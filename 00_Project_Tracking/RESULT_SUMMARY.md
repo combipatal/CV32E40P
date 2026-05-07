@@ -27,6 +27,13 @@ Post-synth pre-DFT topo/SDF | 10 ns | 1.61 ns | 0.00 ns | 45313.37 cell area | s
 Post-DFT topo/SDF | 10 ns | 1.48 ns | 0.00 ns | 49449.82 cell area | see post_dft.power.rpt | DFT inserted; PT post-DFT SDF STA setup/hold clean, hold slack 0.03 ns
 ```
 
+### Fmax Estimate
+
+```text
+Basis | Clock | Worst Setup Slack | Estimated Critical Delay | Ideal Fmax | Next Trial
+Post-DFT topo/SDF STA | 10.00 ns | 1.48 ns | 8.52 ns | 117.4 MHz | 8.5 ns first, then 8.0 ns if clean
+```
+
 ### Equivalence
 
 ```text

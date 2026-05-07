@@ -1,0 +1,1090 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<title>CV32E40P Front-End Script 분석 보고서</title>
+<style>
+@page { size: A4; margin: 19mm 18mm 20mm 18mm; }
+* { box-sizing: border-box; }
+body { margin:0; color:#111; background:#fff; font-family:"Noto Sans CJK KR","Noto Sans KR","Malgun Gothic","DejaVu Sans",Arial,sans-serif; font-size:10.2pt; line-height:1.62; }
+h1 { font-size:21pt; margin:0 0 9mm 0; padding-bottom:4mm; border-bottom:1.5px solid #111; font-weight:800; letter-spacing:-0.02em; }
+h2 { font-size:14.5pt; margin:10mm 0 3mm; padding-top:1mm; font-weight:760; border-bottom:1px solid #d6d6d6; }
+h3 { font-size:12.2pt; margin:6mm 0 2mm; font-weight:730; }
+h4 { font-size:10.8pt; margin:4mm 0 1.5mm; font-weight:700; }
+p { margin:0 0 3.2mm 0; }
+ul,ol { margin:1.5mm 0 3.5mm 5mm; padding-left:5mm; } li { margin:0.8mm 0; }
+blockquote { margin:3mm 0 4mm; padding:2.5mm 4mm; border-left:3px solid #555; background:#f7f7f7; color:#222; }
+hr { border:0; border-top:1px solid #ccc; margin:7mm 0; }
+table { width:100%; border-collapse:collapse; margin:3mm 0 5mm; font-size:9.2pt; page-break-inside:avoid; }
+th,td { border:1px solid #bdbdbd; padding:1.8mm 2.2mm; vertical-align:top; }
+th { background:#eeeeee; font-weight:760; }
+code { font-family:"D2Coding","JetBrains Mono","DejaVu Sans Mono",Consolas,monospace; font-size:8.8pt; background:#f2f2f2; border:1px solid #ddd; padding:0.2mm 0.8mm; border-radius:2px; }
+pre { margin:2.5mm 0 4mm; padding:3mm; background:#f6f6f6; border:1px solid #cfcfcf; white-space:pre-wrap; overflow-wrap:anywhere; page-break-inside:avoid; }
+pre code { background:transparent; border:0; padding:0; color:#111; font-size:8.0pt; line-height:1.45; }
+strong { font-weight:760; }
+a { color:#111; text-decoration:underline; }
+</style></head><body><h1>CV32E40P Front-End Script 분석 보고서</h1>
+<p><strong>문서 목적</strong><br>
+CV32E40P 프로젝트의 front-end implementation script를 학습 관점에서 해석한다. 본 보고서는 디자인 자료가 아니라 기술 보고서 형식으로, flow 순서·script 역할·주요 명령·제약 조건·후속 tool 연계를 설명한다.</p>
+<p><strong>분석 대상</strong></p>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>대상</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project</td>
+<td>CV32E40P RISC-V Core Front-End Flow</td>
+</tr>
+<tr>
+<td>Main Tool</td>
+<td>Synopsys Design Compiler, Formality, DFT Compiler, TetraMAX, PrimeTime</td>
+</tr>
+<tr>
+<td>Main Scope</td>
+<td>Synthesis → FM R2N → DFT → FM N2N → ATPG → STA</td>
+</tr>
+<tr>
+<td>기준 Mode</td>
+<td>Functional 10ns baseline + scan insertion flow</td>
+</tr>
+</tbody>
+</table>
+<p><strong>읽는 방법</strong></p>
+<ol>
+<li>먼저 전체 flow를 본다.</li>
+<li>library/filelist/SDC를 먼저 이해한다.</li>
+<li>DC가 만든 artifact가 Formality/DFT/PrimeTime으로 어떻게 전달되는지 본다.</li>
+<li>각 script는 “무엇을 읽고, 무엇을 만들고, 다음 단계에서 어떻게 쓰이는가” 기준으로 읽는다.</li>
+</ol>
+<hr>
+<blockquote>
+<p>목적: CV32E40P front-end script를 공부용으로 읽기 쉽게 정리한다. 각 script의 역할, 주요 명령의 의미, 왜 필요한지, 후속 tool과 어떻게 연결되는지를 기준으로 본다.</p>
+</blockquote>
+<hr>
+<h2>0. 전체 Flow</h2>
+<pre><code class="language-text">RTL / wrapper / filelist
+  ↓
+DC: analyze → elaborate → link smoke test
+  ↓
+DC Topographical: SDC 적용 → compile_ultra -spg -gate_clock
+  ↓
+pre-DFT netlist / DDC / SDC / SDF / SVF
+  ↓
+Formality R2N: RTL ↔ synthesized netlist
+  ↓
+DFT Compiler: scan protocol → DFT DRC → insert_dft
+  ↓
+post-DFT netlist / DDC / SDC / SDF / SPF / SVF
+  ↓
+Formality N2N: pre-DFT netlist ↔ post-DFT netlist
+  ↓
+TetraMAX: scan DRC / stuck-at ATPG
+  ↓
+PrimeTime: pre/post-DFT SDF STA
+</code></pre>
+<p>핵심은 <strong>DC 결과를 그대로 믿지 않고, FM / DFT / ATPG / PT가 다시 검증하게 만드는 구조</strong>다.</p>
+<hr>
+<h2>1. 디렉터리 역할</h2>
+<table>
+<thead>
+<tr>
+<th>경로</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>configs/</code></td>
+<td>공통 library setup</td>
+</tr>
+<tr>
+<td><code>filelists/</code></td>
+<td>DC/Formality가 읽을 RTL 목록</td>
+</tr>
+<tr>
+<td><code>constraints/</code></td>
+<td>SDC timing constraint</td>
+</tr>
+<tr>
+<td><code>2_Synthesis/</code></td>
+<td>DC synthesis</td>
+</tr>
+<tr>
+<td><code>2.5_FM_R2N/</code></td>
+<td>Formality RTL-to-netlist</td>
+</tr>
+<tr>
+<td><code>3_DFT/</code></td>
+<td>DFT Compiler scan insertion</td>
+</tr>
+<tr>
+<td><code>4_ATPG/</code></td>
+<td>TetraMAX ATPG</td>
+</tr>
+<tr>
+<td><code>5_FM_N2N/</code></td>
+<td>Formality netlist-to-netlist</td>
+</tr>
+<tr>
+<td><code>6_STA/</code></td>
+<td>PrimeTime STA</td>
+</tr>
+<tr>
+<td><code>00_Project_Tracking/</code></td>
+<td>실행 결과/결정/상태 요약</td>
+</tr>
+</tbody>
+</table>
+<p><code>2.5_FM_R2N</code>이 DFT 앞에 있는 이유는 간단하다. DFT를 넣기 전에 <strong>pre-DFT netlist가 RTL과 같은지 먼저 확인</strong>해야 한다.</p>
+<hr>
+<h2>2. Library Setup</h2>
+<p>파일:</p>
+<pre><code class="language-text">configs/library_setup.tcl
+</code></pre>
+<p>핵심 코드:</p>
+<pre><code class="language-tcl">set SAED32_ROOT /DATA/home/edu135/lib/SAED32_EDK
+
+set RVT_TT_DB $SAED32_ROOT/lib/stdcell_rvt/db_nldm/saed32rvt_tt1p05v25c.db
+set LVT_TT_DB $SAED32_ROOT/lib/stdcell_lvt/db_nldm/saed32lvt_tt1p05v25c.db
+set HVT_TT_DB $SAED32_ROOT/lib/stdcell_hvt/db_nldm/saed32hvt_tt1p05v25c.db
+
+set_app_var target_library [list $RVT_TT_DB $LVT_TT_DB $HVT_TT_DB]
+set_app_var link_library [list * $RVT_TT_DB $LVT_TT_DB $HVT_TT_DB]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>줄</th>
+<th>의미</th>
+<th>필요한 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SAED32_ROOT</code></td>
+<td>SAED32 library root path</td>
+<td>모든 library path의 기준점</td>
+</tr>
+<tr>
+<td><code>RVT_TT_DB</code></td>
+<td>regular-Vt TT timing DB</td>
+<td>기본 standard cell mapping 후보</td>
+</tr>
+<tr>
+<td><code>LVT_TT_DB</code></td>
+<td>low-Vt TT timing DB</td>
+<td>빠른 cell 후보. timing에 유리하지만 leakage 증가 가능</td>
+</tr>
+<tr>
+<td><code>HVT_TT_DB</code></td>
+<td>high-Vt TT timing DB</td>
+<td>느리지만 leakage 절감 가능</td>
+</tr>
+<tr>
+<td><code>target_library</code></td>
+<td>DC가 mapping할 cell library</td>
+<td>RTL operator를 실제 cell로 바꾸는 대상</td>
+</tr>
+<tr>
+<td><code>link_library</code></td>
+<td>reference resolve용 library</td>
+<td>submodule/stdcell reference를 연결하기 위함</td>
+</tr>
+</tbody>
+</table>
+<p>주의:</p>
+<pre><code class="language-text">target_library = 어떤 cell로 합성할 것인가
+link_library   = design 안 reference를 어디서 찾을 것인가
+</code></pre>
+<p><code>link_library [list * ...]</code>의 <code>*</code>는 현재 메모리에 읽힌 design도 link 대상으로 쓰겠다는 의미다.</p>
+<hr>
+<h2>3. RTL Filelist</h2>
+<p>파일:</p>
+<pre><code class="language-text">filelists/cv32e40p_dc.tcl
+</code></pre>
+<p>구조:</p>
+<pre><code class="language-tcl">set RTL_INC_DIRS [list \
+  rtl/cv32e40p/rtl/include \
+]
+
+set RTL_FILES [list \
+  ... package files ...
+  rtl/tech/cv32e40p_clock_gate.sv \
+  ... core modules ...
+  rtl/cv32e40p/rtl/cv32e40p_top.sv \
+  rtl/wrappers/cv32e40p_synth_wrap.sv \
+]
+</code></pre>
+<p>SystemVerilog는 compile order가 중요하다.</p>
+<pre><code class="language-text">package → tech wrapper → lower modules → top → synth wrapper
+</code></pre>
+<p>순서가 틀리면 package type, module reference, clock gate wrapper가 unresolved로 깨진다.</p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RTL_INC_DIRS</code></td>
+<td>include/package import 경로</td>
+</tr>
+<tr>
+<td><code>cv32e40p_*_pkg.sv</code></td>
+<td>typedef/enum/parameter package. 먼저 읽어야 함</td>
+</tr>
+<tr>
+<td><code>cv32e40p_clock_gate.sv</code></td>
+<td>synthesis/DFT/FM에서 필요한 clock-gating wrapper</td>
+</tr>
+<tr>
+<td><code>cv32e40p_top.sv</code></td>
+<td>원본 CPU IP top</td>
+</tr>
+<tr>
+<td><code>cv32e40p_synth_wrap.sv</code></td>
+<td>implementation flow용 wrapper top</td>
+</tr>
+</tbody>
+</table>
+<p>wrapper를 쓰는 이유:</p>
+<pre><code class="language-text">cv32e40p_top        = 원본 IP integration top
+cv32e40p_synth_wrap = synthesis/DFT/STA에 맞춘 implementation boundary
+</code></pre>
+<hr>
+<h2>4. SDC Constraint</h2>
+<p>파일:</p>
+<pre><code class="language-text">constraints/cv32e40p_func_10ns.sdc
+</code></pre>
+<p>핵심:</p>
+<pre><code class="language-tcl">create_clock -name clk_i -period 10.0 [get_ports clk_i]
+set_clock_uncertainty 0.1 [get_clocks clk_i]
+
+set_case_analysis 0 [get_ports scan_cg_en_i]
+set_case_analysis 0 [get_ports scan_en]
+set_case_analysis 0 [get_ports scan_in]
+
+set_false_path -from [get_ports rst_ni]
+
+set_input_delay 1.0 -clock clk_i [get_ports {...}]
+set_output_delay 1.0 -clock clk_i [get_ports {...}]
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>의미</th>
+<th>필요한 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_clock</code></td>
+<td><code>clk_i</code>를 10ns clock으로 정의</td>
+<td>STA의 기준. 없으면 reg-to-reg timing 계산 불가</td>
+</tr>
+<tr>
+<td><code>set_clock_uncertainty 0.1</code></td>
+<td>clock margin 0.1ns</td>
+<td>ideal clock만 보면 과하게 낙관적이라 margin 부여</td>
+</tr>
+<tr>
+<td><code>set_case_analysis 0 scan_cg_en_i</code></td>
+<td>functional mode에서 scan clock-gating disable</td>
+<td>scan/test path가 functional STA를 오염하지 않게 함</td>
+</tr>
+<tr>
+<td><code>set_case_analysis 0 scan_en</code></td>
+<td>functional mode에서 scan shift disable</td>
+<td>scan mux path 제외</td>
+</tr>
+<tr>
+<td><code>set_case_analysis 0 scan_in</code></td>
+<td>scan input constant 처리</td>
+<td>floating/unknown 방지</td>
+</tr>
+<tr>
+<td><code>set_false_path -from rst_ni</code></td>
+<td>async reset data timing 제외</td>
+<td>reset은 별도 reset protocol/recovery/removal 문제</td>
+</tr>
+<tr>
+<td><code>set_input_delay 1.0</code></td>
+<td>외부 launching logic budget 가정</td>
+<td>input-to-reg path budget 설정</td>
+</tr>
+<tr>
+<td><code>set_output_delay 1.0</code></td>
+<td>외부 capturing logic budget 가정</td>
+<td>reg-to-output path budget 설정</td>
+</tr>
+</tbody>
+</table>
+<p>이 SDC는 실제 SoC signoff constraint가 아니라 <strong>functional 10ns baseline constraint</strong>다.</p>
+<hr>
+<h2>5. Analyze / Elaborate / Link</h2>
+<p>파일:</p>
+<pre><code class="language-text">2_Synthesis/0_Script/run_analyze_elab_link.tcl
+</code></pre>
+<p>목적:</p>
+<pre><code class="language-text">합성 최적화 전에 RTL을 tool이 제대로 읽고 hierarchy를 만들 수 있는지 확인한다.
+</code></pre>
+<p>핵심 흐름:</p>
+<pre><code class="language-tcl">source configs/library_setup.tcl
+file mkdir ...
+define_design_lib WORK -path 2_Synthesis/work
+source filelists/cv32e40p_dc.tcl
+set_app_var search_path [concat $search_path $RTL_INC_DIRS]
+analyze -format sverilog $RTL_FILES
+elaborate cv32e40p_synth_wrap
+current_design cv32e40p_synth_wrap
+link
+check_design &gt; ...
+write -format ddc -hierarchy -output ...elab.ddc
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>define_design_lib WORK</code></td>
+<td>analyze/elaborate 결과를 저장할 design library 생성</td>
+</tr>
+<tr>
+<td><code>analyze</code></td>
+<td>SystemVerilog source를 parse/compile</td>
+</tr>
+<tr>
+<td><code>elaborate</code></td>
+<td>parameter/hierarchy를 풀어 generic design 생성</td>
+</tr>
+<tr>
+<td><code>current_design</code></td>
+<td>이후 명령 대상 top 지정</td>
+</tr>
+<tr>
+<td><code>link</code></td>
+<td>module/stdcell reference 연결</td>
+</tr>
+<tr>
+<td><code>check_design</code></td>
+<td>unresolved, multi-driver, latch 등 기본 문제 확인</td>
+</tr>
+<tr>
+<td><code>write ddc</code></td>
+<td>elaboration 결과 저장</td>
+</tr>
+</tbody>
+</table>
+<p>이 단계를 따로 두는 이유:</p>
+<pre><code class="language-text">바로 compile하면 실패 원인이 RTL/filelist/library/constraint/optimization 중 어디인지 모호해진다.
+</code></pre>
+<hr>
+<h2>6. DC Topographical Synthesis</h2>
+<p>파일:</p>
+<pre><code class="language-text">2_Synthesis/0_Script/run_compile_10ns_topo.tcl
+</code></pre>
+<p>목적:</p>
+<pre><code class="language-text">Milkyway/TLU+ 물리 정보를 반영해 placement-aware synthesis를 수행한다.
+</code></pre>
+<p>일반 compile과 차이:</p>
+<pre><code class="language-text">run_compile_10ns.tcl      = wire-load 기반 일반 DC compile
+run_compile_10ns_topo.tcl = Milkyway/TLU+ 기반 topographical compile
+</code></pre>
+<p>중요 physical collateral:</p>
+<table>
+<thead>
+<tr>
+<th>변수</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TECH_FILE</code></td>
+<td>layer/via/design rule 등이 들어간 Milkyway technology file</td>
+</tr>
+<tr>
+<td><code>TLUPLUS_MAX</code></td>
+<td>worst RC extraction table</td>
+</tr>
+<tr>
+<td><code>TLUPLUS_MIN</code></td>
+<td>best RC extraction table</td>
+</tr>
+<tr>
+<td><code>TLUPLUS_MAP</code></td>
+<td>tech file layer와 ITF/TLU+ layer mapping</td>
+</tr>
+<tr>
+<td><code>MW_RVT/LVT/HVT</code></td>
+<td>Milkyway reference library</td>
+</tr>
+<tr>
+<td><code>MW_DESIGN_LIB</code></td>
+<td>현재 design용 Milkyway library</td>
+</tr>
+</tbody>
+</table>
+<p>핵심 명령:</p>
+<pre><code class="language-tcl">create_mw_lib -technology $TECH_FILE \
+  -mw_reference_library [list $MW_RVT $MW_LVT $MW_HVT] \
+  -open $MW_DESIGN_LIB
+
+set_tlu_plus_files ...
+check_tlu_plus_files
+check_library
+
+read_sdc constraints/cv32e40p_func_10ns.sdc
+set_svf ...pre_dft_topo.svf
+compile_ultra -spg -gate_clock
+set_svf -off
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_mw_lib</code></td>
+<td>physical-aware compile을 위한 MW design lib 생성</td>
+</tr>
+<tr>
+<td><code>set_tlu_plus_files</code></td>
+<td>RC 추정 table 설정</td>
+</tr>
+<tr>
+<td><code>check_tlu_plus_files</code></td>
+<td>TLU+ 설정 검증</td>
+</tr>
+<tr>
+<td><code>check_library</code></td>
+<td>library consistency 점검</td>
+</tr>
+<tr>
+<td><code>read_sdc</code></td>
+<td>10ns functional constraint 적용</td>
+</tr>
+<tr>
+<td><code>set_svf</code></td>
+<td>Formality용 optimization guide 기록 시작</td>
+</tr>
+<tr>
+<td><code>compile_ultra -spg -gate_clock</code></td>
+<td>physical guidance + clock gating 허용 합성</td>
+</tr>
+</tbody>
+</table>
+<p>Output:</p>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>후속 사용처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pre_dft_topo.ddc</code></td>
+<td>DFT Compiler input</td>
+</tr>
+<tr>
+<td><code>pre_dft_topo.vg</code></td>
+<td>Formality/PrimeTime input</td>
+</tr>
+<tr>
+<td><code>pre_dft_topo.sdc</code></td>
+<td>STA/ICC2 constraint handoff</td>
+</tr>
+<tr>
+<td><code>pre_dft_topo.sdf</code></td>
+<td>SDF timing annotation</td>
+</tr>
+<tr>
+<td><code>pre_dft_topo.svf</code></td>
+<td>Formality R2N guide</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>7. Formality R2N</h2>
+<p>파일:</p>
+<pre><code class="language-text">2.5_FM_R2N/0_Script/run_fm_r2n_topo.tcl
+</code></pre>
+<p>R2N:</p>
+<pre><code class="language-text">Reference      = RTL
+Implementation = synthesized netlist
+</code></pre>
+<p>목적:</p>
+<pre><code class="language-text">합성 후 netlist가 functional mode에서 RTL과 같은지 확인한다.
+</code></pre>
+<p>핵심:</p>
+<pre><code class="language-tcl">set_svf $SVF_FILE
+set verification_clock_gate_reverse_gating true
+read_db -technology_library [list $RVT_TT_DB $LVT_TT_DB $HVT_TT_DB]
+read_sverilog -r -12 -libname WORK $RTL_FILES
+set_top r:/WORK/$TOP_NAME
+set_constant -type port r:/WORK/$TOP_NAME/scan_cg_en_i 0
+set_constant -type port r:/WORK/$TOP_NAME/scan_en 0
+set_constant -type port r:/WORK/$TOP_NAME/scan_in 0
+read_verilog -i -netlist -libname WORK $NETLIST
+set_top i:/WORK/$TOP_NAME
+match
+verify
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>set_svf</code></td>
+<td>DC optimization 정보를 FM에 제공</td>
+</tr>
+<tr>
+<td><code>verification_clock_gate_reverse_gating</code></td>
+<td>clock-gating equivalence 처리를 돕는 설정</td>
+</tr>
+<tr>
+<td><code>read_sverilog -r</code></td>
+<td>RTL을 reference side로 읽음</td>
+</tr>
+<tr>
+<td><code>read_verilog -i</code></td>
+<td>gate netlist를 implementation side로 읽음</td>
+</tr>
+<tr>
+<td><code>set_constant scan_* 0</code></td>
+<td>functional mode equivalence 조건 고정</td>
+</tr>
+<tr>
+<td><code>match</code></td>
+<td>compare point 대응</td>
+</tr>
+<tr>
+<td><code>verify</code></td>
+<td>equivalence 증명</td>
+</tr>
+</tbody>
+</table>
+<p>scan port를 0으로 고정하는 이유:</p>
+<pre><code class="language-text">검증하려는 것은 normal functional mode다. scan mode까지 섞으면 비교 의도가 흐려진다.
+</code></pre>
+<hr>
+<h2>8. DFT Insertion</h2>
+<p>파일:</p>
+<pre><code class="language-text">3_DFT/0_Script/run_insert_dft_10ns_topo.tcl
+</code></pre>
+<p>목적:</p>
+<pre><code class="language-text">pre-DFT DDC를 읽어 muxed scan chain을 삽입하고 post-DFT artifact를 만든다.
+</code></pre>
+<p>중요 입력:</p>
+<pre><code class="language-tcl">set PRE_DFT_DDC 2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.ddc
+</code></pre>
+<p>DDC를 쓰는 이유:</p>
+<pre><code class="language-text">Verilog netlist보다 Synopsys 내부 정보가 많아 DFT Compiler reload에 유리하다.
+</code></pre>
+<p>scan 설정:</p>
+<pre><code class="language-tcl">set_scan_configuration \
+  -style multiplexed_flip_flop \
+  -chain_count 1 \
+  -clock_mixing no_mix \
+  -add_lockup true
+
+set_dft_configuration \
+  -scan enable \
+  -connect_clock_gating enable
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>option</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multiplexed_flip_flop</code></td>
+<td>functional DFF 앞에 scan mux를 붙이는 일반 scan style</td>
+</tr>
+<tr>
+<td><code>chain_count 1</code></td>
+<td>scan chain 1개 구성</td>
+</tr>
+<tr>
+<td><code>clock_mixing no_mix</code></td>
+<td>clock domain을 한 chain에 섞지 않음</td>
+</tr>
+<tr>
+<td><code>add_lockup true</code></td>
+<td>clock skew/edge 차이에 대비한 lockup latch 허용</td>
+</tr>
+<tr>
+<td><code>connect_clock_gating enable</code></td>
+<td>clock-gating test enable 연결 처리</td>
+</tr>
+</tbody>
+</table>
+<p>DFT signal:</p>
+<pre><code class="language-tcl">set_dft_signal -view existing_dft -type ScanClock -port clk_i -timing {45 55}
+set_dft_signal -view existing_dft -type Reset -port rst_ni -active_state 0
+set_dft_signal -view existing_dft -type TestMode -port scan_cg_en_i -active_state 1
+
+set_dft_signal -view spec -type ScanEnable -port scan_en -active_state 1
+set_dft_signal -view spec -type ScanDataIn -port scan_in
+set_dft_signal -view spec -type ScanDataOut -port scan_out
+set_scan_path chain0 -view spec -scan_data_in scan_in -scan_data_out scan_out
+</code></pre>
+<p><code>existing_dft</code>와 <code>spec</code> 차이:</p>
+<pre><code class="language-text">existing_dft = 현재 design에 이미 존재하는 test control을 tool에 알려줌
+spec         = 새로 만들 scan 구조를 지정함
+</code></pre>
+<p>실행:</p>
+<pre><code class="language-tcl">create_test_protocol
+dft_drc
+set_svf ...post_dft_topo.svf
+insert_dft
+set_svf -off
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>create_test_protocol</code></td>
+<td>scan clock/reset/test signal 기반 protocol 생성</td>
+</tr>
+<tr>
+<td><code>dft_drc</code></td>
+<td>insert 전 scan 가능성 검사</td>
+</tr>
+<tr>
+<td><code>insert_dft</code></td>
+<td>실제 scan mux/chain 삽입</td>
+</tr>
+<tr>
+<td><code>set_svf</code></td>
+<td>N2N Formality용 DFT 변환 정보 기록</td>
+</tr>
+</tbody>
+</table>
+<p>Output:</p>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>후속 사용처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.spf</code></td>
+<td>TetraMAX scan DRC/ATPG</td>
+</tr>
+<tr>
+<td><code>.vg</code></td>
+<td>FM N2N, PT STA, ATPG</td>
+</tr>
+<tr>
+<td><code>.ddc</code></td>
+<td>Synopsys reload</td>
+</tr>
+<tr>
+<td><code>.sdc</code></td>
+<td>STA constraint handoff</td>
+</tr>
+<tr>
+<td><code>.sdf</code></td>
+<td>delay annotation</td>
+</tr>
+<tr>
+<td><code>.svf</code></td>
+<td>FM N2N guide</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>9. Formality N2N</h2>
+<p>파일:</p>
+<pre><code class="language-text">5_FM_N2N/0_Script/run_fm_n2n_topo.tcl
+</code></pre>
+<p>N2N:</p>
+<pre><code class="language-text">Reference      = pre-DFT synthesis netlist
+Implementation = post-DFT scan netlist
+</code></pre>
+<p>목적:</p>
+<pre><code class="language-text">scan insertion 이후에도 functional mode 동작이 유지되는지 확인한다.
+</code></pre>
+<p>검증 chain:</p>
+<pre><code class="language-text">RTL == pre-DFT netlist == post-DFT netlist(functional mode)
+</code></pre>
+<p>핵심:</p>
+<pre><code class="language-tcl">set_svf $SVF_FILE
+read_verilog -r -netlist -libname WORK $REF_NETLIST
+read_verilog -i -netlist -libname WORK $IMPL_NETLIST
+set_constant scan_cg_en_i 0
+set_constant scan_en 0
+set_constant scan_in 0
+match
+verify
+</code></pre>
+<p>포인트:</p>
+<pre><code class="language-text">DFT insertion은 구조를 크게 바꾼다. 그래서 post-DFT netlist를 STA/ATPG로 넘기기 전에 N2N Formality로 functional equivalence를 확인한다.
+</code></pre>
+<hr>
+<h2>10. TetraMAX ATPG</h2>
+<p>파일:</p>
+<pre><code class="language-text">4_ATPG/0_Script/run_tmax_stuck_at_topo.tcl
+</code></pre>
+<p>목적:</p>
+<pre><code class="language-text">post-DFT scan netlist와 SPF를 읽어서 stuck-at fault pattern을 생성하고 coverage를 확인한다.
+</code></pre>
+<p>입력:</p>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>post-DFT <code>.vg</code></td>
+<td>scan cell이 들어간 gate netlist</td>
+</tr>
+<tr>
+<td><code>.spf</code></td>
+<td>scan chain/test protocol 정보</td>
+</tr>
+</tbody>
+</table>
+<p>핵심:</p>
+<pre><code class="language-tcl">read_netlist -library ...saed32nm.tv
+read_netlist $NETLIST_FILE
+set_rules B12 ignore
+set_learning -atpg_equivalence
+run_build_model $DESIGN_NAME
+
+set_drc -allow_unstable_set_resets
+set_drc -clock -dynamic -nodisturb_clock_grouping
+run_drc $SPF_FILE
+
+set_faults -model stuck
+add_faults -all
+set_atpg -capture_cycles 4 -abort_limit 32 -num_processes 4
+set_atpg -fill adjacent -coverage 98
+run_atpg
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>명령</th>
+<th>의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read_netlist -library</code></td>
+<td>ATPG용 standard cell Verilog model 읽기</td>
+</tr>
+<tr>
+<td><code>run_build_model</code></td>
+<td>TetraMAX 내부 ATPG model 구성</td>
+</tr>
+<tr>
+<td><code>run_drc $SPF_FILE</code></td>
+<td>scan chain/test protocol 검사</td>
+</tr>
+<tr>
+<td><code>set_faults -model stuck</code></td>
+<td>stuck-at fault model 사용</td>
+</tr>
+<tr>
+<td><code>add_faults -all</code></td>
+<td>전체 fault universe 생성</td>
+</tr>
+<tr>
+<td><code>run_atpg</code></td>
+<td>pattern 생성</td>
+</tr>
+</tbody>
+</table>
+<p>주의:</p>
+<pre><code class="language-text">B12 ignore, Z3 warning 같은 rule 완화는 first-pass ATPG 진행을 위한 분류다. signoff-clean claim이 아니다.
+</code></pre>
+<hr>
+<h2>11. PrimeTime STA</h2>
+<p>파일:</p>
+<pre><code class="language-text">6_STA/0_Script/run_pt_pre_dft_10ns.tcl
+6_STA/0_Script/run_pt_pre_dft_10ns_sdf.tcl
+6_STA/0_Script/run_pt_post_dft_10ns_sdf.tcl
+</code></pre>
+<p>역할:</p>
+<table>
+<thead>
+<tr>
+<th>script</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run_pt_pre_dft_10ns.tcl</code></td>
+<td>일반 pre-DFT netlist wire-load STA</td>
+</tr>
+<tr>
+<td><code>run_pt_pre_dft_10ns_sdf.tcl</code></td>
+<td>topo pre-DFT netlist + SDF STA</td>
+</tr>
+<tr>
+<td><code>run_pt_post_dft_10ns_sdf.tcl</code></td>
+<td>post-DFT scan netlist + SDF STA</td>
+</tr>
+</tbody>
+</table>
+<p>핵심 패턴:</p>
+<pre><code class="language-tcl">set link_path [list * $RVT_TT_DB $LVT_TT_DB $HVT_TT_DB]
+read_verilog $NETLIST
+current_design $TOP_NAME
+link_design
+read_sdc $SDC_FILE
+read_sdf $SDF_FILE
+check_timing -verbose
+report_global_timing
+report_timing -delay_type max
+report_timing -delay_type min
+report_constraint -all_violators
+report_analysis_coverage
+report_annotated_delay
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>report</th>
+<th>보는 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>check_timing</code></td>
+<td>no_clock, unconstrained endpoint, generated clock 문제</td>
+</tr>
+<tr>
+<td><code>report_global_timing</code></td>
+<td>WNS/TNS 요약</td>
+</tr>
+<tr>
+<td><code>report_timing -delay_type max</code></td>
+<td>setup path</td>
+</tr>
+<tr>
+<td><code>report_timing -delay_type min</code></td>
+<td>hold path</td>
+</tr>
+<tr>
+<td><code>report_constraint -all_violators</code></td>
+<td>timing/electrical violation</td>
+</tr>
+<tr>
+<td><code>report_analysis_coverage</code></td>
+<td>STA coverage</td>
+</tr>
+<tr>
+<td><code>report_annotated_delay</code></td>
+<td>SDF annotation 적용 여부</td>
+</tr>
+</tbody>
+</table>
+<p>SDF STA 의미:</p>
+<pre><code class="language-text">netlist = 구조
+SDC     = constraint
+SDF     = delay number
+</code></pre>
+<p>PT에서 셋을 같이 읽어 DC timing report를 독립적으로 재검증한다.</p>
+<hr>
+<h2>12. 핵심 개념 정리</h2>
+<h3>Functional mode vs Scan mode</h3>
+<p>Functional mode:</p>
+<pre><code class="language-text">scan_en = 0
+scan_cg_en_i = 0
+scan_in = 0
+</code></pre>
+<p>Scan mode:</p>
+<pre><code class="language-text">scan_en = 1
+scan_cg_en_i = 1
+scan chain active
+</code></pre>
+<p>FM/STA는 대부분 functional mode 기준이다. TetraMAX/DFT는 scan mode를 별도로 정의한다.</p>
+<h3>SVF</h3>
+<pre><code class="language-text">DC/DFT가 design을 어떻게 바꿨는지 Formality에게 알려주는 guide file
+</code></pre>
+<p>clock gating, hierarchy optimization, DFT insertion 이후 equivalence matching에 중요하다.</p>
+<h3>SDF</h3>
+<pre><code class="language-text">netlist에 delay number를 annotate하는 파일
+</code></pre>
+<p>PT SDF STA에서 DC topo delay 추정을 다시 확인한다.</p>
+<h3>SPF</h3>
+<pre><code class="language-text">scan chain과 test protocol 정보를 담는 파일
+</code></pre>
+<p>TetraMAX가 scan DRC/ATPG를 수행할 때 필요하다.</p>
+<h3>DDC vs VG</h3>
+<table>
+<thead>
+<tr>
+<th>파일</th>
+<th>성격</th>
+<th>주 사용처</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.ddc</code></td>
+<td>Synopsys 내부 design DB</td>
+<td>DC/DFT reload</td>
+</tr>
+<tr>
+<td><code>.vg</code></td>
+<td>Verilog gate netlist</td>
+<td>FM/PT/TetraMAX/외부 handoff</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>13. 공부 순서</h2>
+<pre><code class="language-text">1. configs/library_setup.tcl
+2. filelists/cv32e40p_dc.tcl
+3. constraints/cv32e40p_func_10ns.sdc
+4. 2_Synthesis/0_Script/run_analyze_elab_link.tcl
+5. 2_Synthesis/0_Script/run_compile_10ns_topo.tcl
+6. 2.5_FM_R2N/0_Script/run_fm_r2n_topo.tcl
+7. 3_DFT/0_Script/run_insert_dft_10ns_topo.tcl
+8. 5_FM_N2N/0_Script/run_fm_n2n_topo.tcl
+9. 4_ATPG/0_Script/run_tmax_stuck_at_topo.tcl
+10. 6_STA/0_Script/run_pt_pre_dft_10ns_sdf.tcl
+11. 6_STA/0_Script/run_pt_post_dft_10ns_sdf.tcl
+</code></pre>
+<p>각 단계에서 볼 질문:</p>
+<table>
+<thead>
+<tr>
+<th>단계</th>
+<th>질문</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>library</td>
+<td>어떤 cell/corner로 mapping하나</td>
+</tr>
+<tr>
+<td>filelist</td>
+<td>RTL compile order가 왜 이 순서인가</td>
+</tr>
+<tr>
+<td>SDC</td>
+<td>어떤 mode와 clock을 검증하나</td>
+</tr>
+<tr>
+<td>DC</td>
+<td>RTL이 어떤 netlist/artifact로 변하나</td>
+</tr>
+<tr>
+<td>FM R2N</td>
+<td>합성 netlist가 RTL과 같은가</td>
+</tr>
+<tr>
+<td>DFT</td>
+<td>scan chain을 어떻게 정의하고 삽입하나</td>
+</tr>
+<tr>
+<td>FM N2N</td>
+<td>scan 삽입 후 functional equivalence가 유지되나</td>
+</tr>
+<tr>
+<td>ATPG</td>
+<td>scan chain으로 stuck-at fault를 얼마나 detect하나</td>
+</tr>
+<tr>
+<td>PT</td>
+<td>DC 결과를 독립 STA tool로 재검증했나</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>14. 면접 설명 문장</h2>
+<p>짧게:</p>
+<blockquote>
+<p>CV32E40P 공개 RTL을 wrapper 기준으로 정리한 뒤, SAED32 TT mixed-VT library에서 DC Graphical synthesis를 수행했습니다. 합성 결과는 SVF 기반 Formality R2N으로 RTL 등가성을 확인했고, DFT Compiler로 muxed scan을 삽입한 뒤 post-DFT netlist를 N2N Formality로 다시 검증했습니다. 이후 TetraMAX stuck-at ATPG와 PrimeTime SDF STA로 scan 구조와 timing을 재확인했습니다.</p>
+</blockquote>
+<p>기술적으로:</p>
+<blockquote>
+<p>단순히 DC compile 결과만 본 것이 아니라, pre-DFT topo netlist, SDC, SDF, SVF를 후속 tool handoff artifact로 남겼습니다. R2N/N2N Formality는 scan/test port를 functional constant로 고정해 normal mode equivalence를 검증했고, DFT 단계에서는 scan clock/reset/test mode/scan path를 명시적으로 정의해 SPF를 생성했습니다. PrimeTime에서는 SDF annotation과 analysis coverage를 확인해 DC timing report와 독립적으로 setup/hold를 재검증했습니다.</p>
+</blockquote>
+<hr>
+<h2>15. 개선 포인트</h2>
+<table>
+<thead>
+<tr>
+<th>개선</th>
+<th>이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PROJECT_ROOT</code> 환경변수화</td>
+<td>다른 machine/path에서 재현 가능하게 만들기 위함</td>
+</tr>
+<tr>
+<td>library path 환경변수화</td>
+<td>private path 노출 방지, repo template화</td>
+</tr>
+<tr>
+<td>MCMM 확장</td>
+<td>현재는 TT 단일 corner. SS/FF 및 setup/hold scenario 필요</td>
+</tr>
+<tr>
+<td>backend handoff 정리</td>
+<td>ICC2/OpenROAD로 넘길 netlist/SDC/library/floorplan 조건 필요</td>
+</tr>
+<tr>
+<td>report parser 추가</td>
+<td>WNS/TNS/area/power/coverage를 자동 table화</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>16. 안전한 Claim Boundary</h2>
+<p>가능:</p>
+<pre><code class="language-text">CV32E40P front-end closure baseline
+DC/DC Graphical synthesis
+Formality R2N/N2N pass
+DFT scan insertion
+TetraMAX stuck-at ATPG
+PrimeTime SDF STA
+</code></pre>
+<p>금지:</p>
+<pre><code class="language-text">RTL-to-GDS 완료
+post-route signoff 완료
+IR/EM 완료
+production DFT signoff
+multi-corner signoff closure
+</code></pre>
+<p>현재 프로젝트는 <strong>front-end closure로 강하다</strong>. backend evidence가 생기면 그때 RTL-to-GDS로 올린다.</p>
+</body></html>

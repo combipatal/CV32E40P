@@ -899,6 +899,132 @@ Formality reverse clock-gating. scan_out is intentionally undriven before DFT
 insertion and is excluded from functional R2N comparison.
 ```
 
+## Actual DFT, N2N, ATPG, and Post-DFT STA Result
+
+Run date:
+
+```text
+2026-05-07
+```
+
+Completed scope:
+
+```text
+DC/DFT Compiler topographical scan insertion
+post-DFT DDC/VG/SDC/SDF/SPF generation
+Formality N2N equivalence
+PrimeTime post-DFT SDF STA
+TetraMAX stuck-at ATPG
+```
+
+DFT command:
+
+```text
+dc_shell -topographical_mode -f 3_DFT/0_Script/run_insert_dft_10ns_topo.tcl
+```
+
+Generated post-DFT artifacts:
+
+```text
+3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.ddc
+3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.vg
+3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.sdc
+3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.sdf
+3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.spf
+3_DFT/2_Output/svf/cv32e40p_synth_wrap.post_dft_topo.svf
+```
+
+Important DFT implementation note:
+
+```text
+write_test_protocol must be run after insert_dft for this flow.
+Writing SPF before insert_dft produced an empty ScanStructures block and caused
+TetraMAX to miss the scan chain, reducing ATPG coverage to 2.66%.
+The fixed SPF contains chain0 with ScanLength 2130.
+```
+
+DFT result:
+
+```text
+Scan style: muxed scan
+Scan chains: 1
+Scan chain: chain0
+Scan length: 2130
+Scan input/output: scan_in -> scan_out
+Valid scan cells: 2130
+DFT DRC result: PASS_WITH_NOTE
+DFT DRC note: 1 TEST-505 constant-1 clock-gate cell
+Post-DFT DC slack: 1.48 ns
+Post-DFT DC TNS: 0.00 ns
+Post-DFT cell area: 49449.82
+```
+
+N2N command:
+
+```text
+fm_shell -work_path 5_FM_N2N/FM_WORK -file 5_FM_N2N/0_Script/run_fm_n2n_topo.tcl -overwrite
+```
+
+N2N result:
+
+```text
+Verification SUCCEEDED
+Passing compare points: 2243
+Failing compare points: 0
+Not compared: 74 clock-gate LAT, 1 don't-verify port
+```
+
+Post-DFT SDF STA command:
+
+```text
+pt_shell -f 6_STA/0_Script/run_pt_post_dft_10ns_sdf.tcl
+```
+
+Post-DFT SDF STA result:
+
+```text
+read_sdf errors: 0
+Annotated cell delay arcs: 106265
+Annotated net delay arcs: 47481
+Annotated timing checks: 13076
+Annotated constraints: 6390
+Setup violations: none
+Hold violations: none
+Worst setup slack: 1.48 ns
+Worst hold slack: 0.03 ns
+```
+
+ATPG command:
+
+```text
+tmax -shell 4_ATPG/0_Script/run_tmax_stuck_at_topo.tcl
+```
+
+ATPG result:
+
+```text
+Fault model: stuck-at
+Collapsed faults: 82949
+Detected faults: 81697
+Possibly detected faults: 99
+Undetectable faults: 74
+ATPG untestable faults: 14
+Not detected faults: 1065
+Test coverage: 98.64%
+Fault coverage: 98.55%
+Patterns: 448 basic_scan patterns
+Pattern output: 4_ATPG/2_Output/patterns/cv32e40p_synth_wrap.stuck_at.serial.stil
+```
+
+Remaining notes:
+
+```text
+TetraMAX DRC reports 6 Z3 wire-contention warnings. They are retained as warnings
+for first-pass ATPG, not claimed as production DFT signoff clean.
+DC/PT max_cap and max_transition design-rule cleanup remains deferred to backend
+or later physical-aware closure.
+```
+
 Generated evidence:
 
 ```text

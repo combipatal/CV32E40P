@@ -769,6 +769,84 @@ The remaining pre-DFT concern is design-rule consistency, especially max_cap
 between DC and PrimeTime.
 ```
 
+## Actual Topographical and SDF Run Result
+
+Run date:
+
+```text
+2026-05-07
+```
+
+Completed scope:
+
+```text
+DC Graphical topographical compile
+SDF generation from DC
+PrimeTime STA with read_sdf annotation
+```
+
+Topographical setup:
+
+```text
+DC command: dc_shell -topographical_mode -f 2_Synthesis/0_Script/run_compile_10ns_topo.tcl
+Milkyway tech: /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+TLU+ max: /DATA/home/edu135/lib/SAED32_EDK/tech/star_rcxt/saed32nm_1p9m_Cmax.tluplus
+TLU+ min: /DATA/home/edu135/lib/SAED32_EDK/tech/star_rcxt/saed32nm_1p9m_Cmin.tluplus
+TLU+ map: /DATA/home/edu135/lib/SAED32_EDK/tech/star_rcxt/saed32nm_tf_itf_tluplus.map
+MW refs: RVT + LVT + HVT SAED32 Milkyway libraries
+```
+
+Generated topographical artifacts:
+
+```text
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.ddc
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.vg
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.sdc
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.sdf
+2_Synthesis/2_Output/svf/cv32e40p_synth_wrap.pre_dft_topo.svf
+```
+
+DC Graphical topographical result:
+
+```text
+Clock target: 10 ns
+Corner: TT 1.05V 25C
+Setup WNS: 1.61 ns
+Setup TNS: 0.00 ns
+Setup violating paths: 0
+Hold violating paths: 0
+Leaf cells: 14083
+Sequential cells: 2204
+Cell area: 45313.37
+Net length estimate: 459454.50
+```
+
+PrimeTime SDF STA result:
+
+```text
+PT command: pt_shell -f 6_STA/0_Script/run_pt_pre_dft_10ns_sdf.tcl
+read_sdf errors: 0
+Annotated cell delay arcs: 106265
+Annotated net delay arcs: 43148
+Annotated timing checks: 13076
+Annotated constraints: 6390
+check_timing: succeeded
+Setup violations: none
+Hold violations: none
+Worst setup slack: 1.61 ns
+Worst hold slack: 0.06 ns
+```
+
+Residual items:
+
+```text
+Topographical timing is clean at 10 ns.
+Design-rule closure is not clean yet.
+DC topographical report shows max_cap/max_transition DRC violations.
+PrimeTime SDF STA also reports max_cap violations.
+Do not call this full front-end closure until DRC is fixed or explicitly waived.
+```
+
 ## Portfolio Tables to Prepare
 
 Implementation table:

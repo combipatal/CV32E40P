@@ -847,6 +847,69 @@ PrimeTime SDF STA also reports max_cap violations.
 Do not call this full front-end closure until DRC is fixed or explicitly waived.
 ```
 
+## Actual Formality R2N Run Result
+
+Run date:
+
+```text
+2026-05-07
+```
+
+Completed scope:
+
+```text
+Formality RTL-to-netlist equivalence
+Reference: cv32e40p_synth_wrap RTL
+Implementation: DC Graphical pre-DFT topographical netlist
+SVF: 2_Synthesis/2_Output/svf/cv32e40p_synth_wrap.pre_dft_topo.svf
+```
+
+Command:
+
+```text
+fm_shell -work_path 2.5_FM_R2N/FM_WORK -file 2.5_FM_R2N/0_Script/run_fm_r2n_topo.tcl -overwrite
+```
+
+Required setup choices:
+
+```text
+verification_clock_gate_reverse_gating = true
+scan_cg_en_i = 0
+scan_en = 0
+scan_in = 0
+scan_out marked as directly undriven don't-verify point
+```
+
+Result:
+
+```text
+Verification SUCCEEDED
+Passing compare points: 2243
+Failing compare points: 0
+Unmatched reference/implementation compare points: 3/73
+Not compared: 1 clock-gate LAT, 1 don't-verify port
+```
+
+Interpretation:
+
+```text
+R2N is passed for functional equivalence. The remaining unmatched implementation
+LATCG points are the expected inserted clock-gating latch structures handled by
+Formality reverse clock-gating. scan_out is intentionally undriven before DFT
+insertion and is excluded from functional R2N comparison.
+```
+
+Generated evidence:
+
+```text
+2.5_FM_R2N/0_Script/run_fm_r2n_topo.tcl
+2.5_FM_R2N/3_Log/fm_r2n_topo.console.log
+2.5_FM_R2N/4_Report/r2n_topo.failing_points.rpt
+2.5_FM_R2N/4_Report/r2n_topo.passing_points.post_verify.rpt
+2.5_FM_R2N/4_Report/r2n_topo.unmatched_points.post_verify.rpt
+2.5_FM_R2N/2_Output/r2n_topo_fm_session.fss
+```
+
 ## Portfolio Tables to Prepare
 
 Implementation table:

@@ -50,6 +50,10 @@ set PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING ""
 set PLACE_SUPPORT_OFF_TRACK_VIA_REGION ""
 set PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK ""
 set SCAN_DEF_FILE ""
+set HOTSPOT_BLOCKAGE_ENABLE ""
+set HOTSPOT_BLOCKAGE_BOUNDARY {{215.0 195.0} {265.0 265.0}}
+set HOTSPOT_BLOCKAGE_PERCENT 40
+set PG_M2_MESH_OFFSET 20.0
 if {[info exists ::env(PLACE_PIN_DENSITY_AWARE)]} {
   set PLACE_PIN_DENSITY_AWARE $::env(PLACE_PIN_DENSITY_AWARE)
 }
@@ -85,6 +89,18 @@ if {[info exists ::env(PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK)]} {
 }
 if {[info exists ::env(SCAN_DEF_FILE)]} {
   set SCAN_DEF_FILE $::env(SCAN_DEF_FILE)
+}
+if {[info exists ::env(HOTSPOT_BLOCKAGE_ENABLE)]} {
+  set HOTSPOT_BLOCKAGE_ENABLE $::env(HOTSPOT_BLOCKAGE_ENABLE)
+}
+if {[info exists ::env(HOTSPOT_BLOCKAGE_BOUNDARY)]} {
+  set HOTSPOT_BLOCKAGE_BOUNDARY $::env(HOTSPOT_BLOCKAGE_BOUNDARY)
+}
+if {[info exists ::env(HOTSPOT_BLOCKAGE_PERCENT)]} {
+  set HOTSPOT_BLOCKAGE_PERCENT $::env(HOTSPOT_BLOCKAGE_PERCENT)
+}
+if {[info exists ::env(PG_M2_MESH_OFFSET)]} {
+  set PG_M2_MESH_OFFSET $::env(PG_M2_MESH_OFFSET)
 }
 
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
@@ -239,12 +255,15 @@ set_pg_strategy core_ring_strategy \
   -pattern {{name: core_ring_pattern}{nets: {VDD VSS}}{offset: {5 5}}} \
   -extension {{stop: design_boundary_and_generate_pin}}
 
+# M2 PG mesh는 M1/M2/VIA1 DRC와 직접 맞물릴 수 있어 offset trial을 지원합니다.
+set PG_MESH_LAYERS [subst {
+  {{vertical_layer: M2}{width: 0.4}{spacing: interleaving}{pitch: 40.0}{offset: $PG_M2_MESH_OFFSET}}
+  {{vertical_layer: M8}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 20.0}}
+  {{horizontal_layer: M7}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 28.0}}
+}]
+
 create_pg_mesh_pattern core_mesh_pattern \
-  -layers { \
-    {{vertical_layer: M2}{width: 0.4}{spacing: interleaving}{pitch: 40.0}{offset: 20.0}} \
-    {{vertical_layer: M8}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 20.0}} \
-    {{horizontal_layer: M7}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 28.0}} \
-  }
+  -layers $PG_MESH_LAYERS
 
 set_pg_strategy core_mesh_strategy \
   -core \
@@ -258,6 +277,12 @@ set_pg_strategy_via_rule pg_via_all \
 compile_pg \
   -strategies {stdcell_rail_strategy core_ring_strategy core_mesh_strategy} \
   -via_rule pg_via_all
+
+set PG_MESH_SETTING_REPORT [open $TRIAL_POWER_DIR/pg_mesh_trial_settings.rpt w]
+puts $PG_MESH_SETTING_REPORT "M2_mesh_offset: $PG_M2_MESH_OFFSET"
+puts $PG_MESH_SETTING_REPORT "M8_mesh_offset: 20.0"
+puts $PG_MESH_SETTING_REPORT "M7_mesh_offset: 28.0"
+close $PG_MESH_SETTING_REPORT
 
 ################################################################################
 # compile_pg가 만든 실제 boundary PG port는 VDD_1/VSS_1입니다.
@@ -349,6 +374,28 @@ if {$PLACE_SUPPORT_OFF_TRACK_VIA_REGION ne ""} {
 }
 if {$PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK ne ""} {
   set_app_options -name place.legalize.enable_pin_color_alignment_check -value $PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK
+}
+
+if {$HOTSPOT_BLOCKAGE_ENABLE ne ""} {
+  # marker context에서 DRC가 몰린 영역 주변의 placement 밀도를 낮춥니다.
+  # partial blockage는 coarse placement 단계에서만 직접 반영됩니다.
+  set HOTSPOT_BLOCKAGE [create_placement_blockage \
+    -name hotspot_drc_density_screen \
+    -type partial \
+    -blocked_percentage $HOTSPOT_BLOCKAGE_PERCENT \
+    -boundary $HOTSPOT_BLOCKAGE_BOUNDARY]
+
+  set HOTSPOT_BLOCKAGE_REPORT [open $TRIAL_PLACE_DIR/hotspot_blockage.rpt w]
+  puts $HOTSPOT_BLOCKAGE_REPORT "name: hotspot_drc_density_screen"
+  puts $HOTSPOT_BLOCKAGE_REPORT "type: partial"
+  puts $HOTSPOT_BLOCKAGE_REPORT "blocked_percentage: $HOTSPOT_BLOCKAGE_PERCENT"
+  puts $HOTSPOT_BLOCKAGE_REPORT "boundary: $HOTSPOT_BLOCKAGE_BOUNDARY"
+  if {[catch {sizeof_collection $HOTSPOT_BLOCKAGE} HOTSPOT_BLOCKAGE_COUNT]} {
+    puts $HOTSPOT_BLOCKAGE_REPORT "created_count: unknown"
+  } else {
+    puts $HOTSPOT_BLOCKAGE_REPORT "created_count: $HOTSPOT_BLOCKAGE_COUNT"
+  }
+  close $HOTSPOT_BLOCKAGE_REPORT
 }
 
 report_app_options place.coarse.* > $TRIAL_PLACE_DIR/place_coarse_app_options.rpt

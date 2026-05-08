@@ -476,3 +476,33 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/m1_retrack_route_088/06_route/check_routes.before_remove.rpt
   7_Backend_ICC2/4_Report/trials/m1_retrack_route_088/06_route/check_routability.after_recreate.rpt
 ```
+
+## Route DRC Root-Cause Focus Decision
+
+```text
+Date: 2026-05-08
+Decision: pause blind DRC-reduction trials and focus on root-cause identification
+Reason: multiple broad fix trials did not identify or close the problem. Overall utilization reduction, M8 signal layer bound, detail-route looping, scan DEF handoff, advanced legalizer/pin-color, generic placement spreading, and hotspot partial blockage alone all leave hundreds of route DRCs.
+Hotspot evidence:
+  scan_def_m8_restore fresh detail DRC = 398
+  hotspot window {{215 195} {265 265}} contains 123 markers
+  hotspot distribution: Off-grid VIA1 48, Off-grid M2 46, Diff net spacing M1 18, Needs fat contact 10, Off-grid M1 1
+  representative off-grid markers are near NOR2X0_HVT signal pins and sometimes near VDD/VSS M2 PG stripes
+  representative fat-contact markers are near OR2X1_HVT M1/M2 pin access
+Rejected interpretation:
+  do not treat this as simple global density or simple hotspot density issue.
+Current leading hypotheses:
+  1. stdcell pin access + M2/VIA1 off-grid interaction
+  2. possible M2 PG mesh interference in the hotspot
+  3. LEF-built NDM / pin-check quality issue
+  4. route off-grid/via policy defaults
+Next action:
+  run cause probes that test one prediction at a time, starting with PG M2 stripe distance/offset evidence and then route off-grid/via option probes.
+Evidence:
+  docs/backend/route_drc_root_cause_investigation.md
+  7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/all_drc_markers.tsv
+  7_Backend_ICC2/4_Report/trials/root_cause_probe/99_manual/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/root_cause_probe/99_manual/route_detail_app_options.rpt
+```

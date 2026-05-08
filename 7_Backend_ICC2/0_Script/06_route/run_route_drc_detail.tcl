@@ -14,6 +14,9 @@
 source 7_Backend_ICC2/0_Script/00_setup/icc2_common_setup.tcl
 
 set DRC_DETAIL_DIR $ROUTE_REPORT_DIR/drc_detail
+if {[info exists ::env(DRC_DETAIL_DIR)]} {
+  set DRC_DETAIL_DIR $::env(DRC_DETAIL_DIR)
+}
 file mkdir $DRC_DETAIL_DIR
 
 open_lib $ICC2_LIB_DIR

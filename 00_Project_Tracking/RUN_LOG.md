@@ -246,6 +246,22 @@ Notes: Parsed 305 blocked access points and 400 route DRC markers. Nearest DRC d
 
 ```text
 Date: 2026-05-08
+Command: env TRIAL_NAME=hotspot_blk40_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def HOTSPOT_BLOCKAGE_ENABLE=true HOTSPOT_BLOCKAGE_PERCENT=40 HOTSPOT_BLOCKAGE_BOUNDARY="{{215.0 195.0} {265.0 265.0}}" icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/hotspot_blk40_scan_def_m8/hotspot_blk40_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 hotspot partial blockage probe
+Result: PASS_WITH_OPEN
+Notes: Added one 40% partial placement blockage over hotspot {{215 195} {265 265}}. route_auto completed with open nets 0, legality 0 violations, PG connectivity floating counts 0, PG DRC no errors, and check_routes DRC 390. Compared with scan_def_m8_restore DRC 398, this is only 8 DRC improvement, so hotspot cell density alone is not the root cause. Evidence: 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/04_place/hotspot_blockage.rpt and 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/{check_routes.rpt,check_legality.rpt,pg_connectivity.rpt,pg_drc.rpt,drc_detail/drc.matrix.rpt}.
+```
+
+```text
+Date: 2026-05-08
+Command: root-cause investigation documentation update
+Stage: ICC2 route DRC root-cause investigation
+Result: RECORDED
+Notes: Shifted active goal from immediate DRC reduction to root-cause identification. Hotspot {{215 195} {265 265}} contains 123 DRC markers; 94 are M2/VIA1 off-grid. Representative markers show NOR2X0_HVT/OR2X1_HVT stdcell pin access, paired M2/VIA1 off-grid markers, and some VDD/VSS M2 PG shape overlap. Leading hypotheses are stdcell pin access + M2/VIA1 off-grid interaction, possible M2 PG mesh interference, LEF-built NDM/pin-check quality, and route off-grid/via policy. Evidence: docs/backend/route_drc_root_cause_investigation.md and 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_manual/{route_common_app_options.rpt,route_detail_app_options.rpt}.
+```
+
+```text
+Date: 2026-05-08
 Command: env TRIAL_NAME=pin_access_spread CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 PLACE_PIN_DENSITY_AWARE=true PLACE_MAX_DENSITY=0.70 PLACE_TARGET_ROUTING_DENSITY=0.70 PLACE_INCREASED_CELL_EXPANSION=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pin_access_spread/pin_access_spread.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
 Stage: ICC2 placement spreading route trial
 Result: REJECTED

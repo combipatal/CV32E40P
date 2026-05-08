@@ -20,6 +20,7 @@ ICC2 placement initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/04_plac
 ICC2 power initial | ICC2 | PASS | 7_Backend_ICC2/4_Report/03_power/{pg_connectivity,pg_drc}.rpt | M7 horizontal mesh offset 28um; PG DRC clean; VDD/VSS floating wires, vias, and std cells all 0
 ICC2 CTS initial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/05_cts/{clock_qor.summary,clock_qor.drc_violators,qor,check_legality,pg_connectivity}.rpt | clock_opt through route_clock; clock DRC 0; legality 0; timing paths MET; whole-design DRC still has 1 max_transition/172 max_cap, VSS floating boundary terminals 2
 ICC2 route initial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/06_route/{check_routes,qor,check_legality,pg_connectivity}.rpt | route_auto completed; open nets 0; route DRC 408 remains; legality 0; PG clean
+ICC2 route 60% util trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/60util/06_route/{check_routes,utilization,timing.max,timing.min}.rpt | route-stage utilization 0.7324; open nets 0; check_routes DRC 407 remains; timing paths MET; density-only fix rejected
 ```
 
 ### Backend Init
@@ -48,6 +49,7 @@ First-pass route open nets | PASS | 7_Backend_ICC2/4_Report/06_route/check_route
 First-pass route DRC | OPEN | 7_Backend_ICC2/4_Report/06_route/check_routes.rpt | TOTAL VIOLATIONS 408: diff-net spacing 131, less-than-min-area 8, needs-fat-contact 106, off-grid 163
 First-pass route legality | PASS | 7_Backend_ICC2/4_Report/06_route/check_legality.rpt | TOTAL 0 violations
 First-pass route PG | PASS | 7_Backend_ICC2/4_Report/06_route/pg_connectivity.rpt | VDD/VSS floating wires/vias/std cells/terminals all 0; PG DRC reports no errors
+60% utilization route trial | OPEN | 7_Backend_ICC2/4_Report/trials/60util/06_route/check_routes.rpt | check_routes reports 407 DRCs and 0 open nets; DRC classes: diff-net spacing 102, min-area 8, needs-fat-contact 128, off-grid 166, same-net spacing 1, short 2
 ```
 
 ### Timing
@@ -59,6 +61,7 @@ Post-DFT topo/SDF | 10 ns | 1.48 ns | 0.00 ns | 49449.82 cell area | see post_df
 ICC2 initial placement | 10 ns | 0.57 ns | not summarized | 49449.8147 cell area | not summarized | pre-CTS/pre-route ICC2 timing estimate with TLU+ RC after PG closure
 ICC2 first-pass CTS | 10 ns | 1.98 ns listed worst setup path | not summarized | 58348.41 design area in log final QoR | not summarized | post-CTS/pre-signal-route timing estimate; listed worst hold slack 0.02 ns
 ICC2 first-pass route | 10 ns | 2.00 ns listed worst setup path | not summarized | 58348.41 cell area | not summarized | post-route estimate with detailed routed nets; listed worst hold slack 0.02 ns; route DRC not clean
+ICC2 60% util route trial | 10 ns | 2.10 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
 ```
 
 ### Fmax Estimate

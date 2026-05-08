@@ -198,3 +198,25 @@ Evidence:
   7_Backend_ICC2/4_Report/06_route/check_legality.rpt
   7_Backend_ICC2/4_Report/06_route/pg_connectivity.rpt
 ```
+
+## Route Utilization Trial Decision
+
+```text
+Date: 2026-05-08
+Decision: test lower floorplan density before changing route technology/setup assumptions
+Trial: 60% target core utilization, same PG/place/CTS/route settings as baseline
+Reason: baseline first-pass route had actual route utilization 77.17% and 408 check_routes DRCs.
+Expected if density was dominant root cause: much lower route DRC count.
+Observed:
+  floorplan utilization report: 0.6027
+  route utilization report: 0.7324
+  route_auto final DRC: 406
+  check_routes final DRC: 407
+  open nets: 0
+Conclusion: lowering target utilization from 65% to 60% does not materially improve DRC.
+Decision: do not treat core utilization alone as the root cause. Next cleanup should focus on explicit route setup, via/contact/grid behavior, top PG port cleanup, and scan DEF handoff.
+Evidence:
+  7_Backend_ICC2/3_Log/trials/60util/trial_60util_to_route.log
+  7_Backend_ICC2/4_Report/trials/60util/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/60util/06_route/utilization.rpt
+```

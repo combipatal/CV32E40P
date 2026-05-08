@@ -236,3 +236,12 @@ Result: RECORDED
 Notes: Fresh check_routability confirms no PG net open, no standard-cell overlap, no min-grid violations, no blocked ports, and no blocked nets. It reports 2 unplaced top PG ports, 3 off-track M1 pins, and one long VSS PG shape with shape_use detail_route. Fresh check_routes reproduces 408 DRCs and 0 open nets. Fresh utilization remains 77.17%. This supports a combined root cause: routing congestion plus PG/top-port cleanup plus tech/via/contact/grid setup, not connectivity failure.
 Evidence: 7_Backend_ICC2/4_Report/06_route/check_routability.post_route.rpt, check_routes.fresh.rpt, utilization.fresh.rpt, qor.fresh.rpt, and 7_Backend_ICC2/3_Log/06_route/route_drc_diagnose.log.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl | tee 7_Backend_ICC2/3_Log/trials/60util/trial_60util_to_route.log
+Stage: ICC2 route DRC 60% utilization trial
+Result: PASS_WITH_OPEN
+Notes: Rebuilt ICC2 lib from post-DFT netlist and reran init, 60% floorplan, PG, placement, CTS, and route in one trial script. The current generated ICC2 lib now reflects this 60% trial state; rerun main 01-06 scripts to recreate the 65% baseline state. Floorplan utilization report is 0.6027; route-stage utilization is 0.7324. Signal route still does not converge: route_auto log ends with 406 DRCs and check_routes reports 407 DRCs. Open nets are 0. check_routes DRC classes are diff-net spacing 102, less-than-min-area 8, needs-fat-contact 128, off-grid 166, same-net spacing 1, and short 2. Timing listed paths are MET: worst setup slack 2.10 ns and worst hold slack 0.02 ns. Legality remains TOTAL 0 and PG connectivity/DRC are clean. Compared to baseline 65% route check_routes 408 DRCs, this trial changes almost nothing, so lower utilization alone is not the route DRC root cause.
+Evidence: 7_Backend_ICC2/3_Log/trials/60util/trial_60util_to_route.log and 7_Backend_ICC2/4_Report/trials/60util/06_route/{check_routes.rpt,utilization.rpt,timing.max.rpt,timing.min.rpt,check_legality.rpt,pg_connectivity.rpt,pg_drc.rpt}.
+```

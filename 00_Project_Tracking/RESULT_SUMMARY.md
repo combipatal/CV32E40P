@@ -24,6 +24,7 @@ ICC2 route 60% util trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/tria
 ICC2 route 60% util + M8 trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/60util_m8/06_route/{check_routes,ignored_layers,utilization,timing.max,timing.min}.rpt | signal route layer bound M1-M8; route-stage utilization 0.7324; open nets 0; check_routes DRC 400 remains; timing paths MET; layer-bound helps slightly but does not close route
 ICC2 route DRC detail diagnosis | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/06_route/drc_detail/{drc.matrix,drc.by_layer,drc.detailed}.rpt | current block is 60util_m8 state; all 400 DRCs are on M1/M2/M1-M2/VIA1; next focus is lower-metal/via/contact/grid cleanup
 ICC2 detail-route repair trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/{check_routes.after,drc.after.matrix,timing.max.after,timing.min.after}.rpt | best DRC count so far is 383 after 1 iteration; 200-iteration run ends at 398; open nets 0 and timing paths MET; not route closure
+ICC2 PG top port cleanup | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/{terminal_attach_summary,check_routability.after,pg_connectivity.after,pg_drc.after}.rpt | VDD/VSS no-pin/unplaced warning removed by offset M8 terminal attach; PG remains clean; route DRC still 400
 ```
 
 ### Backend Init
@@ -57,6 +58,7 @@ First-pass route PG | PASS | 7_Backend_ICC2/4_Report/06_route/pg_connectivity.rp
 Route DRC layer matrix | OPEN | 7_Backend_ICC2/4_Report/06_route/drc_detail/drc.matrix.rpt | all 400 DRCs are lower-metal/access: M1 125, M1-M2 108, M2 88, VIA1 79
 Detail route repair 200iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_200iter/06_route/check_routes.after.rpt | check_routes reports 398 DRCs and 0 open nets; long incremental detail routing does not converge
 Detail route repair 1iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/check_routes.after.rpt | check_routes reports 383 DRCs and 0 open nets; best count so far but M1 diff-net spacing grows to 224
+PG top port cleanup | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/check_routability.after.rpt | VDD/VSS no-pin/unplaced warning removed; 8 M1 off-track pin warnings remain; route DRC still open
 ```
 
 ### Timing

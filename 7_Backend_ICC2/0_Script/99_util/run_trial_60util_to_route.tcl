@@ -198,9 +198,43 @@ compile_pg \
   -strategies {stdcell_rail_strategy core_ring_strategy core_mesh_strategy} \
   -via_rule pg_via_all
 
+################################################################################
+# compile_pg가 만든 실제 boundary PG port는 VDD_1/VSS_1입니다.
+# VDD/VSS port는 save/reopen 뒤 terminal 없이 다시 보일 수 있으므로
+# 작은 M8 terminal을 붙여 route no-pin/unplaced 경고를 제거합니다.
+# 기존 VDD_1/VSS_1 boundary terminal과 겹치지 않도록 y=3..5um 위치를 씁니다.
+################################################################################
+
+set VDD_PORTS [get_ports -quiet VDD]
+if {[sizeof_collection $VDD_PORTS] > 0} {
+  set VDD_TERMS [get_terminals -quiet -of_objects $VDD_PORTS]
+  if {[sizeof_collection $VDD_TERMS] == 0} {
+    create_terminal \
+      -port $VDD_PORTS \
+      -boundary {{13.0000 3.0000} {15.0000 5.0000}} \
+      -layer M8 \
+      -direction all \
+      -name VDD_top_terminal
+  }
+}
+
+set VSS_PORTS [get_ports -quiet VSS]
+if {[sizeof_collection $VSS_PORTS] > 0} {
+  set VSS_TERMS [get_terminals -quiet -of_objects $VSS_PORTS]
+  if {[sizeof_collection $VSS_TERMS] == 0} {
+    create_terminal \
+      -port $VSS_PORTS \
+      -boundary {{10.0000 3.0000} {12.0000 5.0000}} \
+      -layer M8 \
+      -direction all \
+      -name VSS_top_terminal
+  }
+}
+
 report_pg_patterns > $TRIAL_POWER_DIR/pg_patterns.rpt
 report_pg_strategies > $TRIAL_POWER_DIR/pg_strategies.rpt
 report_pg_strategy_via_rules > $TRIAL_POWER_DIR/pg_strategy_via_rules.rpt
+report_ports [get_ports -quiet {VDD VSS VDD_1 VSS_1}] > $TRIAL_POWER_DIR/pg_ports.rpt
 check_pg_connectivity \
   -nets [get_nets {VDD VSS}] \
   -write_connectivity_file $TRIAL_POWER_DIR/pg_connectivity_detail.rpt \

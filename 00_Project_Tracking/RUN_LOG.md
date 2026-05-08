@@ -290,3 +290,48 @@ Result: PASS_WITH_OPEN
 Notes: Started from the restored 60util_m8 routed state. Before DRC was 400. After one detail-route iteration, check_routes reports 383 DRCs and 0 open nets. DRC type split becomes diff-net spacing 224, off-grid 155, and short 4; needs-fat-contact and min-area markers disappear, but M1 diff-net spacing grows. Timing listed paths remain MET: setup slack 2.11 ns and hold slack 0.02 ns. Legality remains 0 and PG connectivity/DRC remain clean. Conclusion: this is the best count so far, but not route closure and not a root-cause fix.
 Evidence: 7_Backend_ICC2/3_Log/trials/detail_repair_1iter/detail_route_repair_1iter.log and 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/{check_routes.before,check_routes.after,drc.before.matrix,drc.after.matrix,timing.max.after,timing.min.after,check_legality.after,pg_connectivity.after,pg_drc.after}.rpt.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_pg_port_diagnose.tcl | tee 7_Backend_ICC2/3_Log/trials/pg_port_diagnose/pg_port_diagnose.log
+Stage: ICC2 PG top port diagnosis
+Result: RECORDED
+Notes: VDD/VSS ports exist but have 0 terminals. compile_pg-generated VDD_1/VSS_1 ports are placed and have 8 terminals each. This explains route-time VDD/VSS no-pin/unplaced warnings.
+Evidence: 7_Backend_ICC2/4_Report/trials/pg_port_diagnose/99_pg_port/{pg_port_summary,report_ports.vdd_vss,pg_connectivity}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_pg_port_cleanup_trial.tcl | tee 7_Backend_ICC2/3_Log/trials/pg_port_cleanup/pg_port_cleanup.log
+Stage: ICC2 PG stale port removal trial
+Result: REJECTED
+Notes: Removing terminal-less VDD/VSS ports kept PG connectivity/DRC clean and check_routes stayed at 383 on the current routed block, but the VDD/VSS ports reappeared after later save/reopen flow. Not robust enough for the main script.
+Evidence: 7_Backend_ICC2/4_Report/trials/pg_port_cleanup/99_pg_port/{cleanup_summary,pg_connectivity.after,pg_drc.after,check_routes.after_cleanup}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=60util_m8_pgport_cleanup SIGNAL_MIN_ROUTING_LAYER=M1 SIGNAL_MAX_ROUTING_LAYER=M8 icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl | tee 7_Backend_ICC2/3_Log/trials/60util_m8_pgport_cleanup/trial_60util_m8_pgport_cleanup.log
+Stage: ICC2 60% + M8 + stale port removal full-route trial
+Result: PASS_WITH_OPEN_REJECTED_FIX
+Notes: Full route still reports check_routes 400 DRCs and 0 open nets. Timing listed paths remain MET: setup slack 2.11 ns and hold slack 0.02 ns. Legality and PG remain clean. However check_routability still reports VDD/VSS no-pin/unplaced warnings, proving stale port removal is not persistent enough.
+Evidence: 7_Backend_ICC2/3_Log/trials/60util_m8_pgport_cleanup/trial_60util_m8_pgport_cleanup.log and 7_Backend_ICC2/4_Report/trials/60util_m8_pgport_cleanup/06_route/{check_routes,check_routability,timing.max,timing.min,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=pg_terminal_attach_offset icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_pg_terminal_attach_trial.tcl | tee 7_Backend_ICC2/3_Log/trials/pg_terminal_attach_offset/pg_terminal_attach_offset.log
+Stage: ICC2 PG top terminal attach trial
+Result: PASS_WITH_OPEN
+Notes: Added one non-overlapping M8 terminal to each VDD and VSS port at y=3..5um on the existing PG ring. VDD/VSS terminal_count becomes 1, while VDD_1/VSS_1 remain at 8 terminals. check_routability no longer reports VDD/VSS no-pin/unplaced warnings and does not report duplicate pin-shape warnings. PG connectivity/DRC remain clean. check_routes remains 400 DRCs and 0 open nets, so this is warning cleanup, not route DRC closure.
+Evidence: 7_Backend_ICC2/3_Log/trials/pg_terminal_attach_offset/pg_terminal_attach_offset.log and 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/{terminal_attach_summary,check_routability.after,check_routes.after,pg_connectivity.after,pg_drc.after}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=pg_port_diagnose_after_offset icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_pg_port_diagnose.tcl | tee 7_Backend_ICC2/3_Log/trials/pg_port_diagnose/pg_port_diagnose_after_offset.log
+Stage: ICC2 PG top terminal save/reopen check
+Result: PASS
+Notes: Reopened the saved ICC2 block after offset terminal attach. VDD terminal_count is 1 and VSS terminal_count is 1, so the accepted fix persists across save/reopen.
+Evidence: 7_Backend_ICC2/4_Report/trials/pg_port_diagnose_after_offset/99_pg_port/pg_port_summary.rpt.
+```

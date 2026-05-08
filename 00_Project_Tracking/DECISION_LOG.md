@@ -270,3 +270,31 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/drc.after.matrix.rpt
   docs/backend/route_drc_detail_diagnosis.md
 ```
+
+## PG Top Port Cleanup Decision
+
+```text
+Date: 2026-05-08
+Decision: attach non-overlapping M8 terminals to VDD/VSS top ports after compile_pg
+Reason: VDD/VSS ports exist after PG creation but have 0 terminals, causing route no-pin/unplaced warnings. The actual compile_pg boundary ports are VDD_1/VSS_1.
+Rejected option 1: remove_ports VDD/VSS
+  reason: PG stayed clean, but VDD/VSS reappeared after save/reopen or later flow.
+Rejected option 2: set VDD_1_0/VSS_1_0 terminal port owner to VDD/VSS
+  reason: ICC2 rejects non-bond-pad terminal port attribute updates.
+Rejected option 3: create VDD/VSS terminal exactly on existing VDD_1/VSS_1 terminal bboxes
+  reason: check_routability reports duplicate redundant pin-shape warnings.
+Accepted option:
+  VDD terminal bbox: {{13.0000 3.0000} {15.0000 5.0000}} on M8
+  VSS terminal bbox: {{10.0000 3.0000} {12.0000 5.0000}} on M8
+Result: VDD/VSS terminal_count becomes 1, VDD_1/VSS_1 remain at 8, PG connectivity remains clean, PG DRC has no errors, check_routability no longer reports VDD/VSS no-pin/unplaced or duplicate pin-shape warnings.
+Persistence check: save/reopen keeps VDD/VSS terminal_count at 1.
+Limit: route DRC remains open at 400 in the current routed trial block.
+Evidence:
+  docs/backend/pg_top_port_cleanup.md
+  7_Backend_ICC2/3_Log/trials/pg_terminal_attach_offset/pg_terminal_attach_offset.log
+  7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/terminal_attach_summary.rpt
+  7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/check_routability.after.rpt
+  7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/pg_connectivity.after.rpt
+  7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/pg_drc.after.rpt
+  7_Backend_ICC2/4_Report/trials/pg_port_diagnose_after_offset/99_pg_port/pg_port_summary.rpt
+```

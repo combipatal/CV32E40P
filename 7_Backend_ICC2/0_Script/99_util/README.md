@@ -35,3 +35,21 @@ DETAIL_ROUTE_ITERATIONS=200
 
 This does not rebuild from init.
 It starts from the current saved ICC2 block.
+
+## PG port diagnostic trials
+
+```text
+run_pg_port_diagnose.tcl
+  VDD/VSS and VDD_1/VSS_1 port/terminal counts를 확인합니다.
+
+run_pg_port_cleanup_trial.tcl
+  VDD/VSS stale port 삭제 trial입니다. save/reopen 뒤 유지되지 않아 final fix로 쓰지 않습니다.
+
+run_pg_terminal_attach_trial.tcl
+  VDD/VSS port에 M8 terminal을 붙이는 trial입니다.
+  accepted offset 위치는 VDD {{13 3} {15 5}}, VSS {{10 3} {12 5}}입니다.
+
+run_pg_terminal_reassign_trial.tcl
+  VDD_1_0/VSS_1_0 terminal owner reassign trial입니다.
+  ICC2가 non-bond-pad terminal port 변경을 막아서 rejected입니다.
+```

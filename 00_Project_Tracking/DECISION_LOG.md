@@ -211,6 +211,27 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_legality.rpt
 ```
 
+## Route DRC Focus Decision
+
+```text
+Date: 2026-05-08
+Decision: stop treating route DRC as a global density-only problem
+Reason: marker context probe shows concentrated hotspots around x=220..260um and y=200..260um. Representative markers are tied to local stdcell pin/route context, including OR2X1_HVT, NOR2X0_HVT, SDFFARX1_RVT, and NBUFFX8_HVT examples. Some hotspot windows also include VDD/VSS PG shapes.
+Next debug focus:
+  local hotspot density
+  PG strap/rail interaction
+  lower-metal M1/M2/VIA1 route/access options
+Rejected focus as standalone:
+  global utilization reduction
+  advanced legalizer/pin color alignment
+  manual M1 track recreation
+  blind detail-route looping
+Evidence:
+  docs/backend/drc_marker_context.md
+  7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/representative_summary.rpt
+  7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/marker_context.rpt
+```
+
 ## First-Pass Route Decision
 
 ```text

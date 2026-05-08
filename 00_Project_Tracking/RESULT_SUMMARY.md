@@ -36,6 +36,7 @@ ICC2 pin access / DRC overlap | script | RECORDED | 7_Backend_ICC2/4_Report/tria
 ICC2 pin-density spread trial | ICC2 | REJECTED | 7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt | open nets 0, legality 0, PG clean, but route DRC 390 and blocked access worsens to 144 official blocked pins; not a standalone fix
 ICC2 scan DEF handoff route trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/scan_def_m8/06_route/check_routes.rpt | ICC2 read DFT scan DEF and optimize_dft validated 1 scan chain; route DRC 398 and open nets 0; scan DEF alone not enough
 ICC2 advanced legalizer + pin color trial | ICC2 | REJECTED | 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_routes.rpt | pin_color_align legality 0, PG clean, open nets 0, but route DRC 605; advanced legalizer/pin color not accepted
+ICC2 DRC marker context probe | ICC2/script | RECORDED | 7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/marker_context.rpt | scan_def_m8_restore detailed DRC has 398 markers; hotspots concentrate at x=220..260um/y=200..260um; representative markers hit OR2X1_HVT/NOR2X0_HVT/SDFFARX1_RVT/NBUFFX8_HVT local pin/route context
 ```
 
 ### Backend Init
@@ -81,6 +82,7 @@ Pin access / DRC overlap | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_
 Pin-density spread route trial | REJECTED | 7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt | check_routes DRC 390, official blocked pins 144; spreading worsens pin access despite slight DRC reduction
 Scan DEF route trial | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/scan_def_m8/06_route/check_routes.rpt | check_routes DRC 398 and open nets 0; scan-aware DFT optimization works but route DRC remains open
 Advanced legalizer + pin color route trial | REJECTED | 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_routes.rpt | check_routes DRC 605 and open nets 0; legality/PG clean, but worse than scan_def_m8
+DRC marker context probe | RECORDED | 7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/representative_summary.rpt | fresh marker matrix: M1 diff spacing 116, M1-M2 fat contact 99, M2 off-grid 78, VIA1 off-grid 82; top 20um buckets around x=220..260/y=200..260
 ```
 
 ### Timing

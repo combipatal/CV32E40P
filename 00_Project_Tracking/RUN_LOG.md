@@ -459,3 +459,21 @@ Result: RECORDED
 Notes: Parser found 254 line-level blocked access point entries, concentrated in SDFFARX1_RVT 233, MUX41X1_HVT 16, and INVX8_LVT 5. ICC2 official final summary for this routed context says Pins with blocked access 0, so the parsed count must be treated as blocked access points, not official blocked pins.
 Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_advleg_color_m8_blocked_detail/scan_def_advleg_color_m8_blocked_detail.log and 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8_blocked_detail/99_pin_access/{report_cell_pin_access.same_refs.details,blocked_access.compact_summary}.rpt.
 ```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=scan_def_m8_restore CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/scan_def_m8_restore/scan_def_m8_restore.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 scan DEF + M8 routed block restore
+Result: PASS_WITH_OPEN
+Notes: Rebuilt current saved ICC2 block away from the rejected advanced-legalizer state and back to the simpler scan DEF + M8 route state. route_auto ended with 0 open nets and 397 DRCs; fresh detail extraction reports 398 DRCs. This is the intended diagnosis baseline.
+Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_m8_restore/scan_def_m8_restore.log and 7_Backend_ICC2/4_Report/trials/scan_def_m8_restore/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/06_route/route_drc_detail.scan_def_m8_restore.log -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl; python3 scripts/select_drc_representatives.py; icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/drc_marker_context/drc_marker_context.log -f 7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl
+Stage: ICC2 DRC marker context probe
+Result: RECORDED
+Notes: Fresh marker extraction reports 398 DRCs: M1 diff-net spacing 116, M1-M2 needs-fat-contact 99, M2 off-grid 78, VIA1 off-grid 82, M2 min-area 8, M1 off-grid 10, M2 diff-net spacing 4, and M1 short 1. Hotspot buckets are concentrated around x=220..260um and y=200..260um. Representative marker context shows many failures near OR2X1_HVT/NOR2X0_HVT small combinational cells, with some SDFFARX1_RVT/NBUFFX8_HVT examples and some VDD/VSS PG shapes inside the same local search windows.
+Evidence: docs/backend/drc_marker_context.md, 7_Backend_ICC2/4_Report/06_route/drc_detail/{drc.matrix,drc.by_layer,drc.detailed}.rpt, and 7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/{representative_summary,representative_drc_markers,marker_context}.rpt.
+```

@@ -4,7 +4,7 @@
 
 ```text
 Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, and advanced legalizer/pin-color trial completed; route DRC cleanup pending
+Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, advanced legalizer/pin-color trial, and DRC marker context probe completed; route DRC cleanup pending
 ```
 
 ## Next Milestone
@@ -74,7 +74,8 @@ Pin access / route DRC overlap was parsed. 289 of 305 blocked access points have
 Placement spreading trial was run and rejected. It reduced route DRC only from 400 to 390 while blocked access worsened from 117 to 144 official blocked pins.
 Scan DEF handoff trial was run. ICC2 read SCANCHAINS and scan-aware DFT optimization validated 1 scan chain; route DRC improved only from 400 to 398.
 Advanced legalizer and pin color alignment trials were run and rejected. They keep open nets 0, legality 0, and PG clean, but final route DRC is 605.
-Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, generic placement spreading, scan DEF handoff alone, and advanced legalizer/pin-color alignment do not close route. Current evidence points to lower-metal M1/M2/VIA1 access, stdcell pin/via/contact setup, and post-CTS density/clock-buffer interaction.
+DRC marker context probe was run after restoring the simpler scan_def_m8 route state. Hotspots are concentrated around x=220..260um and y=200..260um, and representative markers show OR2X1_HVT/NOR2X0_HVT/SDFFARX1_RVT/NBUFFX8_HVT local pin/route interactions plus some nearby VDD/VSS PG shapes.
+Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, generic placement spreading, scan DEF handoff alone, and advanced legalizer/pin-color alignment do not close route. Current evidence points to local lower-metal M1/M2/VIA1 congestion/access around stdcell pins, with possible PG interaction in hotspot windows.
 Extraction and post-route STA are still pending.
 ```
 

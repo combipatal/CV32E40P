@@ -25,6 +25,7 @@ ICC2 route 60% util + M8 trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report
 ICC2 route DRC detail diagnosis | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/06_route/drc_detail/{drc.matrix,drc.by_layer,drc.detailed}.rpt | current block is 60util_m8 state; all 400 DRCs are on M1/M2/M1-M2/VIA1; next focus is lower-metal/via/contact/grid cleanup
 ICC2 detail-route repair trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/{check_routes.after,drc.after.matrix,timing.max.after,timing.min.after}.rpt | best DRC count so far is 383 after 1 iteration; 200-iteration run ends at 398; open nets 0 and timing paths MET; not route closure
 ICC2 PG top port cleanup | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/{terminal_attach_summary,check_routability.after,pg_connectivity.after,pg_drc.after}.rpt | VDD/VSS no-pin/unplaced warning removed by offset M8 terminal attach; PG remains clean; route DRC still 400
+ICC2 off-track pin diagnosis | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/{check_routability.verbose,offtrack_pin_objects}.rpt | 8 M1 off-track warnings map to stdcell pins: SDFFARX1_RVT/QN, INVX8_LVT/A, MUX41X1_HVT/S1; next focus is pin-access/track/contact setup
 ```
 
 ### Backend Init
@@ -59,6 +60,7 @@ Route DRC layer matrix | OPEN | 7_Backend_ICC2/4_Report/06_route/drc_detail/drc.
 Detail route repair 200iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_200iter/06_route/check_routes.after.rpt | check_routes reports 398 DRCs and 0 open nets; long incremental detail routing does not converge
 Detail route repair 1iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/check_routes.after.rpt | check_routes reports 383 DRCs and 0 open nets; best count so far but M1 diff-net spacing grows to 224
 PG top port cleanup | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/check_routability.after.rpt | VDD/VSS no-pin/unplaced warning removed; 8 M1 off-track pin warnings remain; route DRC still open
+Off-track M1 pin object diagnosis | RECORDED | 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt | remaining 8 off-track warnings are stdcell M1 pins, not top-level PG ports; ZRT-022 CO contact setup remains suspicious
 ```
 
 ### Timing

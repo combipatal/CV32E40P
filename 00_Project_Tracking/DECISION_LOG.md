@@ -298,3 +298,23 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/pg_drc.after.rpt
   7_Backend_ICC2/4_Report/trials/pg_port_diagnose_after_offset/99_pg_port/pg_port_summary.rpt
 ```
+
+## Off-Track M1 Pin Diagnosis Decision
+
+```text
+Date: 2026-05-08
+Decision: treat remaining 8 off-track M1 pin warnings as stdcell pin-access/track/contact setup issues, not PG top-port issues
+Reason: after PG terminal attach, check_routability reports No PG net open, no blocked ports/nets, no standard-cell overlap, and no min-grid violations. Region query maps all 8 warning coordinates to real stdcell M1 pins.
+Observed cells:
+  SDFFARX1_RVT/QN: 5 warnings
+  INVX8_LVT/A: 2 warnings
+  MUX41X1_HVT/S1: 1 warning
+Related warning:
+  ZRT-022 Cannot find a default contact code for layer CO.
+Conclusion: next route cleanup should inspect SAED32 NDM/LEF pin access, M1 track definition, CO/VIA1 contact setup, and Milkyway-vs-LEF-built NDM behavior before more route_detail loops.
+Rejected action: manual stdcell LEF/NDM pin geometry edits.
+Evidence:
+  docs/backend/offtrack_pin_diagnosis.md
+  7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/check_routability.verbose.rpt
+  7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt
+```

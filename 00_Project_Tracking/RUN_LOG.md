@@ -335,3 +335,23 @@ Result: PASS
 Notes: Reopened the saved ICC2 block after offset terminal attach. VDD terminal_count is 1 and VSS terminal_count is 1, so the accepted fix persists across save/reopen.
 Evidence: 7_Backend_ICC2/4_Report/trials/pg_port_diagnose_after_offset/99_pg_port/pg_port_summary.rpt.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_offtrack_pin_diagnose.tcl | tee 7_Backend_ICC2/3_Log/trials/offtrack_pin_diagnose/offtrack_pin_diagnose.log
+Stage: ICC2 off-track M1 pin diagnosis
+Result: FAIL_THEN_FIXED
+First fatal error: Cannot specify '-intersect' with '-physical_context'. (CMD-001)
+Log path: 7_Backend_ICC2/3_Log/trials/offtrack_pin_diagnose/offtrack_pin_diagnose.log
+Suspected root cause: script used an invalid get_pins option combination for region search.
+Next action taken: replaced get_pins -physical_context -intersect with hierarchical region pin query and reran.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_offtrack_pin_diagnose.tcl | tee 7_Backend_ICC2/3_Log/trials/offtrack_pin_diagnose/offtrack_pin_diagnose.log
+Stage: ICC2 off-track M1 pin diagnosis
+Result: RECORDED
+Notes: check_routability still reports 8 M1 off-track pin warnings, but the object names are now identified. The warnings map to real stdcell pins, mainly SDFFARX1_RVT/QN plus INVX8_LVT/A and MUX41X1_HVT/S1. check_routability confirms No PG net open, no standard-cell overlap, no min-grid violation, no blocked ports, and no blocked nets. Verbose mode also names the 6 non-physical clock-gate ENL internal ports. Current conclusion: this is not a top-level PG port issue; next root-cause work should focus on SAED32 stdcell pin access versus ICC2 M1 routing track/contact setup and ZRT-022 default CO contact warning.
+Evidence: docs/backend/offtrack_pin_diagnosis.md, 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/check_routability.verbose.rpt, 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt, and 7_Backend_ICC2/3_Log/trials/offtrack_pin_diagnose/offtrack_pin_diagnose.log.
+```

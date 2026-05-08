@@ -53,3 +53,20 @@ run_pg_terminal_reassign_trial.tcl
   VDD_1_0/VSS_1_0 terminal owner reassign trial입니다.
   ICC2가 non-bond-pad terminal port 변경을 막아서 rejected입니다.
 ```
+
+## run_offtrack_pin_diagnose.tcl
+
+`check_routability`가 좌표만 보여주는 M1 off-track pin warning을 실제 pin/cell/net 이름으로 추적합니다.
+
+현재 결과:
+
+```text
+8개 off-track warning은 top-level PG port가 아니라 stdcell M1 pin입니다.
+주요 cell은 SDFFARX1_RVT/QN, INVX8_LVT/A, MUX41X1_HVT/S1입니다.
+```
+
+결과 문서:
+
+```text
+docs/backend/offtrack_pin_diagnosis.md
+```

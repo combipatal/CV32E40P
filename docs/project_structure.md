@@ -28,6 +28,17 @@ This project uses a DC_LAB_3-style numbered flow layout, with extra directories 
 
 7_Backend_ICC2/
   Conditional Phase 2 backend area.
+  Split by ICC2 physical stage:
+    0_Script/00_setup
+    0_Script/01_init_design
+    0_Script/02_floorplan
+    0_Script/03_power
+    0_Script/04_place
+    0_Script/05_cts
+    0_Script/06_route
+    0_Script/07_extract_sta
+    0_Script/08_export
+    0_Script/99_util
 ```
 
 ## Shared Inputs

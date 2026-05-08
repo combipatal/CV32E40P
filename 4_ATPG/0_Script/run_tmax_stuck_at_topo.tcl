@@ -1,9 +1,12 @@
 ################################################################################
-# CV32E40P TetraMAX stuck-at ATPG
+# CV32E40P TetraMAX stuck-at ATPG 스크립트
 #
-# Input  : DC/DFT Compiler topographical post-DFT netlist + SPF
-# Goal   : 1 muxed scan chain, stuck-at ATPG first pass
-# Corner : TT mixed-VT library models for RVT + LVT + HVT cells
+# 입력:
+#   DC/DFT Compiler topographical post-DFT netlist + SPF
+# 목표:
+#   1개 muxed scan chain으로 stuck-at ATPG 1차 run 수행
+# 기준:
+#   TT mixed-VT RVT + LVT + HVT cell model
 ################################################################################
 
 set DESIGN_NAME cv32e40p_synth_wrap
@@ -18,7 +21,7 @@ set PATTERN_DIR  $ROOT_DIR/4_ATPG/2_Output/patterns
 set REPORT_DIR   $ROOT_DIR/4_ATPG/4_Report/stuck_at_topo
 
 ################################################################################
-# Read mixed-VT cell models and post-DFT topo netlist.
+# mixed-VT cell model과 post-DFT topo netlist를 읽습니다.
 ################################################################################
 
 read_netlist -library $LIB_DIR/stdcell_rvt/verilog/saed32nm.tv
@@ -28,25 +31,26 @@ read_netlist -library $LIB_DIR/stdcell_hvt/verilog/saed32nm_hvt.tv
 read_netlist $NETLIST_FILE
 
 ################################################################################
-# Build ATPG model.
+# ATPG model을 만듭니다.
 ################################################################################
 
-# B12 is floating input. Keep as ignore for first pass because scan/test-only
-# ports can otherwise stop early diagnosis before build.
+# B12는 floating input rule입니다.
+# scan/test-only 포트 때문에 초기 build가 멈추지 않도록 1차 run에서는 ignore합니다.
 set_rules B12 ignore
 set_learning -atpg_equivalence
 
 run_build_model $DESIGN_NAME
 
 ################################################################################
-# Scan DRC using DC-generated SPF.
+# DC가 만든 SPF로 scan DRC를 수행합니다.
 ################################################################################
 
 set_drc -allow_unstable_set_resets
 set_drc -clock -dynamic -nodisturb_clock_grouping
 
-# Z3 is WIRE contention ability. Keep it visible, but do not stop the
-# first stuck-at ATPG run. Treat as a DFT/ATPG DRC note, not signoff clean.
+# Z3는 wire contention 가능성 rule입니다.
+# 1차 stuck-at ATPG run은 멈추지 않게 warning으로 낮추고,
+# signoff-clean이 아니라 DFT/ATPG DRC note로 기록합니다.
 set_rules Z3 warning
 set_contention nowire -severity warning
 
@@ -60,7 +64,7 @@ report_po_masks           > $REPORT_DIR/po_masks.rpt
 report_capture_masks      > $REPORT_DIR/capture_masks.rpt
 
 ################################################################################
-# Stuck-at ATPG.
+# stuck-at fault를 만들고 ATPG를 수행합니다.
 ################################################################################
 
 set_faults -fault_coverage
@@ -78,7 +82,7 @@ set_atpg -merge high -decision random -store
 run_atpg
 
 ################################################################################
-# Patterns and reports.
+# pattern과 fault report를 저장합니다.
 ################################################################################
 
 write_patterns $PATTERN_DIR/cv32e40p_synth_wrap.stuck_at.serial.stil \

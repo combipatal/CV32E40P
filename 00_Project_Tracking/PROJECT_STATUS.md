@@ -3,13 +3,13 @@
 ## Current Phase
 
 ```text
-Front-End baseline completed through DFT, N2N, ATPG, and post-DFT SDF STA
+Front-End baseline completed; ICC2 backend init_design sanity check started
 ```
 
 ## Next Milestone
 
 ```text
-Review remaining DRC notes before calling the flow signoff-clean.
+Create first real ICC2 floorplan and power plan after reviewing init_design warnings.
 ```
 
 ## Frozen Baseline
@@ -31,8 +31,7 @@ Not included: production signoff, post-route STA, IR/EM, GDS signoff.
 [x] Create technology clock gate RTL
 [x] Create DC/FM filelists
 [x] Create 10 ns SDC
-[x] DC analyze/elaborate/link
-[x] DC compile
+[x] DC Graphical topo analyze/elaborate/link/compile
 [x] Formality R2N
 [x] DFT insertion
 [x] Formality N2N
@@ -48,6 +47,9 @@ DFT is topographical and writes post-DFT DDC/VG/SDC/SDF/SPF.
 SPF is written after insert_dft so TetraMAX sees chain0 length 2130.
 TetraMAX stuck-at ATPG reached 98.64% test coverage and 98.55% fault coverage.
 Remaining notes: DC DFT TEST-505 constant-1 clock gate, TetraMAX Z3 wire contention warnings, and physical max_cap/max_transition cleanup deferred to backend.
+Active synthesis script is only 2_Synthesis/0_Script/run_compile_10ns_topo.tcl.
+ICC2 can open/link/save the post-DFT netlist as a physical design library.
+No floorplan exists yet, so ICC2 timing uses zero interconnect delay and check_design warnings are expected to need backend cleanup.
 ```
 
 ## Fmax Estimate

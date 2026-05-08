@@ -708,18 +708,18 @@ Run date:
 Completed scope:
 
 ```text
-DC analyze/elaborate/link
-DC 10 ns TT mixed-VT synthesis
-PrimeTime pre-DFT functional STA
+DC Graphical topographical 10 ns TT mixed-VT synthesis
+PrimeTime pre-DFT topo/SDF functional STA
 ```
 
 Generated implementation artifacts:
 
 ```text
-2_Synthesis/2_Output/pre_dft/cv32e40p_synth_wrap.pre_dft.ddc
-2_Synthesis/2_Output/pre_dft/cv32e40p_synth_wrap.pre_dft.vg
-2_Synthesis/2_Output/pre_dft/cv32e40p_synth_wrap.pre_dft.sdc
-2_Synthesis/2_Output/svf/cv32e40p_synth_wrap.pre_dft.svf
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.ddc
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.vg
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.sdc
+2_Synthesis/2_Output/pre_dft_topo/cv32e40p_synth_wrap.pre_dft_topo.sdf
+2_Synthesis/2_Output/svf/cv32e40p_synth_wrap.pre_dft_topo.svf
 ```
 
 DC synthesis result:
@@ -728,34 +728,34 @@ DC synthesis result:
 Clock target: 10 ns
 Corner: TT 1.05V 25C
 Library policy: RVT + LVT + HVT mixed-VT
-Setup WNS: 0.02 ns
+Setup WNS: 1.61 ns
 Setup TNS: 0.00 ns
 Setup violating paths: 0
 Hold violating paths: 0
-Leaf cells: 14300
+Leaf cells: see 2_Synthesis/4_Report/topo/post_compile.qor.rpt
 Sequential cells: 2205
-Cell area: 44899.37
-Design area: 60869.92
+Cell area: 45313.37
+Design area: see 2_Synthesis/4_Report/topo/post_compile.area.rpt
 ```
 
-PrimeTime pre-DFT STA result:
+PrimeTime pre-DFT topo/SDF STA result:
 
 ```text
 check_timing: succeeded
 Setup violations: none
 Hold violations: none
-Worst reported setup slack: 0.02 ns
-Worst setup endpoint: data_addr_o[31]
-Worst setup startpoint: u_core/core_i/id_stage_i/prepost_useincr_ex_o_reg
+Worst reported setup slack: 1.61 ns
+Worst reported hold slack: 0.06 ns
+SDF annotation: 0 read_sdf errors
 ```
 
-Residual items before claiming full Front-End closure:
+Residual items before backend cleanup:
 
 ```text
-DC reports one rounded max_cap residual at 16.00/16.00.
-PrimeTime reports 476 max_cap violations.
-PrimeTime max_cap behavior needs investigation or a documented waiver before R2N/DFT closure is called clean.
-R2N, DFT insertion, N2N, and TetraMAX ATPG are still pending.
+DC topo reports max_cap/max_transition DRC notes.
+PrimeTime pre-DFT topo/SDF timing is setup/hold clean.
+R2N, DFT insertion, N2N, TetraMAX ATPG, and post-DFT SDF STA completed in the fixed baseline.
+Physical DRC cleanup is deferred to backend.
 ```
 
 Interpretation:

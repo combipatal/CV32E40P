@@ -1,7 +1,18 @@
+################################################################################
+# CV32E40P DC/Formality RTL filelist
+#
+# 목적:
+#   합성 가능한 RTL만 정해진 순서로 읽습니다.
+#   upstream simulation clock gate와 testbench wrapper는 제외합니다.
+################################################################################
+
+# SystemVerilog include directory입니다.
 set RTL_INC_DIRS [list \
   rtl/cv32e40p/rtl/include \
 ]
 
+# 패키지를 먼저 읽고, technology clock gate replacement와 core RTL을 읽은 뒤,
+# 마지막에 합성용 wrapper를 읽습니다.
 set RTL_FILES [list \
   rtl/cv32e40p/rtl/include/cv32e40p_apu_core_pkg.sv \
   rtl/cv32e40p/rtl/include/cv32e40p_fpu_pkg.sv \

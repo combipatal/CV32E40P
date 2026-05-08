@@ -50,3 +50,25 @@ Ideal Fmax estimate: 117.4 MHz
 Next trial candidates: 8.5 ns first, 8.0 ns if 8.5 ns is clean enough
 Constraint: this is pre-layout/topographical estimate, not post-route signoff Fmax
 ```
+
+## Active Script Cleanup
+
+```text
+Date: 2026-05-08
+Decision: keep topographical synthesis flow only for active scripts
+Removed active scripts:
+  2_Synthesis/0_Script/run_analyze_elab_link.tcl
+  2_Synthesis/0_Script/run_compile_10ns.tcl
+  6_STA/0_Script/run_pt_pre_dft_10ns.tcl
+Reason: current baseline and backend handoff use DC Graphical topo outputs and SDF-based STA.
+Historical non-topo run evidence remains in RUN_LOG as history, but is not the active flow.
+```
+
+## Backend Library Format Decision
+
+```text
+Date: 2026-05-08
+Decision: build ICC2 NDM reference libraries from SAED32 DB+LEF using lm_shell
+Reason: direct Milkyway auto-conversion in ICC2/lm_shell failed because export_icc2_frame was unavailable in this install.
+Result: RVT/LVT/HVT NDM libraries were generated and ICC2 linked the post-DFT netlist successfully.
+```

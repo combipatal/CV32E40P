@@ -245,3 +245,12 @@ Result: PASS_WITH_OPEN
 Notes: Rebuilt ICC2 lib from post-DFT netlist and reran init, 60% floorplan, PG, placement, CTS, and route in one trial script. The current generated ICC2 lib now reflects this 60% trial state; rerun main 01-06 scripts to recreate the 65% baseline state. Floorplan utilization report is 0.6027; route-stage utilization is 0.7324. Signal route still does not converge: route_auto log ends with 406 DRCs and check_routes reports 407 DRCs. Open nets are 0. check_routes DRC classes are diff-net spacing 102, less-than-min-area 8, needs-fat-contact 128, off-grid 166, same-net spacing 1, and short 2. Timing listed paths are MET: worst setup slack 2.10 ns and worst hold slack 0.02 ns. Legality remains TOTAL 0 and PG connectivity/DRC are clean. Compared to baseline 65% route check_routes 408 DRCs, this trial changes almost nothing, so lower utilization alone is not the route DRC root cause.
 Evidence: 7_Backend_ICC2/3_Log/trials/60util/trial_60util_to_route.log and 7_Backend_ICC2/4_Report/trials/60util/06_route/{check_routes.rpt,utilization.rpt,timing.max.rpt,timing.min.rpt,check_legality.rpt,pg_connectivity.rpt,pg_drc.rpt}.
 ```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=60util_m8 SIGNAL_MIN_ROUTING_LAYER=M1 SIGNAL_MAX_ROUTING_LAYER=M8 icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl | tee 7_Backend_ICC2/3_Log/trials/60util_m8/trial_60util_m8_route.log
+Stage: ICC2 60% utilization + M8 route-layer trial
+Result: PASS_WITH_OPEN
+Notes: Trial rebuilt the ICC2 lib, reran init/floorplan/PG/place/CTS/route, and applied signal route layer bounds M1-M8. The current generated ICC2 lib now reflects this 60util_m8 trial state; rerun main 01-06 scripts to recreate the 65% baseline state. route_auto completed with 399 DRCs; check_routes reports 400 DRCs and 0 open nets. DRC classes are diff-net spacing 122, less-than-min-area 7, needs-fat-contact 108, off-grid 160, and short 3. Worst listed setup slack is 2.11 ns MET; worst listed hold slack is 0.02 ns MET. Legality is 0 violations. PG connectivity and PG DRC are clean. M8 bound slightly improves 60% trial DRC from 407 to 400, but route convergence is still open.
+Evidence: 7_Backend_ICC2/3_Log/trials/60util_m8/trial_60util_m8_route.log and 7_Backend_ICC2/4_Report/trials/60util_m8/06_route/{check_routes,check_routability,ignored_layers,utilization,timing.max,timing.min,check_legality,pg_connectivity,pg_drc}.rpt.
+```

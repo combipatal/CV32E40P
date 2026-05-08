@@ -6,9 +6,11 @@
 #   CTS buffer가 추가된 뒤 route 시점 실제 utilization은 약 77%까지 올라갔고,
 #   route DRC 408개가 남았습니다.
 #
-#   이 trial은 floorplan target만 60%로 낮추고 같은 PG/place/CTS/route를 수행합니다.
+#   기본 trial은 floorplan target만 60%로 낮추고 같은 PG/place/CTS/route를 수행합니다.
 #   DRC가 크게 줄면 routing density가 주요 원인입니다.
 #   DRC가 거의 그대로면 tech/via/grid/PG cleanup 쪽 원인이 더 큽니다.
+#
+#   SIGNAL_MAX_ROUTING_LAYER 환경변수를 주면 signal route layer bound도 같이 시험합니다.
 #
 # 주의:
 #   이 스크립트는 ICC2 design library를 처음부터 다시 만듭니다.
@@ -18,6 +20,19 @@
 source 7_Backend_ICC2/0_Script/00_setup/icc2_common_setup.tcl
 
 set TRIAL_NAME 60util
+if {[info exists ::env(TRIAL_NAME)]} {
+  set TRIAL_NAME $::env(TRIAL_NAME)
+}
+
+set SIGNAL_MIN_ROUTING_LAYER M1
+set SIGNAL_MAX_ROUTING_LAYER ""
+if {[info exists ::env(SIGNAL_MIN_ROUTING_LAYER)]} {
+  set SIGNAL_MIN_ROUTING_LAYER $::env(SIGNAL_MIN_ROUTING_LAYER)
+}
+if {[info exists ::env(SIGNAL_MAX_ROUTING_LAYER)]} {
+  set SIGNAL_MAX_ROUTING_LAYER $::env(SIGNAL_MAX_ROUTING_LAYER)
+}
+
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
 set TRIAL_INIT_DIR $TRIAL_ROOT/01_init_design
 set TRIAL_FLOORPLAN_DIR $TRIAL_ROOT/02_floorplan
@@ -296,8 +311,19 @@ check_pg_drc \
 
 ################################################################################
 # 6. Route
-# route 설정은 baseline과 동일하게 두고, floorplan density 효과만 봅니다.
+# 기본 route 설정은 baseline과 동일하게 두고, floorplan density 효과를 봅니다.
+#
+# SIGNAL_MAX_ROUTING_LAYER 환경변수를 주면 signal route layer bound도 같이 시험합니다.
+# 예: SIGNAL_MAX_ROUTING_LAYER=M8
 ################################################################################
+
+if {$SIGNAL_MAX_ROUTING_LAYER ne ""} {
+  set_ignored_layers \
+    -min_routing_layer $SIGNAL_MIN_ROUTING_LAYER \
+    -max_routing_layer $SIGNAL_MAX_ROUTING_LAYER
+
+  catch {report_ignored_layers > $TRIAL_ROUTE_DIR/ignored_layers.rpt}
+}
 
 check_routability > $TRIAL_ROUTE_DIR/check_routability.rpt
 

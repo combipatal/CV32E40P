@@ -113,12 +113,12 @@ Evidence: 7_Backend_ICC2/3_Log/04_place/place_initial.log
 
 ```text
 Date: 2026-05-08
-Decision: keep DRC-clean PG plan with M1 rails, M2/M7/M8 mesh, M7/M8 ring, and boundary PG pins
+Decision: keep PG plan with M1 rails, M2/M7/M8 mesh, M7/M8 ring, and boundary PG pins
 Reason: M1 rails alone did not connect well to upper mesh. Adding M2 vertical straps greatly improved VSS and most VDD rail connectivity.
 Rejected trial: M2 pitch 20um
 Reject reason: created 1225 M1 spacing errors.
-Chosen value: M2/M7/M8 pitch 40um for first-pass DRC-clean state.
-Current open issue: VDD PG connectivity still has 3 floating wires and 499 floating std cells.
+Chosen value: M2/M7/M8 pitch 40um and M7 horizontal offset 28um for first-pass DRC-clean PG connectivity.
+Resolved issue: old M7 offset 20um left VDD with 3 floating wires and 499 floating std cells.
 Evidence: 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt and pg_drc.rpt
 ```
 
@@ -138,5 +138,21 @@ Restored result:
   PG DRC clean again.
   VDD still has 3 floating wires and 499 floating std cells.
   VSS has 0 floating std cells.
-Next: investigate DRC-clean local via/strap options or add proper backend physical-only/tap/filler sequence before trying CTS.
+Follow-up: resolved later by moving M7 horizontal mesh offset to 28um.
+```
+
+## M7 Mesh Offset Decision
+
+```text
+Date: 2026-05-08
+Decision: set M7 horizontal mesh offset to 28um
+Reason: M7 offset 20um aligned with three VDD stdcell M1 rails, preventing DRC-clean M1-M2 rail vias. Offset 22um and 25um moved the issue to VSS. Offset 28um avoids the observed rail collision for both supplies.
+Rejected trial: targeted create_pg_vias repair
+Reject reason: default DRC inserted 0 vias; forcing -drc no_check inserted vias but created 42 PG DRC errors.
+Result: VDD and VSS both have 0 floating wires, 0 floating vias, and 0 floating std cells. PG DRC reports no errors.
+Evidence:
+  7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/03_power/pg_drc.rpt
+  7_Backend_ICC2/4_Report/04_place/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/04_place/pg_drc.rpt
 ```

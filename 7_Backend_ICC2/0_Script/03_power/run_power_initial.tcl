@@ -101,13 +101,15 @@ set_pg_strategy core_ring_strategy \
 # M2 vertical strap은 M1 stdcell rail과 가까운 metal에서 먼저 연결합니다.
 # M7/M8 strap은 상위 mesh/ring 연결 경로입니다.
 # pitch 40um는 첫 pass용 보수적 값입니다. IR drop 분석 전까지는 학습용 기준입니다.
+# M7 offset은 28um로 둡니다.
+# 20um/22um에서는 일부 stdcell M1 rail과 M7 strap이 같은 y에 놓여 M1-M2 via가 빠졌습니다.
 ################################################################################
 
 create_pg_mesh_pattern core_mesh_pattern \
   -layers { \
     {{vertical_layer: M2}{width: 0.4}{spacing: interleaving}{pitch: 40.0}{offset: 20.0}} \
     {{vertical_layer: M8}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 20.0}} \
-    {{horizontal_layer: M7}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 20.0}} \
+    {{horizontal_layer: M7}{width: 1.0}{spacing: interleaving}{pitch: 40.0}{offset: 28.0}} \
   }
 
 set_pg_strategy core_mesh_strategy \

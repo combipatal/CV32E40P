@@ -187,3 +187,19 @@ Stage: ICC2 VDD PG bridge trial
 Result: REJECTED_THEN_RESTORED
 Notes: Queried the three remaining floating VDD M1 rail shapes: PATH_11_12 at y=40.034, PATH_11_36 at y=80.162, and PATH_11_60 at y=120.290. Tried adding a narrow VDD-only M2 bridge mesh, but check_pg_drc reported 146 M1 insufficient-spacing errors. Removed the bridge and reran power script to restore the DRC-clean baseline. Fresh restored evidence: pg_drc reports no errors; pg_connectivity still reports VDD 3 floating wires / 499 floating std cells and VSS 0 floating std cells.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/03_power/run_power_initial.tcl
+Stage: ICC2 PG connectivity closure
+Result: PASS
+Notes: Root cause was M7 horizontal mesh alignment with some stdcell M1 rails, which prevented clean M1-M2 via creation at those rail/mesh crossings. Rejected targeted create_pg_vias repair because normal DRC blocked the vias and -drc no_check created 42 PG DRC errors. Rejected M7 offset 22um/25um because VSS remained floating. Chose M7 horizontal mesh offset 28um. Final power reports show VDD floating wires/vias/std cells = 0/0/0 and VSS floating wires/vias/std cells = 0/0/0. PG DRC reports no errors. Evidence: 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/03_power/pg_drc.rpt, and 7_Backend_ICC2/3_Log/03_power/power_initial.log.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/04_place/run_place_initial.tcl
+Stage: ICC2 placement refresh after PG closure
+Result: PASS_WITH_NOTE
+Notes: Re-ran placement/legalization after PG mesh offset update. legalize_placement succeeded and check_legality reports TOTAL 0 violations. Placement-stage PG connectivity remains closed: VDD floating wires/vias/std cells = 0/0/0 and VSS floating wires/vias/std cells = 0/0/0. Placement-stage PG DRC reports no errors. Worst listed placement timing slack is 0.57 ns. Missing scan DEF is still bypassed with place.coarse.continue_on_missing_scandef true, so scan-aware placement remains a later cleanup item. Evidence: 7_Backend_ICC2/4_Report/04_place/check_legality.rpt, pg_connectivity.rpt, pg_drc.rpt, timing.rpt, and 7_Backend_ICC2/3_Log/04_place/place_initial.log.
+```

@@ -355,3 +355,12 @@ Result: RECORDED
 Notes: check_routability still reports 8 M1 off-track pin warnings, but the object names are now identified. The warnings map to real stdcell pins, mainly SDFFARX1_RVT/QN plus INVX8_LVT/A and MUX41X1_HVT/S1. check_routability confirms No PG net open, no standard-cell overlap, no min-grid violation, no blocked ports, and no blocked nets. Verbose mode also names the 6 non-physical clock-gate ENL internal ports. Current conclusion: this is not a top-level PG port issue; next root-cause work should focus on SAED32 stdcell pin access versus ICC2 M1 routing track/contact setup and ZRT-022 default CO contact warning.
 Evidence: docs/backend/offtrack_pin_diagnosis.md, 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/check_routability.verbose.rpt, 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt, and 7_Backend_ICC2/3_Log/trials/offtrack_pin_diagnose/offtrack_pin_diagnose.log.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_contact_code_diagnose.tcl | tee 7_Backend_ICC2/3_Log/trials/contact_code_diagnose/contact_code_diagnose.log
+Stage: ICC2 CO/VIA contact code diagnosis
+Result: RECORDED
+Notes: ZRT-022 is reproduced. ICC2 sees CO layer number 28, mask polyCont, width 0.042um, but no CO via_def/default contact exists in the current library tech. VIA1 does have six M1-M2 via_defs and one signal-usable default, VIA12SQ_C. Therefore ZRT-022 is a real CO default-contact warning from stdcell pin CO geometry, but it is not evidence that M1-M2 VIA1 routing setup is missing. M1/M2 tracks start at 0.088um with 0.152um pitch, matching the SAED32 unit site width, while several off-track pin coordinates are 0.02-0.055um away from the nearest track. Current best root-cause candidate remains stdcell M1 pin access versus track/via legality, not PG connectivity.
+Evidence: docs/backend/contact_code_diagnosis.md, 7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/{contact_code_summary,check_routability.contact,via_defs.cv32e40p_icc2_lib,tracks.m1,tracks.m2}.rpt, and 7_Backend_ICC2/3_Log/trials/contact_code_diagnose/contact_code_diagnose.log.
+```

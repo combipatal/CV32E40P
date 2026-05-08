@@ -318,3 +318,27 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/check_routability.verbose.rpt
   7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt
 ```
+
+## CO Contact Code Diagnosis Decision
+
+```text
+Date: 2026-05-08
+Decision: do not patch or create a CO ContactCode as the next fix
+Reason: ZRT-022 is real because CO layer exists but CO via_def/default contact is absent. However CO is stdcell internal contact/pin geometry, while signal route M1-M2 access uses VIA1.
+Evidence from ICC2:
+  CO via_def_count = 0, default_count = 0
+  VIA1 via_def_count = 6, default_count = 1
+  default VIA1 = VIA12SQ_C lower=M1 upper=M2 excluded_for_signal=false
+Track evidence:
+  M1 start = 0.0880, pitch = 0.1520
+  M2 start = 0.0880, pitch = 0.1520
+  SAED32 unit site width = 0.152
+  flagged pin coordinates are often 0.02-0.055um away from nearest track
+Conclusion: ZRT-022 explains the CO warning, but current route DRC root cause is more likely stdcell M1 pin access versus routing track/VIA1 legality or LEF-built NDM access quality.
+Next decision path: compare Milkyway reference vs LEF-built NDM behavior, then test pin-access/track options with check_routability before another full route run.
+Evidence:
+  docs/backend/contact_code_diagnosis.md
+  7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/contact_code_summary.rpt
+  7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/check_routability.contact.rpt
+  7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/via_defs.cv32e40p_icc2_lib.rpt
+```

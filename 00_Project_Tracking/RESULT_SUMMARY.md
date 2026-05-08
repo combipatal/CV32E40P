@@ -26,6 +26,7 @@ ICC2 route DRC detail diagnosis | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Repor
 ICC2 detail-route repair trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/{check_routes.after,drc.after.matrix,timing.max.after,timing.min.after}.rpt | best DRC count so far is 383 after 1 iteration; 200-iteration run ends at 398; open nets 0 and timing paths MET; not route closure
 ICC2 PG top port cleanup | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/{terminal_attach_summary,check_routability.after,pg_connectivity.after,pg_drc.after}.rpt | VDD/VSS no-pin/unplaced warning removed by offset M8 terminal attach; PG remains clean; route DRC still 400
 ICC2 off-track pin diagnosis | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/{check_routability.verbose,offtrack_pin_objects}.rpt | 8 M1 off-track warnings map to stdcell pins: SDFFARX1_RVT/QN, INVX8_LVT/A, MUX41X1_HVT/S1; next focus is pin-access/track/contact setup
+ICC2 CO/VIA contact diagnosis | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/{contact_code_summary,check_routability.contact}.rpt | CO has no default contact, explaining ZRT-022; VIA1 has default VIA12SQ_C, so M1-M2 via setup is present
 ```
 
 ### Backend Init
@@ -61,6 +62,7 @@ Detail route repair 200iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repai
 Detail route repair 1iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/check_routes.after.rpt | check_routes reports 383 DRCs and 0 open nets; best count so far but M1 diff-net spacing grows to 224
 PG top port cleanup | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_terminal_attach_offset/99_pg_port/check_routability.after.rpt | VDD/VSS no-pin/unplaced warning removed; 8 M1 off-track pin warnings remain; route DRC still open
 Off-track M1 pin object diagnosis | RECORDED | 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt | remaining 8 off-track warnings are stdcell M1 pins, not top-level PG ports; ZRT-022 CO contact setup remains suspicious
+CO/VIA contact code diagnosis | RECORDED | 7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/contact_code_summary.rpt | CO via_def/default count is 0/0, but VIA1 is 6/1 with default VIA12SQ_C; do not patch CO yet
 ```
 
 ### Timing

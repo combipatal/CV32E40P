@@ -70,3 +70,21 @@ run_pg_terminal_reassign_trial.tcl
 ```text
 docs/backend/offtrack_pin_diagnosis.md
 ```
+
+## run_contact_code_diagnose.tcl
+
+`ZRT-022 Cannot find a default contact code for layer CO` warning을 진단합니다.
+
+현재 결과:
+
+```text
+CO layer는 존재하지만 CO용 via_def/default contact는 없습니다.
+VIA1에는 default via_def VIA12SQ_C가 있습니다.
+따라서 ZRT-022는 CO pin-shape warning이고, M1-M2 via가 통째로 없는 문제는 아닙니다.
+```
+
+결과 문서:
+
+```text
+docs/backend/contact_code_diagnosis.md
+```

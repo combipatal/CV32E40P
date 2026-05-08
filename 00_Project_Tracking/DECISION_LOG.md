@@ -601,3 +601,28 @@ Evidence:
   /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
   /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```
+
+## SDFFARX1_RVT Hotspot Overlap Decision
+
+```text
+Date: 2026-05-08
+Decision: treat SDFFARX1_RVT blocked access as a hotspot contributor, not the sole root cause
+Reason:
+  current saved block has 352 SDFFARX1_RVT blocked access points
+  hotspot contains 119 DRC markers but only 11 SDFFARX1_RVT blocked points
+  all 11 hotspot SDFFARX1_RVT points have nearest DRC inside the hotspot
+  10 of 11 are within 10um of the nearest DRC, 6 of 11 are within 5um
+  all 11 nearest DRCs are Needs fat contact
+  ICC2 context shows each hotspot SDFFARX1_RVT point has an M2 VSS PG stripe nearby at x=259.8..260.2
+Conclusion:
+  SDFFARX1_RVT pin access participates in the hotspot.
+  SDFFARX1_RVT alone cannot explain the full hotspot because hotspot DRC count is much larger than SDFFARX1 hotspot blocked point count.
+  Stronger model is now: x=260um M2 VSS PG stripe + SDFFARX1_RVT M2 pin access + lower-metal via/contact rules.
+Next action:
+  isolate all DRC markers near the x=259.8..260.2 M2 VSS stripe, then identify the full ref-cell distribution around that stripe.
+Evidence:
+  docs/backend/sdffarx1_hotspot_overlap.md
+  7_Backend_ICC2/4_Report/trials/sdffarx1_current_hotspot_overlap/99_overlap/sdffarx1_overlap_summary.rpt
+  7_Backend_ICC2/4_Report/trials/sdffarx1_hotspot_context/99_context/sdffarx1_hotspot_context.rpt
+  7_Backend_ICC2/4_Report/trials/sdffarx1_hotspot_context/99_context/report_cell_pin_access.hotspot_sdffarx1.details.rpt
+```

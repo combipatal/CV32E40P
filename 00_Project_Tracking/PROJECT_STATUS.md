@@ -82,8 +82,9 @@ After the invalid PG M2 offset probe, the saved ICC2 block was restored to the P
 Route option probes were run. generate_extra_off_grid_pin_tracks=true gives 385 DRCs; high drc_convergence/optimize_wire_via effort gives 389 DRCs. Both keep open nets 0 and PG clean, but neither removes the M2/VIA1 off-grid class.
 Baseline and route option probe logs all repeat ZRT-044 for MUX41X2_HVT/S0 no valid via regions, so stdcell valid-via-region / pin-access data is now the strongest next cause target.
 MUX41X2_HVT/S0 pin-access cause was confirmed. SAED32 HVT LEF gives S0 only one M1 stripe of height 0.050um, while default VIA12SQ_C needs cut plus M1 enclosure. create_pin_check_lib reports PDC-001 no via regions for the same pin. This is a confirmed library pin-access weakness, but not the only cause of all 398 route DRCs.
+SDFFARX1_RVT hotspot overlap was checked with coordinate-consistent current-block evidence. SDFFARX1_RVT has many blocked access points overall, but only 11 inside the hotspot. Those 11 all map to hotspot Needs-fat-contact DRCs, and ICC2 context shows each is near the x=259.8..260.2 M2 VSS PG stripe. SDFFARX1_RVT is therefore a hotspot contributor, not the sole root cause.
 Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, generic placement spreading, scan DEF handoff alone, hotspot partial blockage alone, and advanced legalizer/pin-color alignment do not identify or close the root cause. Do not continue manual cell moves or blind repair trials before the next cause probe.
-Updated root-cause view: PG M2 mesh is a contributing obstruction, but the remaining evidence still points to a combined PG mesh + stdcell pin access + M2/VIA1 route policy issue rather than PG alone.
+Updated root-cause view: PG M2 mesh is a contributing obstruction, and the strongest local model is x=260um M2 VSS PG stripe + stdcell pin access + M2/VIA1 contact legality. Next cause probe should isolate all DRC markers near the x=259.8..260.2 PG stripe and list the nearby ref-cell distribution.
 Extraction and post-route STA are still pending.
 ```
 

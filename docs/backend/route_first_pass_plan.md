@@ -65,3 +65,26 @@ Open items before extraction/STA:
   check_routability should be run before future route attempts
   top VDD/VSS ports are reported unplaced/no-pin during routing
 ```
+
+## Diagnosis Snapshot
+
+```text
+Date: 2026-05-08
+Script: 7_Backend_ICC2/0_Script/06_route/run_route_drc_diagnose.tcl
+
+Fresh evidence:
+  check_routability: no PG net open
+  check_routability: no blocked ports/nets
+  check_routability: no standard-cell overlap
+  check_routability: no min-grid violations
+  check_routability: found 2 unplaced top PG ports
+  check_routability: found 3 off-track M1 pins
+  check_routability: found one long VSS PG detail_route shape
+  check_routes.fresh: 408 route DRCs, 0 open nets
+  utilization.fresh: 77.17%
+
+Current diagnosis:
+  Route DRC is not caused by open nets or PG connectivity failure.
+  Most likely cause is combined routing congestion, PG/top-port cleanup, and
+  tech/via/contact/grid setup.
+```

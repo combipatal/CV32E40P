@@ -227,3 +227,12 @@ Stage: ICC2 first-pass signal route
 Result: PASS_WITH_OPEN
 Notes: route_auto ran to completion and saved the block. Detail route did not converge cleanly: route_auto ended with 407 DRCs and check_routes reports 408 DRCs. Open nets are 0. check_routes DRC classes are diff-net spacing 131, less-than-min-area 8, needs-fat-contact 106, and off-grid 163. Timing listed paths are still MET: worst listed setup slack 2.00 ns and worst listed hold slack 0.02 ns. Placement legality remains TOTAL 0 violations. PG connectivity improved versus CTS: VDD/VSS floating wires/vias/std cells/terminals are all 0, and PG DRC reports no errors. Open items: route DRC cleanup, explicit route layer setup, check_routability pre-check, and unplaced/no-pin top VDD/VSS port warnings. Evidence: 7_Backend_ICC2/3_Log/06_route/route_initial.log and 7_Backend_ICC2/4_Report/06_route/{check_routes.rpt,qor.rpt,timing.max.rpt,timing.min.rpt,check_legality.rpt,pg_connectivity.rpt,pg_drc.rpt}.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_diagnose.tcl | tee 7_Backend_ICC2/3_Log/06_route/route_drc_diagnose.log
+Stage: ICC2 route DRC diagnosis
+Result: RECORDED
+Notes: Fresh check_routability confirms no PG net open, no standard-cell overlap, no min-grid violations, no blocked ports, and no blocked nets. It reports 2 unplaced top PG ports, 3 off-track M1 pins, and one long VSS PG shape with shape_use detail_route. Fresh check_routes reproduces 408 DRCs and 0 open nets. Fresh utilization remains 77.17%. This supports a combined root cause: routing congestion plus PG/top-port cleanup plus tech/via/contact/grid setup, not connectivity failure.
+Evidence: 7_Backend_ICC2/4_Report/06_route/check_routability.post_route.rpt, check_routes.fresh.rpt, utilization.fresh.rpt, qor.fresh.rpt, and 7_Backend_ICC2/3_Log/06_route/route_drc_diagnose.log.
+```

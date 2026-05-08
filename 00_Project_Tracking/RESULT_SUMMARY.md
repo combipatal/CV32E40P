@@ -15,6 +15,7 @@ ATPG | TetraMAX | PASS_WITH_NOTE | 4_ATPG/4_Report/stuck_at_topo/summary.rpt | s
 SDF STA | PrimeTime | PASS_WITH_NOTE | 6_STA/4_Report/topo_sdf/pre_dft.func_tt_10ns_sdf.*.rpt | SDF annotated with 0 errors; setup/hold clean; max_cap residual remains
 Post-DFT SDF STA | PrimeTime | PASS_WITH_NOTE | 6_STA/4_Report/post_dft_topo_sdf/post_dft.func_tt_10ns_sdf.*.rpt | post-DFT SDF annotated with 0 errors; setup/hold clean; max_cap residual remains
 ICC2 init_design | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/2_Output/01_init_design/cv32e40p_icc2_lib | post-DFT netlist linked and saved as physical design; no floorplan yet; check_design has 0 errors and 14004 warnings
+ICC2 floorplan initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/02_floorplan/{design_physical,utilization,qor}.rpt | rectangular floorplan created; utilization 65.40%; 382 pins created; no power plan yet
 ```
 
 ### Backend Init
@@ -25,6 +26,9 @@ NDM reference build | PASS_WITH_NOTE | 7_Backend_ICC2/3_Log/00_setup/build_saed3
 ICC2 post-DFT open/link/save | PASS_WITH_NOTE | 7_Backend_ICC2/3_Log/01_init_design/init_design_check.log | cv32e40p_synth_wrap linked; block and lib saved
 ICC2 check_design | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/01_init_design/check_design.rpt | 0 errors, 14004 warnings before floorplan
 Physical area seen by ICC2 | RECORDED | 7_Backend_ICC2/4_Report/01_init_design/design_physical.rpt | total physical cell area 49449.815
+Initial floorplan | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/02_floorplan/design_physical.rpt | core area {20 20} {295.728 294.208}; 1:1 aspect target; 20um core offset
+Initial utilization | RECORDED | 7_Backend_ICC2/4_Report/02_floorplan/utilization.rpt | utilization 0.6540; total capacity area 75606.8234; cell area 49449.8147
+Initial pin placement | PASS | 7_Backend_ICC2/3_Log/02_floorplan/floorplan_initial.log | place_pins -self created 382 pins
 ```
 
 ### Timing

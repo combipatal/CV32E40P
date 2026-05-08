@@ -39,3 +39,16 @@ NDM HVT: 7_Backend_ICC2/2_Output/00_setup/ndm/saed32hvt_tt.ndm
 Tech file: /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 Source DB+LEF conversion script: 7_Backend_ICC2/0_Script/00_setup/build_saed32_ndm.tcl
 ```
+
+## Backend Floorplan Initial Settings
+
+```text
+Script: 7_Backend_ICC2/0_Script/02_floorplan/run_floorplan_initial.tcl
+Shape: rectangle
+Target core utilization: 0.65
+Reported utilization: 0.6540
+Aspect ratio target: 1:1
+Core offset: 20um
+Core area: {20 20} {295.728 294.208}
+Top-level pins created: 382
+```

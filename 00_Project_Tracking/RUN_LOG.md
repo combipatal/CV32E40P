@@ -37,6 +37,14 @@ Notes: ICC2 created cv32e40p_icc2_lib, read post-DFT topo netlist, linked cv32e4
 ```
 
 ```text
+Date: 2026-05-08
+Command: /tools/synopsys/syn/W-2024.09-SP5-5/icc2/bin/icc2_shell -batch -file 7_Backend_ICC2/0_Script/02_floorplan/run_floorplan_initial.tcl -output_log_file 7_Backend_ICC2/3_Log/02_floorplan/floorplan_initial.log
+Stage: ICC2 floorplan initial
+Result: PASS_WITH_NOTE
+Notes: Opened cv32e40p_icc2_lib:cv32e40p_synth_wrap, initialized rectangular floorplan with target utilization 0.65, core offset 20um, and 1:1 aspect ratio. ICC2 reported core utilization ratio 65.40%, core area coordinates {20 20} {295.728 294.208}, utilization 0.6540, and 382 created pins. check_design reported 0 errors and 14004 warnings. Routing directions were auto-derived for M1-MRDL; power plan/placement/routing are not done yet.
+```
+
+```text
 Date: 2026-05-07
 Command: source ~/.bashrc; dc_shell -f 2_Synthesis/0_Script/run_analyze_elab_link.tcl
 Stage: DC analyze/elaborate/link

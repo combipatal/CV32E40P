@@ -72,3 +72,13 @@ Decision: build ICC2 NDM reference libraries from SAED32 DB+LEF using lm_shell
 Reason: direct Milkyway auto-conversion in ICC2/lm_shell failed because export_icc2_frame was unavailable in this install.
 Result: RVT/LVT/HVT NDM libraries were generated and ICC2 linked the post-DFT netlist successfully.
 ```
+
+## Initial Floorplan Decision
+
+```text
+Date: 2026-05-08
+Decision: first ICC2 floorplan uses rectangular core, 1:1 aspect ratio, 65% target utilization, and 20um core offset
+Reason: CV32E40P baseline has no macros, so a simple square-ish standard-cell floorplan is easiest to debug before power planning.
+Result: ICC2 created a floorplan with reported utilization 65.40% and 382 top-level pins.
+Next: create power plan before placement.
+```

@@ -3,13 +3,13 @@
 ## Current Phase
 
 ```text
-Front-End baseline completed; ICC2 backend init_design sanity check started
+Front-End baseline completed; ICC2 backend floorplan initial pass completed
 ```
 
 ## Next Milestone
 
 ```text
-Create first real ICC2 floorplan and power plan after reviewing init_design warnings.
+Create first power plan: VDD/VSS connection, rings/straps, and PG connectivity checks.
 ```
 
 ## Frozen Baseline
@@ -49,7 +49,8 @@ TetraMAX stuck-at ATPG reached 98.64% test coverage and 98.55% fault coverage.
 Remaining notes: DC DFT TEST-505 constant-1 clock gate, TetraMAX Z3 wire contention warnings, and physical max_cap/max_transition cleanup deferred to backend.
 Active synthesis script is only 2_Synthesis/0_Script/run_compile_10ns_topo.tcl.
 ICC2 can open/link/save the post-DFT netlist as a physical design library.
-No floorplan exists yet, so ICC2 timing uses zero interconnect delay and check_design warnings are expected to need backend cleanup.
+Initial ICC2 floorplan exists: rectangular core, 65.40% utilization, 382 pins created.
+Power plan, placement, CTS, routing, extraction, and post-route STA are still pending.
 ```
 
 ## Fmax Estimate

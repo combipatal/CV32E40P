@@ -82,3 +82,42 @@ Reason: CV32E40P baseline has no macros, so a simple square-ish standard-cell fl
 Result: ICC2 created a floorplan with reported utilization 65.40% and 382 top-level pins.
 Next: create power plan before placement.
 ```
+
+## Backend RC Tech Decision
+
+```text
+Date: 2026-05-08
+Decision: read SAED32 TLU+ Cmin/Cmax into ICC2 init_design and bind them to the default corner
+Reason: timing-driven placement aborted without valid parasitic data.
+Files:
+  max RC = saed32nm_1p9m_Cmax.tluplus
+  min RC = saed32nm_1p9m_Cmin.tluplus
+  map    = saed32nm_tf_itf_tluplus.map
+Result: create_placement no longer aborts on missing RC values.
+Evidence: 7_Backend_ICC2/4_Report/01_init_design/parasitic_parameters.rpt
+```
+
+## Placement Scan DEF Decision
+
+```text
+Date: 2026-05-08
+Decision: allow first-pass placement to continue without scan DEF
+ICC2 option: place.coarse.continue_on_missing_scandef = true
+Reason: DFT handoff currently has SPF for ATPG but no ICC2 scan DEF. ICC2 otherwise stops placement on PLACE-042.
+Risk: scan-chain-aware placement/reorder is not active. Placement QoR is acceptable only as first-pass learning evidence.
+Next: add proper scan DEF generation/import before calling backend placement production-clean.
+Evidence: 7_Backend_ICC2/3_Log/04_place/place_initial.log
+```
+
+## Power Plan Decision
+
+```text
+Date: 2026-05-08
+Decision: keep DRC-clean PG plan with M1 rails, M2/M7/M8 mesh, M7/M8 ring, and boundary PG pins
+Reason: M1 rails alone did not connect well to upper mesh. Adding M2 vertical straps greatly improved VSS and most VDD rail connectivity.
+Rejected trial: M2 pitch 20um
+Reject reason: created 1225 M1 spacing errors.
+Chosen value: M2/M7/M8 pitch 40um for first-pass DRC-clean state.
+Current open issue: VDD PG connectivity still has 3 floating wires and 499 floating std cells.
+Evidence: 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt and pg_drc.rpt
+```

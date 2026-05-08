@@ -16,6 +16,8 @@ SDF STA | PrimeTime | PASS_WITH_NOTE | 6_STA/4_Report/topo_sdf/pre_dft.func_tt_1
 Post-DFT SDF STA | PrimeTime | PASS_WITH_NOTE | 6_STA/4_Report/post_dft_topo_sdf/post_dft.func_tt_10ns_sdf.*.rpt | post-DFT SDF annotated with 0 errors; setup/hold clean; max_cap residual remains
 ICC2 init_design | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/2_Output/01_init_design/cv32e40p_icc2_lib | post-DFT netlist linked and saved as physical design; no floorplan yet; check_design has 0 errors and 14004 warnings
 ICC2 floorplan initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/02_floorplan/{design_physical,utilization,qor}.rpt | rectangular floorplan created; utilization 65.40%; 382 pins created; no power plan yet
+ICC2 placement initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/04_place/check_legality.rpt | 14083 cells placed/legalized; 0 legality violations; no scan DEF, so placement uses continue_on_missing_scandef
+ICC2 power initial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/03_power/{pg_connectivity,pg_drc}.rpt | PG DRC clean; VSS connectivity clean; VDD still has 3 floating wires and 499 floating std cells
 ```
 
 ### Backend Init
@@ -29,6 +31,11 @@ Physical area seen by ICC2 | RECORDED | 7_Backend_ICC2/4_Report/01_init_design/d
 Initial floorplan | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/02_floorplan/design_physical.rpt | core area {20 20} {295.728 294.208}; 1:1 aspect target; 20um core offset
 Initial utilization | RECORDED | 7_Backend_ICC2/4_Report/02_floorplan/utilization.rpt | utilization 0.6540; total capacity area 75606.8234; cell area 49449.8147
 Initial pin placement | PASS | 7_Backend_ICC2/3_Log/02_floorplan/floorplan_initial.log | place_pins -self created 382 pins
+TLU+ parasitic setup | PASS | 7_Backend_ICC2/4_Report/01_init_design/parasitic_parameters.rpt | default corner uses saed32_cmin early and saed32_cmax late at 25C
+Initial placement legality | PASS | 7_Backend_ICC2/4_Report/04_place/check_legality.rpt | TOTAL 0 violations after legalize_placement
+Initial placement timing estimate | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/04_place/timing.rpt | worst listed setup slack 0.76 ns; pre-CTS/pre-route estimate only
+Initial PG DRC | PASS | 7_Backend_ICC2/4_Report/03_power/pg_drc.rpt | check_pg_drc reports no errors for chosen 40um M2 mesh pitch
+Initial PG connectivity | OPEN | 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt | VSS floating std cells 0; VDD floating std cells 499, floating wires 3
 ```
 
 ### Timing
@@ -37,6 +44,7 @@ Initial pin placement | PASS | 7_Backend_ICC2/3_Log/02_floorplan/floorplan_initi
 Stage | Clock | WNS | TNS | Area | Power | Notes
 Post-synth pre-DFT topo/SDF | 10 ns | 1.61 ns | 0.00 ns | 45313.37 cell area | see topo post_compile.power.rpt | DC Graphical topo + PT SDF STA timing clean, DRC not clean
 Post-DFT topo/SDF | 10 ns | 1.48 ns | 0.00 ns | 49449.82 cell area | see post_dft.power.rpt | DFT inserted; PT post-DFT SDF STA setup/hold clean, hold slack 0.03 ns
+ICC2 initial placement | 10 ns | 0.76 ns | not summarized | 49449.8147 cell area | not summarized | pre-CTS/pre-route ICC2 timing estimate with TLU+ RC
 ```
 
 ### Fmax Estimate

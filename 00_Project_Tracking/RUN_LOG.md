@@ -147,3 +147,35 @@ Stage: Baseline freeze and Fmax estimate
 Result: RECORDED
 Notes: Froze tt_mvt_10ns_scan1 as the first complete Front-End baseline at commit 5473b61. Fmax estimate uses post-DFT topo/SDF worst setup slack: 10.00 ns - 1.48 ns = 8.52 ns critical delay, ideal Fmax about 117.4 MHz. Next trial candidate is 8.5 ns first, then 8.0 ns if clean enough.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/01_init_design/run_init_design_check.tcl
+Stage: ICC2 init_design with TLU+
+Result: PASS_WITH_NOTE
+Notes: Rebuilt cv32e40p_icc2_lib from post-DFT topo netlist. Added TLU+ parasitic models saed32_cmin/saed32_cmax and set default corner early/late parasitic parameters. Evidence: 7_Backend_ICC2/4_Report/01_init_design/parasitic_parameters.rpt. check_design remains 0 errors, 14004 warnings.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/02_floorplan/run_floorplan_initial.tcl
+Stage: ICC2 floorplan refresh
+Result: PASS_WITH_NOTE
+Notes: Recreated rectangular floorplan after TLU+ setup. Core utilization remains 65.40%, 382 pins created. Evidence: 7_Backend_ICC2/4_Report/02_floorplan/utilization.rpt and 7_Backend_ICC2/3_Log/02_floorplan/floorplan_initial.log.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/04_place/run_place_initial.tcl
+Stage: ICC2 initial placement
+Result: PASS_WITH_NOTE
+Notes: Placement required set_app_options place.coarse.continue_on_missing_scandef true because no ICC2 scan DEF exists in DFT handoff. TLU+ setup fixed the earlier RC/parasitic abort. create_placement and legalize_placement completed; 14083 cells legalized with 0 placement legality violations. Worst reported placement timing slack is 0.76 ns. Evidence: 7_Backend_ICC2/4_Report/04_place/check_legality.rpt and timing.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/03_power/run_power_initial.tcl
+Stage: ICC2 post-placement power rebuild
+Result: PASS_WITH_OPEN
+Notes: Rebuilt VDD/VSS PG after placement using M1 stdcell rails, M2/M7/M8 mesh, M7/M8 core ring, and generated 16 design-boundary PG pins. PG DRC is clean. VSS connectivity is clean. VDD still has 3 floating wires and 499 floating std cells, so PG connectivity is not closed. A denser M2 20um trial reduced floating risk but caused 1225 M1 spacing errors, so it was rejected and M2 pitch restored to 40um. Evidence: 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt, pg_drc.rpt, and 7_Backend_ICC2/3_Log/03_power/power_initial.log.
+```

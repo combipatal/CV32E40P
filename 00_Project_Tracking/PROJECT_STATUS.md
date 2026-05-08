@@ -3,13 +3,13 @@
 ## Current Phase
 
 ```text
-Front-End baseline completed; ICC2 backend floorplan initial pass completed
+Front-End baseline completed; ICC2 backend init/floorplan/place/power first pass completed
 ```
 
 ## Next Milestone
 
 ```text
-Create first power plan: VDD/VSS connection, rings/straps, and PG connectivity checks.
+Close remaining VDD PG connectivity, then continue CTS planning.
 ```
 
 ## Frozen Baseline
@@ -50,7 +50,10 @@ Remaining notes: DC DFT TEST-505 constant-1 clock gate, TetraMAX Z3 wire content
 Active synthesis script is only 2_Synthesis/0_Script/run_compile_10ns_topo.tcl.
 ICC2 can open/link/save the post-DFT netlist as a physical design library.
 Initial ICC2 floorplan exists: rectangular core, 65.40% utilization, 382 pins created.
-Power plan, placement, CTS, routing, extraction, and post-route STA are still pending.
+ICC2 placement exists: 14083 cells legalized with 0 legality violations.
+ICC2 power plan exists: PG DRC clean, VSS connectivity clean, VDD has 3 floating wires and 499 floating std cells.
+Missing scan DEF is currently bypassed for first-pass placement; proper scan DEF handoff remains a backend cleanup item.
+CTS, routing, extraction, and post-route STA are still pending.
 ```
 
 ## Fmax Estimate

@@ -22,6 +22,21 @@ create_lib $ICC2_LIB_DIR \
   -ref_libs [list $NDM_RVT $NDM_LVT $NDM_HVT]
 
 ################################################################################
+# TLU+ RC tech를 ICC2 library에 읽습니다.
+# placement/timing estimate에서 layer RC가 필요합니다.
+################################################################################
+
+read_parasitic_tech \
+  -tlup $TLUPLUS_MAX \
+  -layermap $TLUPLUS_MAP \
+  -name saed32_cmax
+
+read_parasitic_tech \
+  -tlup $TLUPLUS_MIN \
+  -layermap $TLUPLUS_MAP \
+  -name saed32_cmin
+
+################################################################################
 # post-DFT netlist를 읽고 link합니다.
 # 여기서 unresolved cell이 나오면 backend 진행 전에 library 문제가 있는 것입니다.
 ################################################################################
@@ -38,10 +53,22 @@ link_block
 read_sdc $POST_DFT_SDC
 
 ################################################################################
+# default corner에 min/max parasitic model을 연결합니다.
+# TT 1.05V 25C timing library를 쓰되, RC는 Cmin/Cmax로 early/late를 잡습니다.
+################################################################################
+
+set_parasitic_parameters \
+  -early_spec saed32_cmin \
+  -early_temperature 25 \
+  -late_spec saed32_cmax \
+  -late_temperature 25
+
+################################################################################
 # 기본 check와 evidence report를 남깁니다.
 ################################################################################
 
 report_ref_libs > $INIT_REPORT_DIR/ref_libs.rpt
+report_parasitic_parameters > $INIT_REPORT_DIR/parasitic_parameters.rpt
 report_design -physical > $INIT_REPORT_DIR/design_physical.rpt
 report_design > $INIT_REPORT_DIR/design.rpt
 

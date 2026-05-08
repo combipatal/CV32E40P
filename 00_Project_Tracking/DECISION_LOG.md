@@ -179,3 +179,22 @@ Evidence:
   7_Backend_ICC2/4_Report/05_cts/check_legality.rpt
   7_Backend_ICC2/4_Report/05_cts/pg_connectivity.rpt
 ```
+
+## First-Pass Route Decision
+
+```text
+Date: 2026-05-08
+Decision: add a simple first-pass signal route script using route_auto
+Reason: verify whether the post-CTS design can enter signal routing and produce route/timing/PG evidence.
+Result: route_auto completed with 0 open nets, but detail route did not converge to DRC clean.
+Route DRC: check_routes reports 408 total violations.
+Main DRC classes: diff-net spacing 131, less-than-min-area 8, needs-fat-contact 106, off-grid 163.
+Positive evidence: timing listed setup/hold paths are MET, legality is 0 violations, PG DRC is clean, and PG connectivity is fully connected.
+Open items: improve route setup before extraction/STA, run check_routability before route, set explicit routing layer bounds, and investigate VDD/VSS top port no-pin/unplaced warnings.
+Evidence:
+  7_Backend_ICC2/3_Log/06_route/route_initial.log
+  7_Backend_ICC2/4_Report/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/06_route/qor.rpt
+  7_Backend_ICC2/4_Report/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/06_route/pg_connectivity.rpt
+```

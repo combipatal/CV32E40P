@@ -541,3 +541,35 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
   7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/pg_drc.rpt
 ```
+
+## Route Off-Grid / Via Policy Probe Decision
+
+```text
+Date: 2026-05-08
+Decision: treat route off-grid/via options as contributing knobs, not as the root-cause fix
+Reason: two route option probes changed the DRC count only slightly and left the same lower-metal access classes open.
+Probe 1:
+  route.detail.generate_extra_off_grid_pin_tracks=true
+  route DRC 398 -> 385
+  Off-grid 170 -> 160
+  Needs fat contact 99 -> 84
+Probe 2:
+  route.detail.drc_convergence_effort_level=high
+  route.detail.optimize_wire_via_effort_level=high
+  route DRC 398 -> 389
+  Off-grid 170 -> 163
+  Needs fat contact 99 -> 84
+Common evidence:
+  route open nets remain 0
+  PG DRC remains clean
+  ZRT-703 says force_end_on_preferred_grid is ignored because no layers have preferred grid
+  ZRT-044 for MUX41X2_HVT/S0 no valid via regions appears in baseline and probes
+Conclusion:
+  simple router effort is not the main cause.
+  extra off-grid pin tracks help slightly but do not solve the issue.
+  next target should be stdcell valid via region / pin access data, especially MUX41X2_HVT/S0 and the lower-metal M2/VIA1 access model.
+Evidence:
+  docs/backend/route_drc_root_cause_investigation.md
+  7_Backend_ICC2/4_Report/trials/route_offgrid_tracks_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/route_via_effort_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
+```

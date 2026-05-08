@@ -503,6 +503,24 @@ Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_m8_restore/scan_def_m8_restore.lo
 
 ```text
 Date: 2026-05-08
+Command: env TRIAL_NAME=route_offgrid_tracks_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_offgrid_tracks_scan_def_m8/route_offgrid_tracks_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route off-grid pin-track probe
+Result: PASS_WITH_OPEN
+Notes: route.detail.generate_extra_off_grid_pin_tracks=true was applied. Final route has 0 open nets, PG DRC clean, and 385 route DRCs. Detail matrix: M1 diff spacing 130, M1-M2 needs-fat-contact 84, M2 off-grid 73, VIA1 off-grid 82. This improves baseline 398 only slightly, so extra off-grid pin tracks are a contributing axis, not the sole root cause.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_offgrid_tracks_scan_def_m8/route_offgrid_tracks_scan_def_m8.log, 7_Backend_ICC2/4_Report/trials/route_offgrid_tracks_scan_def_m8/06_route/{check_routes,route_detail_app_options,pg_drc}.rpt, and 7_Backend_ICC2/4_Report/trials/route_offgrid_tracks_scan_def_m8/06_route/drc_detail/drc.matrix.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=route_via_effort_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_via_effort_scan_def_m8/route_via_effort_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route via/DRC effort probe
+Result: PASS_WITH_OPEN
+Notes: route.detail.drc_convergence_effort_level=high and route.detail.optimize_wire_via_effort_level=high were applied. Final route has 0 open nets, PG DRC clean, and 389 route DRCs. Detail matrix: M1 diff spacing 130, M1-M2 needs-fat-contact 84, M2 off-grid 73, VIA1 off-grid 81. This improves baseline 398 only slightly, so simple router effort is not the root cause.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_via_effort_scan_def_m8/route_via_effort_scan_def_m8.log, 7_Backend_ICC2/4_Report/trials/route_via_effort_scan_def_m8/06_route/{check_routes,route_detail_app_options,pg_drc}.rpt, and 7_Backend_ICC2/4_Report/trials/route_via_effort_scan_def_m8/06_route/drc_detail/drc.matrix.rpt.
+```
+
+```text
+Date: 2026-05-08
 Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/06_route/route_drc_detail.scan_def_m8_restore.log -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl; python3 scripts/select_drc_representatives.py; icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/drc_marker_context/drc_marker_context.log -f 7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl
 Stage: ICC2 DRC marker context probe
 Result: RECORDED

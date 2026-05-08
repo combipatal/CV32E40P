@@ -91,6 +91,8 @@ Hotspot partial blockage probe | OPEN | 7_Backend_ICC2/4_Report/trials/hotspot_b
 Route DRC root-cause hypothesis | RECORDED | docs/backend/route_drc_root_cause_investigation.md | hotspot window has 123 markers: Off-grid VIA1 48, Off-grid M2 46, Diff M1 18, Needs fat contact 10, Off-grid M1 1
 Hotspot DRC-to-PG distance | RECORDED | 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt | 23/123 markers within 1um of M2 PG, 78/123 within 5um, 45/123 farther than 5um
 PG M2 offset 30um probe | INVALID_FOR_CLOSURE_BUT_INFORMATIVE | 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | signal DRC 377, but PG DRC 97; diff spacing improves 120 -> 82 while fat-contact worsens 99 -> 127 and off-grid remains 170 -> 163
+Route extra off-grid pin tracks probe | OPEN | 7_Backend_ICC2/4_Report/trials/route_offgrid_tracks_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | route DRC 385 and open nets 0; PG clean; off-grid 170 -> 160 and needs-fat-contact 99 -> 84, so helpful but not root-cause closure
+Route via/DRC effort high probe | OPEN | 7_Backend_ICC2/4_Report/trials/route_via_effort_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | route DRC 389 and open nets 0; PG clean; off-grid remains 163, so simple route effort is not the main cause
 ```
 
 ### Timing

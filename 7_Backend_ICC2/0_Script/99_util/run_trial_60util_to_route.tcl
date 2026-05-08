@@ -54,6 +54,13 @@ set HOTSPOT_BLOCKAGE_ENABLE ""
 set HOTSPOT_BLOCKAGE_BOUNDARY {{215.0 195.0} {265.0 265.0}}
 set HOTSPOT_BLOCKAGE_PERCENT 40
 set PG_M2_MESH_OFFSET 20.0
+set ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS ""
+set ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID ""
+set ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL ""
+set ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL ""
+set ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER ""
+set ROUTE_COMMON_VIA_ON_GRID_BY_LAYER ""
+set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ""
 if {[info exists ::env(PLACE_PIN_DENSITY_AWARE)]} {
   set PLACE_PIN_DENSITY_AWARE $::env(PLACE_PIN_DENSITY_AWARE)
 }
@@ -101,6 +108,27 @@ if {[info exists ::env(HOTSPOT_BLOCKAGE_PERCENT)]} {
 }
 if {[info exists ::env(PG_M2_MESH_OFFSET)]} {
   set PG_M2_MESH_OFFSET $::env(PG_M2_MESH_OFFSET)
+}
+if {[info exists ::env(ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS)]} {
+  set ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS $::env(ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS)
+}
+if {[info exists ::env(ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID)]} {
+  set ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID $::env(ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID)
+}
+if {[info exists ::env(ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL)]} {
+  set ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL $::env(ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL)
+}
+if {[info exists ::env(ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL)]} {
+  set ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL $::env(ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL)
+}
+if {[info exists ::env(ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER)]} {
+  set ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER $::env(ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER)
+}
+if {[info exists ::env(ROUTE_COMMON_VIA_ON_GRID_BY_LAYER)]} {
+  set ROUTE_COMMON_VIA_ON_GRID_BY_LAYER $::env(ROUTE_COMMON_VIA_ON_GRID_BY_LAYER)
+}
+if {[info exists ::env(ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER)]} {
+  set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER $::env(ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER)
 }
 
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
@@ -503,6 +531,47 @@ if {$SIGNAL_MAX_ROUTING_LAYER ne ""} {
 
   catch {report_ignored_layers > $TRIAL_ROUTE_DIR/ignored_layers.rpt}
 }
+
+# route DRC 원인 확인용 option입니다.
+# 한 trial에서 하나나 두 개만 켜서 DRC class 변화가 어디서 오는지 봅니다.
+if {$ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS ne ""} {
+  set_app_options \
+    -name route.detail.generate_extra_off_grid_pin_tracks \
+    -value $ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS
+}
+if {$ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID ne ""} {
+  set_app_options \
+    -name route.detail.force_end_on_preferred_grid \
+    -value $ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID
+}
+if {$ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL ne ""} {
+  set_app_options \
+    -name route.detail.drc_convergence_effort_level \
+    -value $ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL
+}
+if {$ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL ne ""} {
+  set_app_options \
+    -name route.detail.optimize_wire_via_effort_level \
+    -value $ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL
+}
+if {$ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER ne ""} {
+  set_app_options \
+    -name route.common.extra_via_off_grid_cost_multiplier_by_layer_name \
+    -value $ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER
+}
+if {$ROUTE_COMMON_VIA_ON_GRID_BY_LAYER ne ""} {
+  set_app_options \
+    -name route.common.via_on_grid_by_layer_name \
+    -value $ROUTE_COMMON_VIA_ON_GRID_BY_LAYER
+}
+if {$ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ne ""} {
+  set_app_options \
+    -name route.common.wire_on_grid_by_layer_name \
+    -value $ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER
+}
+
+report_app_options route.common.* > $TRIAL_ROUTE_DIR/route_common_app_options.rpt
+report_app_options route.detail.* > $TRIAL_ROUTE_DIR/route_detail_app_options.rpt
 
 check_routability > $TRIAL_ROUTE_DIR/check_routability.rpt
 

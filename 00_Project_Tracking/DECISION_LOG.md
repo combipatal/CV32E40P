@@ -121,3 +121,22 @@ Chosen value: M2/M7/M8 pitch 40um for first-pass DRC-clean state.
 Current open issue: VDD PG connectivity still has 3 floating wires and 499 floating std cells.
 Evidence: 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt and pg_drc.rpt
 ```
+
+## VDD PG Bridge Trial Decision
+
+```text
+Date: 2026-05-08
+Decision: reject narrow VDD-only M2 bridge strap trial
+Reason: adding VDD-only M2 bridge straps produced PG DRC errors even though the goal was to reduce remaining VDD floating rails.
+Observed floating VDD rails:
+  PATH_11_12 y ~= 40.034
+  PATH_11_36 y ~= 80.162
+  PATH_11_60 y ~= 120.290
+Rejected trial result:
+  check_pg_drc reported 146 M1 insufficient-spacing errors.
+Restored result:
+  PG DRC clean again.
+  VDD still has 3 floating wires and 499 floating std cells.
+  VSS has 0 floating std cells.
+Next: investigate DRC-clean local via/strap options or add proper backend physical-only/tap/filler sequence before trying CTS.
+```

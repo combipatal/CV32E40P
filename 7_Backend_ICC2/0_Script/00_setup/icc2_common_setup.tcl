@@ -43,6 +43,7 @@ set INIT_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/01_init_design
 set FLOORPLAN_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/02_floorplan
 set POWER_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/03_power
 set PLACE_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/04_place
+set CTS_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/05_cts
 
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/00_setup
 file mkdir $SETUP_LOG_DIR
@@ -50,14 +51,17 @@ file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/01_init_design
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/02_floorplan
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/03_power
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/04_place
+file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/05_cts
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/3_Log/01_init_design
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/3_Log/02_floorplan
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/3_Log/03_power
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/3_Log/04_place
+file mkdir $PROJECT_ROOT/7_Backend_ICC2/3_Log/05_cts
 file mkdir $INIT_REPORT_DIR
 file mkdir $FLOORPLAN_REPORT_DIR
 file mkdir $POWER_REPORT_DIR
 file mkdir $PLACE_REPORT_DIR
+file mkdir $CTS_REPORT_DIR
 
 # ICC2 link용 library 목록입니다.
 set target_library [list $RVT_TT_DB $LVT_TT_DB $HVT_TT_DB]

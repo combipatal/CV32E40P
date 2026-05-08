@@ -18,6 +18,7 @@ ICC2 init_design | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/2_Output/01_init_desig
 ICC2 floorplan initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/02_floorplan/{design_physical,utilization,qor}.rpt | rectangular floorplan created; utilization 65.40%; 382 pins created; no power plan yet
 ICC2 placement initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/04_place/check_legality.rpt | 14083 cells placed/legalized; 0 legality violations; no scan DEF, so placement uses continue_on_missing_scandef
 ICC2 power initial | ICC2 | PASS | 7_Backend_ICC2/4_Report/03_power/{pg_connectivity,pg_drc}.rpt | M7 horizontal mesh offset 28um; PG DRC clean; VDD/VSS floating wires, vias, and std cells all 0
+ICC2 CTS initial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/05_cts/{clock_qor.summary,clock_qor.drc_violators,qor,check_legality,pg_connectivity}.rpt | clock_opt through route_clock; clock DRC 0; legality 0; timing paths MET; whole-design DRC still has 1 max_transition/172 max_cap, VSS floating boundary terminals 2
 ```
 
 ### Backend Init
@@ -37,6 +38,11 @@ Initial placement timing estimate | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/04_
 Initial PG DRC | PASS | 7_Backend_ICC2/4_Report/03_power/pg_drc.rpt | check_pg_drc reports no errors for chosen 40um mesh pitch and M7 offset 28um
 Initial PG connectivity | PASS | 7_Backend_ICC2/4_Report/03_power/pg_connectivity.rpt | VDD floating wires/vias/std cells 0/0/0; VSS floating wires/vias/std cells 0/0/0
 Placement-stage PG connectivity | PASS | 7_Backend_ICC2/4_Report/04_place/pg_connectivity.rpt | PG remains connected after placement refresh; VDD/VSS floating wires, vias, and std cells all 0
+First-pass CTS clock tree | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/05_cts/clock_qor.summary.rpt | clk_i has 2130 sinks, 6 levels, 11 repeaters, max latency 0.37 ns, global skew 0.33 ns
+First-pass CTS clock DRC | PASS | 7_Backend_ICC2/4_Report/05_cts/clock_qor.drc_violators.rpt | transition/cap/fanout/netlength DRC count all 0 for clk_i
+First-pass CTS legality | PASS | 7_Backend_ICC2/4_Report/05_cts/check_legality.rpt | TOTAL 0 violations
+First-pass CTS PG check | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/05_cts/pg_connectivity.rpt | VDD floating wires/vias/std cells/terminals 0; VSS floating wires/vias/std cells 0 but floating terminals 2
+First-pass CTS whole-design DRC | OPEN | 7_Backend_ICC2/4_Report/05_cts/qor.rpt | Max Trans Violations 1; Max Cap Violations 172
 ```
 
 ### Timing
@@ -46,6 +52,7 @@ Stage | Clock | WNS | TNS | Area | Power | Notes
 Post-synth pre-DFT topo/SDF | 10 ns | 1.61 ns | 0.00 ns | 45313.37 cell area | see topo post_compile.power.rpt | DC Graphical topo + PT SDF STA timing clean, DRC not clean
 Post-DFT topo/SDF | 10 ns | 1.48 ns | 0.00 ns | 49449.82 cell area | see post_dft.power.rpt | DFT inserted; PT post-DFT SDF STA setup/hold clean, hold slack 0.03 ns
 ICC2 initial placement | 10 ns | 0.57 ns | not summarized | 49449.8147 cell area | not summarized | pre-CTS/pre-route ICC2 timing estimate with TLU+ RC after PG closure
+ICC2 first-pass CTS | 10 ns | 1.98 ns listed worst setup path | not summarized | 58348.41 design area in log final QoR | not summarized | post-CTS/pre-signal-route timing estimate; listed worst hold slack 0.02 ns
 ```
 
 ### Fmax Estimate

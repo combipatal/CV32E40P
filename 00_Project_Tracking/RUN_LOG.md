@@ -203,3 +203,19 @@ Stage: ICC2 placement refresh after PG closure
 Result: PASS_WITH_NOTE
 Notes: Re-ran placement/legalization after PG mesh offset update. legalize_placement succeeded and check_legality reports TOTAL 0 violations. Placement-stage PG connectivity remains closed: VDD floating wires/vias/std cells = 0/0/0 and VSS floating wires/vias/std cells = 0/0/0. Placement-stage PG DRC reports no errors. Worst listed placement timing slack is 0.57 ns. Missing scan DEF is still bypassed with place.coarse.continue_on_missing_scandef true, so scan-aware placement remains a later cleanup item. Evidence: 7_Backend_ICC2/4_Report/04_place/check_legality.rpt, pg_connectivity.rpt, pg_drc.rpt, timing.rpt, and 7_Backend_ICC2/3_Log/04_place/place_initial.log.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/05_cts/run_cts_initial.tcl
+Stage: ICC2 CTS script syntax trial
+Result: FAIL_THEN_FIXED
+Notes: First CTS attempt stopped at set_clock_routing_rules because the command required -rules or -default_rule. Fixed the learning script by adding -default_rule while keeping the explicit M4-M6 clock routing layer limit.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/05_cts/run_cts_initial.tcl | tee 7_Backend_ICC2/3_Log/05_cts/cts_initial.log
+Stage: ICC2 first-pass CTS
+Result: PASS_WITH_OPEN
+Notes: clock_opt completed through route_clock, clock tree compilation finished successfully, and clock route finished with 0 DRC violations/open nets. Clock QoR reports clk_i has 2130 sinks, 6 levels, 11 repeaters, max latency 0.37 ns, global skew 0.33 ns, 0 transition DRC, and 0 capacitance DRC. Listed setup/hold timing paths are MET: worst setup slack 1.98 ns and worst hold slack 0.02 ns. check_legality reports TOTAL 0 violations. PG DRC reports no errors. PG connectivity has VDD floating wires/vias/std cells/terminals = 0/0/0/0 and VSS floating wires/vias/std cells = 0/0/0, but VSS floating terminals = 2 after CTS. report_qor still shows whole-design electrical DRC open: 1 max transition violation and 172 max capacitance violations. Open items: no default max_transition constraint warning, scan DEF still bypassed from placement, whole-design electrical DRC, and VSS boundary terminal count. Evidence: 7_Backend_ICC2/3_Log/05_cts/cts_initial.log and 7_Backend_ICC2/4_Report/05_cts/{clock_qor.summary.rpt,clock_qor.drc_violators.rpt,clock_timing.summary.rpt,timing.max.rpt,timing.min.rpt,qor.rpt,check_legality.rpt,pg_connectivity.rpt,pg_drc.rpt}.
+```

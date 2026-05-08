@@ -3,13 +3,13 @@
 ## Current Phase
 
 ```text
-Front-End baseline completed; ICC2 backend init/floorplan/place/power PG connectivity closed
+Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS first pass completed
 ```
 
 ## Next Milestone
 
 ```text
-Start CTS planning from PG-clean placed design.
+Clean CTS open items before route: max_transition constraint, VSS floating boundary terminals, scan DEF handoff risk.
 ```
 
 ## Frozen Baseline
@@ -52,8 +52,10 @@ ICC2 can open/link/save the post-DFT netlist as a physical design library.
 Initial ICC2 floorplan exists: rectangular core, 65.40% utilization, 382 pins created.
 ICC2 placement exists: 14083 cells legalized with 0 legality violations after PG closure refresh.
 ICC2 power plan exists: PG DRC clean, VDD connectivity clean, and VSS connectivity clean.
+ICC2 CTS first pass exists: clock_opt completed through route_clock, clock DRC count 0, legality 0 violations, listed setup/hold timing paths MET.
 Missing scan DEF is currently bypassed for first-pass placement; proper scan DEF handoff remains a backend cleanup item.
-CTS, routing, extraction, and post-route STA are still pending.
+CTS open items: no default max_transition constraint warning, whole-design electrical DRC remains in post-CTS qor.rpt (1 max_transition and 172 max_cap), VSS floating boundary terminals = 2 after CTS, and CTS log auto-reported target skew 1.500000 while script option report shows 0.20 ns.
+Routing, extraction, and post-route STA are still pending.
 ```
 
 ## Fmax Estimate

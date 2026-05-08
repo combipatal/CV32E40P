@@ -156,3 +156,26 @@ Evidence:
   7_Backend_ICC2/4_Report/04_place/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/04_place/pg_drc.rpt
 ```
+
+## First-Pass CTS Decision
+
+```text
+Date: 2026-05-08
+Decision: run first-pass CTS with clock_opt -from build_clock -to route_clock
+Clock: clk_i
+Target skew set in script/report_clock_tree_options: 0.20 ns
+Clock routing rule: default rule, min layer M4, max layer M6
+Reason: build and route the clock tree from the PG-clean placed design before wider route/final optimization.
+Rejected script syntax: set_clock_routing_rules without -rules/-default_rule
+Fix: added -default_rule with explicit M4-M6 layer limits.
+Result: CTS completed, clock DRC count is 0, legality is 0 violations, listed setup/hold paths are MET.
+Open items: CTS log also reports auto target skew as 1.500000 during build, no default max_transition constraint warning, missing scan DEF remains, report_qor has whole-design electrical DRC violations, and VSS has 2 floating boundary terminals in post-CTS PG connectivity.
+Evidence:
+  7_Backend_ICC2/3_Log/05_cts/cts_initial.log
+  7_Backend_ICC2/4_Report/05_cts/clock_tree_options.rpt
+  7_Backend_ICC2/4_Report/05_cts/clock_qor.summary.rpt
+  7_Backend_ICC2/4_Report/05_cts/clock_qor.drc_violators.rpt
+  7_Backend_ICC2/4_Report/05_cts/qor.rpt
+  7_Backend_ICC2/4_Report/05_cts/check_legality.rpt
+  7_Backend_ICC2/4_Report/05_cts/pg_connectivity.rpt
+```

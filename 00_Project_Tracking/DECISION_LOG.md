@@ -220,3 +220,53 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/60util/06_route/check_routes.rpt
   7_Backend_ICC2/4_Report/trials/60util/06_route/utilization.rpt
 ```
+
+## Route Layer Bound And DRC Detail Decision
+
+```text
+Date: 2026-05-08
+Decision: fix main signal route layer bound to M1-M8 and add route DRC detail reporting
+Reason: 60% + M8 trial reduced check_routes DRC from 407 to 400 and removed the signal route max-routing-layer warning, but did not close DRC.
+Detailed finding: all 400 remaining DRCs in the current 60util_m8 block are on M1, M2, M1-M2, or VIA1.
+Matrix:
+  Diff net spacing: 119 on M1, 3 on M2
+  Less than minimum area: 7 on M2
+  Needs fat contact: 108 on M1-M2
+  Off-grid: 5 on M1, 76 on M2, 79 on VIA1
+  Short: 1 on M1, 2 on M2
+Conclusion: upper-layer routing capacity is not the dominant remaining issue. Next repair should focus on lower-metal/VIA1/contact/grid behavior and top PG port cleanup.
+Evidence:
+  7_Backend_ICC2/3_Log/06_route/route_drc_detail.log
+  7_Backend_ICC2/4_Report/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/06_route/drc_detail/drc.by_layer.rpt
+  7_Backend_ICC2/4_Report/06_route/drc_detail/drc.detailed.rpt
+  docs/backend/route_drc_detail_diagnosis.md
+```
+
+## Detail Route Repair Decision
+
+```text
+Date: 2026-05-08
+Decision: do not continue blind incremental detail_route looping as the main route-closure method
+Reason: direct repair trials did not solve the lower-metal/VIA1 DRC cluster.
+Trial 1: 200 max iterations
+  before DRC: 400
+  after DRC: 398
+  open nets: 0
+  note: needs-fat-contact grew from 108 to 137
+Trial 2: 1 max iteration
+  before DRC: 400
+  after DRC: 383
+  open nets: 0
+  note: best total count so far, but diff-net spacing grew to 224 on M1
+Conclusion: router can reshuffle the violations, but the root problem remains lower-metal access/grid/contact setup.
+Next decision path: clean top VDD/VSS no-pin/unplaced port handling, inspect lower-metal pin access/off-grid pins, review SAED32 via/contact setup, and add scan DEF handoff before another full route comparison.
+Evidence:
+  7_Backend_ICC2/3_Log/trials/detail_repair_200iter/detail_route_repair.log
+  7_Backend_ICC2/4_Report/trials/detail_repair_200iter/06_route/check_routes.after.rpt
+  7_Backend_ICC2/4_Report/trials/detail_repair_200iter/06_route/drc.after.matrix.rpt
+  7_Backend_ICC2/3_Log/trials/detail_repair_1iter/detail_route_repair_1iter.log
+  7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/check_routes.after.rpt
+  7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/drc.after.matrix.rpt
+  docs/backend/route_drc_detail_diagnosis.md
+```

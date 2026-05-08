@@ -20,3 +20,18 @@ SIGNAL_MAX_ROUTING_LAYER=M8
 
 `SIGNAL_MAX_ROUTING_LAYER` is for route-layer-bound experiments.
 Leave it unset for the original density-only trial.
+
+## run_trial_detail_route_repair.tcl
+
+Incremental detail-route repair trial on the current ICC2 block.
+Use after route DRC detail diagnosis.
+
+Optional environment variables:
+
+```text
+TRIAL_NAME=detail_repair_200iter
+DETAIL_ROUTE_ITERATIONS=200
+```
+
+This does not rebuild from init.
+It starts from the current saved ICC2 block.

@@ -254,3 +254,39 @@ Result: PASS_WITH_OPEN
 Notes: Trial rebuilt the ICC2 lib, reran init/floorplan/PG/place/CTS/route, and applied signal route layer bounds M1-M8. The current generated ICC2 lib now reflects this 60util_m8 trial state; rerun main 01-06 scripts to recreate the 65% baseline state. route_auto completed with 399 DRCs; check_routes reports 400 DRCs and 0 open nets. DRC classes are diff-net spacing 122, less-than-min-area 7, needs-fat-contact 108, off-grid 160, and short 3. Worst listed setup slack is 2.11 ns MET; worst listed hold slack is 0.02 ns MET. Legality is 0 violations. PG connectivity and PG DRC are clean. M8 bound slightly improves 60% trial DRC from 407 to 400, but route convergence is still open.
 Evidence: 7_Backend_ICC2/3_Log/trials/60util_m8/trial_60util_m8_route.log and 7_Backend_ICC2/4_Report/trials/60util_m8/06_route/{check_routes,check_routability,ignored_layers,utilization,timing.max,timing.min,check_legality,pg_connectivity,pg_drc}.rpt.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl | tee 7_Backend_ICC2/3_Log/06_route/route_drc_detail.log
+Stage: ICC2 route DRC detail diagnosis
+Result: PASS_WITH_OPEN
+Notes: Opened current generated ICC2 block, which is the 60util_m8 trial state. check_routes regenerated zroute.err marker data. report_drc_error matrix/by-layer/by-type/detailed reports were written. Matrix shows all 400 remaining DRCs are lower-metal/access issues: M1 125, M1-M2 108, M2 88, VIA1 79. Type split is diff-net spacing 122, less-than-min-area 7, needs-fat-contact 108, off-grid 160, short 3. Hotspot report was also created from detailed Bbox coordinates using 50um buckets.
+Evidence: 7_Backend_ICC2/3_Log/06_route/route_drc_detail.log and 7_Backend_ICC2/4_Report/06_route/drc_detail/{check_routes.detail_source,drc.matrix,drc.by_layer,drc.by_type,drc.detailed,drc.hotspot_50um,zroute.err}.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_detail_route_repair.tcl | tee 7_Backend_ICC2/3_Log/trials/detail_repair_200iter/detail_route_repair.log
+Stage: ICC2 incremental detail route repair trial, 200 max iterations
+Result: PASS_WITH_OPEN
+Notes: Started from the 60util_m8 routed state. route_detail ran incrementally and stopped without DRC convergence. check_routes improved only from 400 to 398 DRCs, with 0 open nets. After matrix shows diff-net spacing 94, less-than-min-area 6, needs-fat-contact 137, off-grid 160, short 1. Timing listed paths remain MET: setup slack 2.11 ns and hold slack 0.02 ns. Legality remains 0 and PG connectivity/DRC remain clean. Conclusion: long blind detail-route looping is not enough for route closure.
+Evidence: 7_Backend_ICC2/3_Log/trials/detail_repair_200iter/detail_route_repair.log and 7_Backend_ICC2/4_Report/trials/detail_repair_200iter/06_route/{check_routes.before,check_routes.after,drc.before.matrix,drc.after.matrix,timing.max.after,timing.min.after,check_legality.after,pg_connectivity.after,pg_drc.after}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=60util_m8_restore SIGNAL_MIN_ROUTING_LAYER=M1 SIGNAL_MAX_ROUTING_LAYER=M8 icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl | tee 7_Backend_ICC2/3_Log/trials/60util_m8_restore/trial_60util_m8_restore.log
+Stage: ICC2 60% utilization + M8 route-layer restore
+Result: PASS_WITH_OPEN
+Notes: Rebuilt the generated ICC2 lib back to a clean 60util_m8-equivalent routed state before the 1-iteration repair comparison. check_routes reports 400 DRCs and 0 open nets. Legality remains 0 and PG connectivity/DRC remain clean. Timing listed paths remain MET.
+Evidence: 7_Backend_ICC2/3_Log/trials/60util_m8_restore/trial_60util_m8_restore.log and 7_Backend_ICC2/4_Report/trials/60util_m8_restore/06_route/{check_routes,timing.max,timing.min,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=detail_repair_1iter DETAIL_ROUTE_ITERATIONS=1 icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_detail_route_repair.tcl | tee 7_Backend_ICC2/3_Log/trials/detail_repair_1iter/detail_route_repair_1iter.log
+Stage: ICC2 incremental detail route repair trial, 1 max iteration
+Result: PASS_WITH_OPEN
+Notes: Started from the restored 60util_m8 routed state. Before DRC was 400. After one detail-route iteration, check_routes reports 383 DRCs and 0 open nets. DRC type split becomes diff-net spacing 224, off-grid 155, and short 4; needs-fat-contact and min-area markers disappear, but M1 diff-net spacing grows. Timing listed paths remain MET: setup slack 2.11 ns and hold slack 0.02 ns. Legality remains 0 and PG connectivity/DRC remain clean. Conclusion: this is the best count so far, but not route closure and not a root-cause fix.
+Evidence: 7_Backend_ICC2/3_Log/trials/detail_repair_1iter/detail_route_repair_1iter.log and 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/{check_routes.before,check_routes.after,drc.before.matrix,drc.after.matrix,timing.max.after,timing.min.after,check_legality.after,pg_connectivity.after,pg_drc.after}.rpt.
+```

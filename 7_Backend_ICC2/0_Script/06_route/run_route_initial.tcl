@@ -23,8 +23,16 @@ open_block -edit $TOP_NAME
 ################################################################################
 # signal routing입니다.
 # check_routability는 routing 전에 congestion/blocked pin 같은 가능성 문제를 봅니다.
+# signal route는 M1-M8까지만 사용합니다.
+# trial 결과 M9/MRDL을 열어두는 것보다 M8 상한이 warning과 DRC를 조금 줄였습니다.
 # route_auto가 global route와 detail route를 수행합니다.
 ################################################################################
+
+set_ignored_layers \
+  -min_routing_layer M1 \
+  -max_routing_layer M8
+
+catch {report_ignored_layers > $ROUTE_REPORT_DIR/ignored_layers.rpt}
 
 check_routability > $ROUTE_REPORT_DIR/check_routability.rpt
 

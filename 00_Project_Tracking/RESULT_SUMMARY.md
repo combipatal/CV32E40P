@@ -22,6 +22,8 @@ ICC2 CTS initial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/05_cts/{clock
 ICC2 route initial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/06_route/{check_routes,qor,check_legality,pg_connectivity}.rpt | route_auto completed; open nets 0; route DRC 408 remains; legality 0; PG clean
 ICC2 route 60% util trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/60util/06_route/{check_routes,utilization,timing.max,timing.min}.rpt | route-stage utilization 0.7324; open nets 0; check_routes DRC 407 remains; timing paths MET; density-only fix rejected
 ICC2 route 60% util + M8 trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/60util_m8/06_route/{check_routes,ignored_layers,utilization,timing.max,timing.min}.rpt | signal route layer bound M1-M8; route-stage utilization 0.7324; open nets 0; check_routes DRC 400 remains; timing paths MET; layer-bound helps slightly but does not close route
+ICC2 route DRC detail diagnosis | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/06_route/drc_detail/{drc.matrix,drc.by_layer,drc.detailed}.rpt | current block is 60util_m8 state; all 400 DRCs are on M1/M2/M1-M2/VIA1; next focus is lower-metal/via/contact/grid cleanup
+ICC2 detail-route repair trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/{check_routes.after,drc.after.matrix,timing.max.after,timing.min.after}.rpt | best DRC count so far is 383 after 1 iteration; 200-iteration run ends at 398; open nets 0 and timing paths MET; not route closure
 ```
 
 ### Backend Init
@@ -52,6 +54,9 @@ First-pass route legality | PASS | 7_Backend_ICC2/4_Report/06_route/check_legali
 First-pass route PG | PASS | 7_Backend_ICC2/4_Report/06_route/pg_connectivity.rpt | VDD/VSS floating wires/vias/std cells/terminals all 0; PG DRC reports no errors
 60% utilization route trial | OPEN | 7_Backend_ICC2/4_Report/trials/60util/06_route/check_routes.rpt | check_routes reports 407 DRCs and 0 open nets; DRC classes: diff-net spacing 102, min-area 8, needs-fat-contact 128, off-grid 166, same-net spacing 1, short 2
 60% utilization + M8 route-layer trial | OPEN | 7_Backend_ICC2/4_Report/trials/60util_m8/06_route/check_routes.rpt | check_routes reports 400 DRCs and 0 open nets; DRC classes: diff-net spacing 122, min-area 7, needs-fat-contact 108, off-grid 160, short 3
+Route DRC layer matrix | OPEN | 7_Backend_ICC2/4_Report/06_route/drc_detail/drc.matrix.rpt | all 400 DRCs are lower-metal/access: M1 125, M1-M2 108, M2 88, VIA1 79
+Detail route repair 200iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_200iter/06_route/check_routes.after.rpt | check_routes reports 398 DRCs and 0 open nets; long incremental detail routing does not converge
+Detail route repair 1iter | OPEN | 7_Backend_ICC2/4_Report/trials/detail_repair_1iter/06_route/check_routes.after.rpt | check_routes reports 383 DRCs and 0 open nets; best count so far but M1 diff-net spacing grows to 224
 ```
 
 ### Timing
@@ -65,6 +70,7 @@ ICC2 first-pass CTS | 10 ns | 1.98 ns listed worst setup path | not summarized |
 ICC2 first-pass route | 10 ns | 2.00 ns listed worst setup path | not summarized | 58348.41 cell area | not summarized | post-route estimate with detailed routed nets; listed worst hold slack 0.02 ns; route DRC not clean
 ICC2 60% util route trial | 10 ns | 2.10 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
 ICC2 60% util + M8 route-layer trial | 10 ns | 2.11 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
+ICC2 detail route repair 1iter | 10 ns | 2.11 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
 ```
 
 ### Fmax Estimate

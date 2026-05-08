@@ -262,6 +262,22 @@ Notes: Shifted active goal from immediate DRC reduction to root-cause identifica
 
 ```text
 Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/root_cause_probe/hotspot_pg_shape_probe.log -f 7_Backend_ICC2/0_Script/99_util/run_hotspot_pg_shape_probe.tcl; python3 scripts/analyze_hotspot_pg_distance.py
+Stage: ICC2 hotspot DRC-to-PG distance probe
+Result: RECORDED
+Notes: Hotspot {{215 195} {265 265}} contains three M2 PG stripes at x=219.8..220.2, 239.8..240.2, and 259.8..260.2. Of 123 hotspot DRC markers, 23 are within 1um of an M2 PG shape, 78 are within 5um, and 45 are farther than 5um. PG is a real contributing axis but does not explain all hotspot markers alone. Evidence: 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/{hotspot_pg_shapes.tsv,hotspot_drc_pg_distance_summary.rpt,hotspot_drc_pg_distance.tsv}.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=pgm2off30_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_MESH_OFFSET=30.0 icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pgm2off30_scan_def_m8/pgm2off30_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 PG M2 offset root-cause probe
+Result: INVALID_FOR_CLOSURE_BUT_INFORMATIVE
+Notes: Moving only the M2 PG mesh offset from 20um to 30um changed signal route DRC from 398 to 377 and reduced diff-net spacing 120 -> 82, but introduced PG DRC: 60 M1 insufficient-spacing errors after placement and 97 after route. Open nets stayed 0 and legality stayed 0. This proves PG M2 position affects route DRC, but the 30um offset is not a valid fix. Evidence: 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/03_power/pg_mesh_trial_settings.rpt, 06_route/check_routes.rpt, 06_route/drc_detail/drc.matrix.rpt, 04_place/pg_drc.rpt, and 06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-08
 Command: env TRIAL_NAME=pin_access_spread CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 PLACE_PIN_DENSITY_AWARE=true PLACE_MAX_DENSITY=0.70 PLACE_TARGET_ROUTING_DENSITY=0.70 PLACE_INCREASED_CELL_EXPANSION=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pin_access_spread/pin_access_spread.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
 Stage: ICC2 placement spreading route trial
 Result: REJECTED
@@ -492,4 +508,31 @@ Stage: ICC2 DRC marker context probe
 Result: RECORDED
 Notes: Fresh marker extraction reports 398 DRCs: M1 diff-net spacing 116, M1-M2 needs-fat-contact 99, M2 off-grid 78, VIA1 off-grid 82, M2 min-area 8, M1 off-grid 10, M2 diff-net spacing 4, and M1 short 1. Hotspot buckets are concentrated around x=220..260um and y=200..260um. Representative marker context shows many failures near OR2X1_HVT/NOR2X0_HVT small combinational cells, with some SDFFARX1_RVT/NBUFFX8_HVT examples and some VDD/VSS PG shapes inside the same local search windows.
 Evidence: docs/backend/drc_marker_context.md, 7_Backend_ICC2/4_Report/06_route/drc_detail/{drc.matrix,drc.by_layer,drc.detailed}.rpt, and 7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/{representative_summary,representative_drc_markers,marker_context}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/root_cause_probe/hotspot_pg_shape_probe.log -f 7_Backend_ICC2/0_Script/99_util/run_hotspot_pg_shape_probe.tcl; python3 scripts/analyze_hotspot_pg_distance.py
+Stage: ICC2 hotspot DRC-to-PG distance probe
+Result: RECORDED
+Notes: Hotspot {{215 195} {265 265}} contains 123 route DRC markers and three M2 PG stripes at x=219.8..220.2, x=239.8..240.2, and x=259.8..260.2. Distance summary: 23 markers within 1um of M2 PG, 78 within 5um, and 45 farther than 5um. PG M2 is related to the hotspot, but not the only cause.
+Evidence: 7_Backend_ICC2/3_Log/trials/root_cause_probe/hotspot_pg_shape_probe.log, 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_pg_shapes.tsv, and 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=pgm2off30_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_MESH_OFFSET=30.0 icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pgm2off30_scan_def_m8/pgm2off30_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 PG M2 offset root-cause probe
+Result: INVALID_FOR_CLOSURE_BUT_INFORMATIVE
+Notes: Moving M2 PG offset from 20um to 30um changed signal route DRC from 398 to 377 and kept open nets at 0, proving PG M2 position affects signal routing. But the same trial created PG DRC errors: 60 M1 insufficient-spacing errors after placement and 97 after route. Rejected as a fix. Root-cause model becomes PG M2 mesh + stdcell pin access + M2/VIA1 route/via policy.
+Evidence: 7_Backend_ICC2/3_Log/trials/pgm2off30_scan_def_m8/pgm2off30_scan_def_m8.log, 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/03_power/pg_mesh_trial_settings.rpt, 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt, and 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=scan_def_m8_restore CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/scan_def_m8_restore/scan_def_m8_restore.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 PG-clean baseline restore after PG offset probe
+Result: PASS_WITH_OPEN
+Notes: Rebuilt and saved the PG-clean scan_def_m8_restore baseline after rejecting the PG_M2_MESH_OFFSET=30.0 probe. Final route has 0 open nets and check_routes reports 398 DRCs. The ICC2 log reports check_pg_drc No errors found at route stage, so the saved block is back to the PG-clean diagnosis baseline.
+Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_m8_restore/scan_def_m8_restore.log and 7_Backend_ICC2/4_Report/trials/scan_def_m8_restore/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
 ```

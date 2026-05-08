@@ -39,6 +39,8 @@ ICC2 advanced legalizer + pin color trial | ICC2 | REJECTED | 7_Backend_ICC2/4_R
 ICC2 DRC marker context probe | ICC2/script | RECORDED | 7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/marker_context.rpt | scan_def_m8_restore detailed DRC has 398 markers; hotspots concentrate at x=220..260um/y=200..260um; representative markers hit OR2X1_HVT/NOR2X0_HVT/SDFFARX1_RVT/NBUFFX8_HVT local pin/route context
 ICC2 hotspot partial blockage probe | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/check_routes.rpt | hotspot {{215 195} {265 265}} 40% partial blockage gives DRC 390 vs scan_def_m8_restore 398; open nets 0, legality 0, PG clean; hotspot density alone not root cause
 ICC2 route DRC root-cause investigation | docs/script | RECORDED | docs/backend/route_drc_root_cause_investigation.md | active goal shifted to root-cause identification; hotspot has 123 DRC markers, dominated by M2/VIA1 off-grid; leading hypotheses are pin access/off-grid, M2 PG interaction, LEF-built NDM quality, and route off-grid/via policy
+ICC2 hotspot DRC-to-PG distance probe | ICC2/script | RECORDED | 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt | hotspot has 3 M2 PG stripes; 78/123 hotspot markers are within 5um of M2 PG, but 45/123 are farther than 5um
+ICC2 PG M2 offset probe | ICC2 | INVALID_FOR_CLOSURE_BUT_INFORMATIVE | 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/check_routes.rpt | M2 PG offset 30um changes signal DRC 398 -> 377 but creates PG DRC 97 after route; PG position affects route DRC but this offset is not a valid fix
 ```
 
 ### Backend Init
@@ -87,6 +89,8 @@ Advanced legalizer + pin color route trial | REJECTED | 7_Backend_ICC2/4_Report/
 DRC marker context probe | RECORDED | 7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/representative_summary.rpt | fresh marker matrix: M1 diff spacing 116, M1-M2 fat contact 99, M2 off-grid 78, VIA1 off-grid 82; top 20um buckets around x=220..260/y=200..260
 Hotspot partial blockage probe | OPEN | 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/check_routes.rpt | hotspot {{215 195} {265 265}} 40% blockage reduces DRC only 398 -> 390; density-only hotspot fix is weak
 Route DRC root-cause hypothesis | RECORDED | docs/backend/route_drc_root_cause_investigation.md | hotspot window has 123 markers: Off-grid VIA1 48, Off-grid M2 46, Diff M1 18, Needs fat contact 10, Off-grid M1 1
+Hotspot DRC-to-PG distance | RECORDED | 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt | 23/123 markers within 1um of M2 PG, 78/123 within 5um, 45/123 farther than 5um
+PG M2 offset 30um probe | INVALID_FOR_CLOSURE_BUT_INFORMATIVE | 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | signal DRC 377, but PG DRC 97; diff spacing improves 120 -> 82 while fat-contact worsens 99 -> 127 and off-grid remains 170 -> 163
 ```
 
 ### Timing

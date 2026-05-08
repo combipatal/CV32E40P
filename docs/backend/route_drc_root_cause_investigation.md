@@ -351,3 +351,112 @@ hotspot DRC는 단순 배치 밀도 문제가 아니다.
 핵심 증상은 ALU/div hotspot 주변의 stdcell pin access와 M2/VIA1 off-grid다.
 PG M2 mesh는 일부 marker에서 강한 공범 후보지만, 단독 원인으로 확정되지는 않았다.
 ```
+
+## PG M2 Distance Probe
+
+PG 간섭 가설을 보기 위해 hotspot 안의 M2 PG shape를 덤프하고, 기존 DRC marker와의 거리를 계산했다.
+
+증거:
+
+```text
+7_Backend_ICC2/0_Script/99_util/run_hotspot_pg_shape_probe.tcl
+scripts/analyze_hotspot_pg_distance.py
+7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_pg_shapes.tsv
+7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt
+```
+
+hotspot 안 M2 PG stripe는 3개다.
+
+```text
+VSS M2 x=219.8..220.2
+VDD M2 x=239.8..240.2
+VSS M2 x=259.8..260.2
+```
+
+hotspot marker 123개와 M2 PG shape 거리:
+
+```text
+<= 0.25um: 6
+<= 0.50um: 18
+<= 1.00um: 23
+<= 2.00um: 32
+<= 5.00um: 78
+>  5.00um: 45
+```
+
+판단:
+
+```text
+PG M2 stripe와 매우 가까운 DRC가 실제로 있다.
+하지만 전체 123개 중 45개는 5um보다 멀다.
+따라서 PG는 원인 축 중 하나지만 단독 원인으로는 부족하다.
+```
+
+## PG M2 Offset Probe
+
+PG M2 mesh offset을 20um에서 30um으로 바꾼 probe를 실행했다.
+
+조건:
+
+```text
+trial: pgm2off30_scan_def_m8
+scan DEF: enabled
+signal max layer: M8
+PG M2 mesh offset: 30.0
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/03_power/pg_mesh_trial_settings.rpt
+7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/04_place/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/pg_drc.rpt
+```
+
+결과:
+
+```text
+route open nets: 0
+placement legality: 0 violations
+signal route DRC: 398 -> 377
+PG DRC after placement: 60 M1 insufficient spacing errors
+PG DRC after route: 97 M1 insufficient spacing errors
+```
+
+signal route DRC matrix:
+
+```text
+Diff net spacing       120 -> 82
+Less than minimum area   8 -> 5
+Needs fat contact       99 -> 127
+Off-grid               170 -> 163
+Short                    1 -> 0
+```
+
+판단:
+
+```text
+M2 PG 위치를 바꾸면 signal route DRC 분포가 크게 변한다.
+따라서 PG mesh 위치는 route DRC 원인 축이 맞다.
+
+그러나 30um offset은 PG DRC를 새로 만들기 때문에 해법으로는 invalid다.
+또 off-grid는 170 -> 163으로 조금만 줄었다.
+따라서 전체 hotspot DRC의 주원인은 PG 하나가 아니라
+PG mesh + stdcell pin access + M2/VIA1 route policy가 같이 얽힌 문제로 보는 것이 더 맞다.
+```
+
+현재 원인 판단 업데이트:
+
+```text
+확정에 가까움:
+  PG M2 mesh는 route DRC에 영향을 준다.
+
+아직 미확정:
+  PG가 주원인인지, pin/via/grid 정책이 주원인인지.
+
+더 강해진 가설:
+  stdcell pin access + M2/VIA1 off-grid interaction
+  with PG mesh as a contributing obstruction
+```

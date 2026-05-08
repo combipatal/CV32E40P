@@ -4,7 +4,7 @@
 
 ```text
 Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, advanced legalizer/pin-color trial, DRC marker context probe, hotspot partial blockage probe, and route DRC root-cause hypothesis write-up completed; root cause not yet proven
+Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, advanced legalizer/pin-color trial, DRC marker context probe, hotspot partial blockage probe, route DRC root-cause hypothesis write-up, hotspot DRC-to-PG distance probe, and PG M2 offset probe completed; root cause not fully proven
 ```
 
 ## Next Milestone
@@ -77,7 +77,10 @@ Advanced legalizer and pin color alignment trials were run and rejected. They ke
 DRC marker context probe was run after restoring the simpler scan_def_m8 route state. Hotspots are concentrated around x=220..260um and y=200..260um, and representative markers show OR2X1_HVT/NOR2X0_HVT/SDFFARX1_RVT/NBUFFX8_HVT local pin/route interactions plus some nearby VDD/VSS PG shapes.
 Hotspot partial blockage probe was run. It changed only the hotspot placement density and reduced route DRC from 398 to 390, so hotspot density alone is not the root cause.
 Root-cause investigation is now the active mode. Hotspot window {{215 195} {265 265}} contains 123 DRC markers, dominated by M2/VIA1 off-grid markers. Current leading hypotheses are stdcell pin access + M2/VIA1 off-grid interaction, possible M2 PG mesh interference, LEF-built NDM/pin-check quality, and route off-grid/via policy.
+Hotspot DRC-to-PG distance probe shows 78 of 123 hotspot markers are within 5um of M2 PG shapes, but 45 are farther than 5um. PG M2 offset 30um changes signal DRC from 398 to 377, proving PG position affects routing, but it creates 97 PG DRC errors and is invalid as a fix.
+After the invalid PG M2 offset probe, the saved ICC2 block was restored to the PG-clean scan_def_m8_restore baseline: route open nets 0, check_routes 398 DRCs, and route-stage check_pg_drc No errors found.
 Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, generic placement spreading, scan DEF handoff alone, hotspot partial blockage alone, and advanced legalizer/pin-color alignment do not identify or close the root cause. Do not continue manual cell moves or blind repair trials before the next cause probe.
+Updated root-cause view: PG M2 mesh is a contributing obstruction, but the remaining evidence still points to a combined PG mesh + stdcell pin access + M2/VIA1 route policy issue rather than PG alone.
 Extraction and post-route STA are still pending.
 ```
 

@@ -506,3 +506,38 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/root_cause_probe/99_manual/route_common_app_options.rpt
   7_Backend_ICC2/4_Report/trials/root_cause_probe/99_manual/route_detail_app_options.rpt
 ```
+
+## PG M2 Mesh Root-Cause Probe Decision
+
+```text
+Date: 2026-05-08
+Decision: treat PG M2 mesh as a contributing route DRC cause, not as the only root cause
+Reason: hotspot DRC-to-PG distance and M2 PG offset probe both show sensitivity to PG placement, but PG does not explain all hotspot markers and an offset-only change creates new PG DRC.
+Distance evidence:
+  hotspot window {{215 195} {265 265}} has 123 DRC markers
+  M2 PG stripes inside hotspot are at x=219.8..220.2, x=239.8..240.2, and x=259.8..260.2
+  23 markers are within 1um of M2 PG
+  78 markers are within 5um of M2 PG
+  45 markers are farther than 5um from M2 PG
+Offset evidence:
+  PG M2 offset 20um -> 30um changes signal route DRC 398 -> 377
+  Diff net spacing changes 120 -> 82
+  Needs fat contact changes 99 -> 127
+  Off-grid changes 170 -> 163
+  route open nets remain 0 and legality remains 0
+  but PG DRC becomes invalid: 60 M1 insufficient-spacing errors after placement and 97 after route
+Conclusion:
+  PG M2 mesh location affects route DRC and is part of the cause.
+  PG M2 offset 30um is rejected as a fix because PG DRC is not clean.
+  The stronger root-cause model is PG mesh + stdcell pin access + M2/VIA1 route/via policy interaction.
+Next action:
+  keep the original PG-clean 20um/40um mesh as baseline for now.
+  investigate route off-grid/via policy and stdcell pin access around NOR2X0_HVT/OR2X1_HVT before another PG structure change.
+Evidence:
+  docs/backend/route_drc_root_cause_investigation.md
+  7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt
+  7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/03_power/pg_mesh_trial_settings.rpt
+  7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/pg_drc.rpt
+```

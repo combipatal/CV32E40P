@@ -554,3 +554,12 @@ Result: PASS_WITH_OPEN
 Notes: Rebuilt and saved the PG-clean scan_def_m8_restore baseline after rejecting the PG_M2_MESH_OFFSET=30.0 probe. Final route has 0 open nets and check_routes reports 398 DRCs. The ICC2 log reports check_pg_drc No errors found at route stage, so the saved block is back to the PG-clean diagnosis baseline.
 Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_m8_restore/scan_def_m8_restore.log and 7_Backend_ICC2/4_Report/trials/scan_def_m8_restore/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
 ```
+
+```text
+Date: 2026-05-08
+Command: rg/sed evidence review of ICC2 check_routability, create_pin_check_lib reports, SAED32 HVT LEF, and SAED32 tech ContactCode definitions.
+Stage: ICC2 MUX41X2_HVT/S0 valid-via-region diagnosis
+Result: ROOT_CAUSE_COMPONENT_CONFIRMED
+Notes: ZRT-044 for MUX41X2_HVT/S0 repeats in baseline and route-option probes. create_pin_check_lib/check_libcell_pin_access reports PDC-001 for MUX41X2_HVT/S0 no via regions. LEF shows MUX41X2_HVT/S0 has only one M1 stripe, RECT 2.1620 1.4440 2.7080 1.4940, height 0.050um. The default VIA12SQ_C needs a 0.05um cut plus M1 lower-layer enclosure, so the M1 landing height is too small for a normal valid VIA1 region. This confirms a library pin-access weakness, but it does not alone explain all 398 route DRCs.
+Evidence: docs/backend/mux41x2_pin_access_diagnosis.md, 7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/check_libcell_pin_access.hvt.analyze_lib_cell.rpt, 7_Backend_ICC2/4_Report/trials/scan_def_m8_restore/06_route/check_routability.rpt, /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef, and /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf.
+```

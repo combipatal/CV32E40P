@@ -573,3 +573,31 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_offgrid_tracks_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
   7_Backend_ICC2/4_Report/trials/route_via_effort_scan_def_m8/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## MUX41X2_HVT/S0 Pin Access Decision
+
+```text
+Date: 2026-05-08
+Decision: treat MUX41X2_HVT/S0 as a confirmed stdcell pin-access root-cause component
+Reason:
+  baseline and route-option trials all repeat ZRT-044 no valid via regions for MUX41X2_HVT/S0
+  create_pin_check_lib/check_libcell_pin_access repeats the same issue as PDC-001 no via regions
+  SAED32 HVT LEF shows MUX41X2_HVT/S0 has only one M1 stripe with height 0.050um
+  SAED32 default VIA12SQ_C has 0.050um cut and needs M1 enclosure, so a valid VIA1 landing region is difficult on that stripe
+Comparison:
+  MUX41X1_HVT/S0 has the same stripe plus an extra M1 tab
+  MUX41X2_HVT/S0 lacks that tab
+Conclusion:
+  this is not just router effort or one bad placement instance
+  it is a real library pin-access weakness
+  it does not alone explain all route DRCs, so keep the combined model: stdcell pin access + PG M2 mesh + M2/VIA1 routing policy
+Next action:
+  check whether MUX41X2_HVT usage can be avoided or swapped by library/cell-purpose constraints
+  then continue with SDFFARX1_RVT blocked-access/hotspot overlap because official blocked access is still dominated by SDFFARX1_RVT
+Evidence:
+  docs/backend/mux41x2_pin_access_diagnosis.md
+  7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/check_libcell_pin_access.hvt.analyze_lib_cell.rpt
+  7_Backend_ICC2/4_Report/trials/scan_def_m8_restore/06_route/check_routability.rpt
+  /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+```

@@ -342,3 +342,25 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/check_routability.contact.rpt
   7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/via_defs.cv32e40p_icc2_lib.rpt
 ```
+
+## Milkyway Reference Path Decision
+
+```text
+Date: 2026-05-08
+Decision: keep current ICC2 backend on DB+LEF-built NDM libraries
+Reason: original SAED32 Milkyway reference libraries cannot be converted/used directly in this environment.
+Trial: create_lib -technology $TECH_FILE -ref_libs {$MW_RVT $MW_LVT $MW_HVT}
+Observed blockers:
+  IC Compiler 1 icc_shell is not installed or not discoverable.
+  lib.setting.milkyway_exec alone did not satisfy create_lib.
+  Milkyway executable required wrapper translation from -f/-output_log_file to -file/-log.
+  After wrapper translation, Milkyway export still failed due missing Milkyway and MDataPrep license features.
+  Import failed because export tar.gz was never created.
+Conclusion: Milkyway-reference vs LEF-built-NDM route behavior cannot be compared directly in current environment.
+Next decision path: debug within DB+LEF-built NDM path by testing pin-access/report commands, M1 track offset trials, and lower-metal/VIA1 route options before full route rerun.
+Evidence:
+  docs/backend/mw_ref_open_trial.md
+  7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log
+  7_Backend_ICC2/2_Output/trials/mw_ref_open_trial/local_cell_libs/log/cv32e40p_icc2_lib_mwref_saed32nm_rvt_1p9m_export_icc2_frame.log
+  7_Backend_ICC2/2_Output/trials/mw_ref_open_trial/local_cell_libs/log/cv32e40p_icc2_lib_mwref_saed32nm_rvt_1p9m_import_icc_fram.log
+```

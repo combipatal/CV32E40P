@@ -4,7 +4,7 @@
 
 ```text
 Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, and CO/VIA contact diagnosis completed; route DRC cleanup pending
+Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, and Milkyway reference open trial completed; route DRC cleanup pending
 ```
 
 ## Next Milestone
@@ -65,7 +65,8 @@ Detail route repair was tested. 200 max iterations ended at 398 DRCs. 1 max iter
 PG top-port cleanup was tested. Accepted fix adds non-overlapping M8 terminals to VDD/VSS at y=3..5um on the PG ring. VDD/VSS no-pin/unplaced warnings are removed and PG remains clean.
 Off-track M1 pin object diagnosis was run. The 8 remaining off-track warnings map to stdcell pins: SDFFARX1_RVT/QN, INVX8_LVT/A, and MUX41X1_HVT/S1.
 CO/VIA contact diagnosis was run. CO has no default contact, which explains ZRT-022, but VIA1 has default M1-M2 via VIA12SQ_C, so M1-M2 via setup is present.
-Conclusion: lower floorplan utilization, M8 bound, and blind detail-route looping help only slightly. Top PG port cleanup removes a warning but does not close route. Next route cleanup should focus on lower-metal/VIA1/contact/grid behavior, SAED32 pin-access/track/contact setup, LEF-built NDM versus Milkyway reference behavior, scan DEF handoff, and electrical constraint cleanup.
+Milkyway reference open trial was run. Direct Milkyway reference conversion is blocked in this environment because IC Compiler 1 icc_shell is unavailable and Milkyway/MDataPrep license features are unavailable.
+Conclusion: lower floorplan utilization, M8 bound, and blind detail-route looping help only slightly. Top PG port cleanup removes a warning but does not close route. Next route cleanup should focus on lower-metal/VIA1/contact/grid behavior, SAED32 pin-access/track/contact setup inside the active DB+LEF-built NDM path, scan DEF handoff, and electrical constraint cleanup.
 Extraction and post-route STA are still pending.
 ```
 

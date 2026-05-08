@@ -364,3 +364,12 @@ Result: RECORDED
 Notes: ZRT-022 is reproduced. ICC2 sees CO layer number 28, mask polyCont, width 0.042um, but no CO via_def/default contact exists in the current library tech. VIA1 does have six M1-M2 via_defs and one signal-usable default, VIA12SQ_C. Therefore ZRT-022 is a real CO default-contact warning from stdcell pin CO geometry, but it is not evidence that M1-M2 VIA1 routing setup is missing. M1/M2 tracks start at 0.088um with 0.152um pitch, matching the SAED32 unit site width, while several off-track pin coordinates are 0.02-0.055um away from the nearest track. Current best root-cause candidate remains stdcell M1 pin access versus track/via legality, not PG connectivity.
 Evidence: docs/backend/contact_code_diagnosis.md, 7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/{contact_code_summary,check_routability.contact,via_defs.cv32e40p_icc2_lib,tracks.m1,tracks.m2}.rpt, and 7_Backend_ICC2/3_Log/trials/contact_code_diagnose/contact_code_diagnose.log.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_mw_ref_open_trial.tcl | tee 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log
+Stage: ICC2 Milkyway reference open trial
+Result: BLOCKED
+Notes: Tested whether original SAED32 Milkyway reference libraries can be used directly through create_lib -ref_libs. First failure required lib.configuration.icc_shell_exec or lib.setting.milkyway_exec. No IC Compiler 1 icc_shell exists in this install. Milkyway executable exists, and a wrapper translated -f/-output_log_file into Milkyway -file/-log. That removed the CLI argument failure, but Milkyway export still failed because Milkyway and MDataPrep license features are unavailable and no export tar.gz was created. Import then failed with FILE-002 and LM-010. Conclusion: direct Milkyway-reference ICC2 backend comparison is blocked by environment/tool/license. Continue with DB+LEF-built NDM and debug pin-access/track options there.
+Evidence: docs/backend/mw_ref_open_trial.md, 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log, 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/icc_milkyway_exec_wrapper.args.log, and 7_Backend_ICC2/2_Output/trials/mw_ref_open_trial/local_cell_libs/log/*_{export_icc2_frame,import_icc_fram}.log.
+```

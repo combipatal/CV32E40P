@@ -88,3 +88,27 @@ VIA1에는 default via_def VIA12SQ_C가 있습니다.
 ```text
 docs/backend/contact_code_diagnosis.md
 ```
+
+## run_mw_ref_open_trial.tcl
+
+원본 SAED32 Milkyway reference library를 ICC2 `create_lib -ref_libs`에 직접 넣어 자동 변환/link가 되는지 확인합니다.
+
+현재 결과:
+
+```text
+Milkyway direct path는 이 환경에서 blocked입니다.
+icc_shell 없음, Milkyway/MDataPrep license 없음, export tar.gz 생성 실패.
+현재 backend는 DB+LEF -> NDM path를 계속 사용합니다.
+```
+
+보조 wrapper:
+
+```text
+icc_milkyway_exec_wrapper.sh
+```
+
+결과 문서:
+
+```text
+docs/backend/mw_ref_open_trial.md
+```

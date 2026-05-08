@@ -4,7 +4,7 @@
 
 ```text
 Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, and M1 retrack route trial completed; route DRC cleanup pending
+Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, and blocked-access detail extraction completed; route DRC cleanup pending
 ```
 
 ## Next Milestone
@@ -68,7 +68,9 @@ CO/VIA contact diagnosis was run. CO has no default contact, which explains ZRT-
 Milkyway reference open trial was run. Direct Milkyway reference conversion is blocked in this environment because IC Compiler 1 icc_shell is unavailable and Milkyway/MDataPrep license features are unavailable.
 Pin access / M1 track probe was run. check_libcell_pin_access needs a create_pin_check_lib-style library and cannot run directly on the current design library. report_cell_pin_access shows the 8 flagged cells have 0 blocked access pins, but the same ref-cell population has 117 blocked access pins.
 Manual M1 track recreation was rejected. It can remove visible off-track warnings in an already routed block probe, but after signal-route removal the warning returns and full route explodes to 27260 DRCs, dominated by 24981 illegal-track-route markers.
-Conclusion: lower floorplan utilization, M8 bound, and blind detail-route looping help only slightly. Top PG port cleanup removes a warning but does not close route. Next route cleanup should focus on lower-metal/VIA1/contact/grid behavior, SAED32 pin-access/track/contact setup inside the active DB+LEF-built NDM path, scan DEF handoff, and electrical constraint cleanup.
+Formal create_pin_check_lib flow was tested. create_pin_check_lib succeeds for mixed RVT/LVT/HVT and each VT library. check_libcell_pin_access analyze_lib_cell succeeds after setting pin_check.place.preplace_option_file. analyze_lib_pin remains blocked by LIB-001.
+Blocked access detail extraction was run. ICC2 official summary remains 117 pins with blocked access. Parsed detail has 125 line-level blocked entries: 116 SDFFARX1_RVT, 9 MUX41X1_HVT, and 0 INVX8_LVT.
+Conclusion: lower floorplan utilization, M8 bound, and blind detail-route looping help only slightly. Top PG port cleanup removes a warning but does not close route. Current evidence points to placed-context lower-metal access around SDFFARX1_RVT/MUX41X1_HVT, not simple M1 track recreation or globally broken stdcell access. Next route cleanup should compare blocked access instance coordinates against DRC hotspots, then test placement/scan handoff or spreading changes.
 Extraction and post-route STA are still pending.
 ```
 

@@ -199,6 +199,22 @@ Evidence:
   7_Backend_ICC2/4_Report/06_route/pg_connectivity.rpt
 ```
 
+## Pin-Check Lib And Blocked Access Decision
+
+```text
+Date: 2026-05-08
+Decision: use create_pin_check_lib + check_libcell_pin_access -mode analyze_lib_cell as the valid ICC2 lib-cell pin-access flow for this environment
+Reason: check_libcell_pin_access cannot run on the normal design library, and create_pin_check_lib requires a non-empty pin_check.place.preplace_option_file in this install.
+Result: create_pin_check_lib succeeded for RVT/LVT/HVT together and separately; analyze_lib_cell succeeded; analyze_lib_pin is still blocked by LIB-001 current library context.
+Blocked access finding: same-ref design-context report still has 117 pins with blocked access. Parsed detail entries are concentrated in SDFFARX1_RVT and MUX41X1_HVT, not INVX8_LVT.
+Conclusion: route DRC root cause is more likely placed-context lower-metal pin access around scan flops/muxes than pure M1 track recreation or globally unusable library cells.
+Evidence:
+  docs/backend/pin_check_lib_blocked_access.md
+  7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/create_pin_check_lib_status.rpt
+  7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/check_libcell_pin_access.all.analyze_lib_cell.rpt
+  7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/blocked_access.compact_summary.rpt
+```
+
 ## Route Utilization Trial Decision
 
 ```text

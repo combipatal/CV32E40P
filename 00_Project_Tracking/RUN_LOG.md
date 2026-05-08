@@ -222,6 +222,22 @@ Notes: clock_opt completed through route_clock, clock tree compilation finished 
 
 ```text
 Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pin_access_blocked_detail/pin_access_blocked_detail.log -f 7_Backend_ICC2/0_Script/99_util/run_pin_access_blocked_detail.tcl
+Stage: ICC2 blocked pin access detail
+Result: RECORDED
+Notes: report_cell_pin_access -details ran on 2244 same-ref cells for SDFFARX1_RVT, INVX8_LVT, and MUX41X1_HVT. ICC2 summary reports 117 pins with blocked access. Parsed detail report has 125 line-level blocked entries: 116 SDFFARX1_RVT, 9 MUX41X1_HVT, and 0 INVX8_LVT. Main pins are RSTB 39, SE 23, Q 21, and CLK 20. Evidence: 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/{report_cell_pin_access.same_refs.details.rpt,blocked_access.compact_summary.rpt,blocked_access.by_ref_cell_pin.rpt}.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/create_pin_check_lib_trial/create_pin_check_lib_trial.log -f 7_Backend_ICC2/0_Script/99_util/run_create_pin_check_lib_trial.tcl
+Stage: ICC2 create_pin_check_lib trial
+Result: PASS_WITH_OPEN
+Notes: create_pin_check_lib succeeded for RVT+LVT+HVT together and for each VT separately. check_libcell_pin_access -mode analyze_lib_cell succeeds after setting pin_check.place.preplace_option_file. Mixed-VT analyze_lib_cell reports 27 skipped cells and 855 cells meeting threshold; each VT reports 9 skipped and 285 meeting threshold. analyze_lib_pin still fails with LIB-001 current library context, so it remains open. Evidence: 7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/{create_pin_check_lib_status.rpt,check_libcell_pin_access.all.analyze_lib_cell.rpt,check_libcell_pin_access.*.analyze_lib_pin.rpt}.
+```
+
+```text
+Date: 2026-05-08
 Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_initial.tcl | tee 7_Backend_ICC2/3_Log/06_route/route_initial.log
 Stage: ICC2 first-pass signal route
 Result: PASS_WITH_OPEN

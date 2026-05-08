@@ -30,6 +30,8 @@ ICC2 CO/VIA contact diagnosis | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials
 ICC2 Milkyway reference trial | ICC2 | BLOCKED | 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log | direct MW ref conversion blocked: no icc_shell, Milkyway/MDataPrep license unavailable, export tar.gz missing; continue DB+LEF-built NDM path
 ICC2 pin access / M1 track probe | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_track_probe/99_pin_access_track/{report_cell_pin_access.flagged_cells,report_cell_pin_access.same_refs,check_routability.*}.rpt | flagged 8 cells have 0 blocked access pins, same ref-cell population has 117 blocked access pins; routed-block M1 offset probe alone is not enough evidence for a fix
 ICC2 M1 retrack route trial | ICC2 | REJECTED | 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log | after signal route removal, M1 track recreation at 0.088 still has 8 off-track warnings and route DRC explodes from 400 to 27260, dominated by illegal track route
+ICC2 create_pin_check_lib trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/{create_pin_check_lib_status,check_libcell_pin_access.all.analyze_lib_cell}.rpt | create_pin_check_lib succeeds for mixed-VT and per-VT refs; analyze_lib_cell succeeds after pin_check.place.preplace_option_file setup; analyze_lib_pin still fails with LIB-001
+ICC2 blocked access detail | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/{report_cell_pin_access.same_refs.details,blocked_access.compact_summary}.rpt | official summary has 117 blocked pins; parsed detail has 125 line-level blocked entries: SDFFARX1_RVT 116, MUX41X1_HVT 9, INVX8_LVT 0
 ```
 
 ### Backend Init
@@ -69,6 +71,8 @@ CO/VIA contact code diagnosis | RECORDED | 7_Backend_ICC2/4_Report/trials/contac
 Milkyway reference open trial | BLOCKED | 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log | original SAED32 MW refs cannot be converted in current environment; DB+LEF-built NDM remains active backend path
 Pin access / M1 track probe | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_track_probe/99_pin_access_track/report_cell_pin_access.flagged_cells.rpt | flagged 8 cells report 46 no-violation pins and 0 blocked access pins; same ref-cell population reports 117 blocked access pins
 M1 retrack full-route trial | REJECTED | 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log | route_auto after signal-route removal and M1 track recreate reports 0 open nets but 27260 DRCs; manual M1 track recreation rejected
+create_pin_check_lib analyze_lib_cell | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/check_libcell_pin_access.all.analyze_lib_cell.rpt | mixed-VT pin-check lib created; analyze_lib_cell reports skipped 27 and met threshold 855; analyze_lib_pin remains blocked by LIB-001
+Blocked access detail extraction | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/blocked_access.compact_summary.rpt | official count 117 blocked pins; parsed detail line count 125, concentrated in SDFFARX1_RVT and MUX41X1_HVT
 ```
 
 ### Timing

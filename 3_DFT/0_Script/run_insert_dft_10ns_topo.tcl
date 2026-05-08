@@ -127,6 +127,12 @@ report_dft_signal -view existing_dft > $REPORT_DIR/dft_signal.existing.post.rpt
 report_dft_drc_violations > $REPORT_DIR/dft_drc_violations.rpt
 write_test_protocol -output $POST_DFT_DIR/cv32e40p_synth_wrap.post_dft_topo.spf
 
+# ICC2 placement가 scan chain 정보를 읽을 수 있도록 scan DEF도 저장합니다.
+# SPF는 ATPG용이고, scan DEF는 backend placement/reorder handoff용입니다.
+write_scan_def \
+  -version 5.8 \
+  -output $POST_DFT_DIR/cv32e40p_synth_wrap.post_dft_topo.scan.def
+
 # post-DFT QoR/timing/area/power evidence입니다.
 report_qor > $REPORT_DIR/post_dft.qor.rpt
 report_timing -max_paths 20 > $REPORT_DIR/post_dft.timing.rpt

@@ -180,6 +180,37 @@ Evidence:
   7_Backend_ICC2/4_Report/05_cts/pg_connectivity.rpt
 ```
 
+## Scan DEF Handoff Decision
+
+```text
+Date: 2026-05-08
+Decision: add ICC2 scan DEF generation to the DFT handoff
+Files:
+  3_DFT/0_Script/run_insert_dft_10ns_topo.tcl
+  3_DFT/0_Script/run_write_scan_def_from_post_dft.tcl
+  3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def
+Reason: ICC2 placement was previously allowed to continue without scan DEF. That bypass is acceptable only for early bring-up, not for scan-aware backend placement.
+Result: ICC2 reads DEF SCANCHAINS. optimize_dft validates 1 scan chain and reduces scan wirelength in the scan_def_m8 trial.
+Evidence:
+  3_DFT/4_Report/topo/scan_path.existing.scan_def_source.rpt
+  7_Backend_ICC2/3_Log/trials/scan_def_m8/scan_def_m8.log
+```
+
+## Advanced Legalizer Trial Decision
+
+```text
+Date: 2026-05-08
+Decision: reject advanced legalizer / pin color alignment as current route-closure setting
+Reason: scan_def_advleg_m8 and scan_def_advleg_color_m8 both finish with 0 open nets, legality 0, and PG clean, but route DRC is 605. This is worse than scan_def_m8 at 398.
+Pin color result: place.legalize.enable_pin_color_alignment_check was enabled and pin_color_align legality violations are 0, but route DRC did not improve.
+Current conclusion: route DRC is not caused simply by missing scan DEF or missing pin color alignment. The active root-cause focus remains lower-metal M1/M2/VIA1 access, stdcell pin/via/contact setup, and post-CTS density/clock-buffer interaction.
+Evidence:
+  docs/backend/scan_def_and_advanced_legalizer_trials.md
+  7_Backend_ICC2/4_Report/trials/scan_def_m8/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_legality.rpt
+```
+
 ## First-Pass Route Decision
 
 ```text

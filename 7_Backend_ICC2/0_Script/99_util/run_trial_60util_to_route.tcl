@@ -42,6 +42,14 @@ set PLACE_PIN_DENSITY_AWARE ""
 set PLACE_MAX_DENSITY ""
 set PLACE_TARGET_ROUTING_DENSITY ""
 set PLACE_INCREASED_CELL_EXPANSION ""
+set PLACE_ADVANCED_LEGALIZER ""
+set PLACE_MULTI_CELL_PIN_ACCESS_CHECK ""
+set PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS ""
+set PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS ""
+set PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING ""
+set PLACE_SUPPORT_OFF_TRACK_VIA_REGION ""
+set PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK ""
+set SCAN_DEF_FILE ""
 if {[info exists ::env(PLACE_PIN_DENSITY_AWARE)]} {
   set PLACE_PIN_DENSITY_AWARE $::env(PLACE_PIN_DENSITY_AWARE)
 }
@@ -53,6 +61,30 @@ if {[info exists ::env(PLACE_TARGET_ROUTING_DENSITY)]} {
 }
 if {[info exists ::env(PLACE_INCREASED_CELL_EXPANSION)]} {
   set PLACE_INCREASED_CELL_EXPANSION $::env(PLACE_INCREASED_CELL_EXPANSION)
+}
+if {[info exists ::env(PLACE_ADVANCED_LEGALIZER)]} {
+  set PLACE_ADVANCED_LEGALIZER $::env(PLACE_ADVANCED_LEGALIZER)
+}
+if {[info exists ::env(PLACE_MULTI_CELL_PIN_ACCESS_CHECK)]} {
+  set PLACE_MULTI_CELL_PIN_ACCESS_CHECK $::env(PLACE_MULTI_CELL_PIN_ACCESS_CHECK)
+}
+if {[info exists ::env(PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS)]} {
+  set PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS $::env(PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS)
+}
+if {[info exists ::env(PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS)]} {
+  set PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS $::env(PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS)
+}
+if {[info exists ::env(PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING)]} {
+  set PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING $::env(PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING)
+}
+if {[info exists ::env(PLACE_SUPPORT_OFF_TRACK_VIA_REGION)]} {
+  set PLACE_SUPPORT_OFF_TRACK_VIA_REGION $::env(PLACE_SUPPORT_OFF_TRACK_VIA_REGION)
+}
+if {[info exists ::env(PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK)]} {
+  set PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK $::env(PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK)
+}
+if {[info exists ::env(SCAN_DEF_FILE)]} {
+  set SCAN_DEF_FILE $::env(SCAN_DEF_FILE)
 }
 
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
@@ -99,6 +131,13 @@ current_design $TOP_NAME
 link_block
 
 read_sdc $POST_DFT_SDC
+
+if {$SCAN_DEF_FILE ne ""} {
+  puts "Reading scan DEF: $SCAN_DEF_FILE"
+  read_def \
+    -include {scanchains} \
+    $SCAN_DEF_FILE
+}
 
 set_parasitic_parameters \
   -early_spec saed32_cmin \
@@ -273,8 +312,8 @@ report_qor > $TRIAL_POWER_DIR/qor.rpt
 
 ################################################################################
 # 4. Placement
-# scan DEF가 아직 없으므로 기존 first-pass와 같이 bypass하고 배치합니다.
-# pin access spreading trial에서는 env로 coarse placement option만 추가합니다.
+# scan DEF가 있으면 read_def로 넣고, 없으면 기존 first-pass처럼 bypass합니다.
+# pin access trial에서는 env로 placement/legalizer option을 하나씩 추가합니다.
 ################################################################################
 
 set_app_options -name place.coarse.continue_on_missing_scandef -value true
@@ -290,8 +329,30 @@ if {$PLACE_TARGET_ROUTING_DENSITY ne ""} {
 if {$PLACE_INCREASED_CELL_EXPANSION ne ""} {
   set_app_options -name place.coarse.increased_cell_expansion -value $PLACE_INCREASED_CELL_EXPANSION
 }
+if {$PLACE_ADVANCED_LEGALIZER ne ""} {
+  set_app_options -name place.legalize.enable_advanced_legalizer -value $PLACE_ADVANCED_LEGALIZER
+}
+if {$PLACE_MULTI_CELL_PIN_ACCESS_CHECK ne ""} {
+  set_app_options -name place.legalize.enable_multi_cell_pin_access_check -value $PLACE_MULTI_CELL_PIN_ACCESS_CHECK
+}
+if {$PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS ne ""} {
+  set_app_options -name place.legalize.optimize_pin_access_access_points -value $PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS
+}
+if {$PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS ne ""} {
+  set_app_options -name place.legalize.optimize_pin_access_drc_variants -value $PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS
+}
+if {$PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING ne ""} {
+  set_app_options -name place.legalize.optimize_pin_access_using_cell_spacing -value $PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING
+}
+if {$PLACE_SUPPORT_OFF_TRACK_VIA_REGION ne ""} {
+  set_app_options -name place.legalize.support_off_track_via_region -value $PLACE_SUPPORT_OFF_TRACK_VIA_REGION
+}
+if {$PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK ne ""} {
+  set_app_options -name place.legalize.enable_pin_color_alignment_check -value $PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK
+}
 
 report_app_options place.coarse.* > $TRIAL_PLACE_DIR/place_coarse_app_options.rpt
+report_app_options place.legalize.* > $TRIAL_PLACE_DIR/place_legalize_app_options.rpt
 
 create_placement \
   -effort medium \

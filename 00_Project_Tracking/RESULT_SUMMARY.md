@@ -34,6 +34,8 @@ ICC2 create_pin_check_lib trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Repor
 ICC2 blocked access detail | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/{report_cell_pin_access.same_refs.details,blocked_access.compact_summary}.rpt | official summary has 117 blocked pins; parsed detail has 125 line-level blocked entries: SDFFARX1_RVT 116, MUX41X1_HVT 9, INVX8_LVT 0
 ICC2 pin access / DRC overlap | script | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_drc_overlap/99_overlap/overlap_summary.rpt | 305 blocked points vs 400 DRC markers; 289 blocked points have nearest DRC within 50um and 193 within 25um
 ICC2 pin-density spread trial | ICC2 | REJECTED | 7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt | open nets 0, legality 0, PG clean, but route DRC 390 and blocked access worsens to 144 official blocked pins; not a standalone fix
+ICC2 scan DEF handoff route trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/scan_def_m8/06_route/check_routes.rpt | ICC2 read DFT scan DEF and optimize_dft validated 1 scan chain; route DRC 398 and open nets 0; scan DEF alone not enough
+ICC2 advanced legalizer + pin color trial | ICC2 | REJECTED | 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_routes.rpt | pin_color_align legality 0, PG clean, open nets 0, but route DRC 605; advanced legalizer/pin color not accepted
 ```
 
 ### Backend Init
@@ -77,6 +79,8 @@ create_pin_check_lib analyze_lib_cell | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report
 Blocked access detail extraction | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/blocked_access.compact_summary.rpt | official count 117 blocked pins; parsed detail line count 125, concentrated in SDFFARX1_RVT and MUX41X1_HVT
 Pin access / DRC overlap | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_drc_overlap/99_overlap/overlap_summary.rpt | 21 shared 50um buckets; nearest DRC type counts are Off-grid 123, Needs fat contact 112, Diff net spacing 54, Short 16
 Pin-density spread route trial | REJECTED | 7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt | check_routes DRC 390, official blocked pins 144; spreading worsens pin access despite slight DRC reduction
+Scan DEF route trial | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/scan_def_m8/06_route/check_routes.rpt | check_routes DRC 398 and open nets 0; scan-aware DFT optimization works but route DRC remains open
+Advanced legalizer + pin color route trial | REJECTED | 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/check_routes.rpt | check_routes DRC 605 and open nets 0; legality/PG clean, but worse than scan_def_m8
 ```
 
 ### Timing

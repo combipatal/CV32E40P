@@ -4,7 +4,7 @@
 
 ```text
 Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, and placement spreading trial completed; route DRC cleanup pending
+Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, and advanced legalizer/pin-color trial completed; route DRC cleanup pending
 ```
 
 ## Next Milestone
@@ -54,7 +54,7 @@ Initial ICC2 floorplan exists: rectangular core, 65.40% utilization, 382 pins cr
 ICC2 placement exists: 14083 cells legalized with 0 legality violations after PG closure refresh.
 ICC2 power plan exists: PG DRC clean, VDD connectivity clean, and VSS connectivity clean.
 ICC2 CTS first pass exists: clock_opt completed through route_clock, clock DRC count 0, legality 0 violations, listed setup/hold timing paths MET.
-Missing scan DEF is currently bypassed for first-pass placement; proper scan DEF handoff remains a backend cleanup item.
+Scan DEF handoff is now available from DFT and was imported by ICC2 in the scan_def_m8 trial.
 CTS open items: no default max_transition constraint warning, whole-design electrical DRC remains in post-CTS qor.rpt (1 max_transition and 172 max_cap), and CTS log auto-reported target skew 1.500000 while script option report shows 0.20 ns.
 ICC2 route first pass exists: route_auto completed, open nets 0, timing listed paths MET, legality 0 violations, PG DRC clean, and PG connectivity all floating counts 0.
 Route open item: check_routes reports 408 DRCs, so extraction/STA should wait until route DRC cleanup.
@@ -72,7 +72,9 @@ Formal create_pin_check_lib flow was tested. create_pin_check_lib succeeds for m
 Blocked access detail extraction was run. ICC2 official summary remains 117 pins with blocked access. Parsed detail has 125 line-level blocked entries: 116 SDFFARX1_RVT, 9 MUX41X1_HVT, and 0 INVX8_LVT.
 Pin access / route DRC overlap was parsed. 289 of 305 blocked access points have a route DRC marker within 50um, and 193 are within 25um. They are related by physical region, but not always exact same-coordinate failures.
 Placement spreading trial was run and rejected. It reduced route DRC only from 400 to 390 while blocked access worsened from 117 to 144 official blocked pins.
-Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, and generic placement spreading do not close route. Current evidence points to placed-context lower-metal access around SDFFARX1_RVT/MUX41X1_HVT, with likely next focus on scan DEF handoff, legalizer pin-track alignment, and lower-metal/via/contact setup.
+Scan DEF handoff trial was run. ICC2 read SCANCHAINS and scan-aware DFT optimization validated 1 scan chain; route DRC improved only from 400 to 398.
+Advanced legalizer and pin color alignment trials were run and rejected. They keep open nets 0, legality 0, and PG clean, but final route DRC is 605.
+Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, generic placement spreading, scan DEF handoff alone, and advanced legalizer/pin-color alignment do not close route. Current evidence points to lower-metal M1/M2/VIA1 access, stdcell pin/via/contact setup, and post-CTS density/clock-buffer interaction.
 Extraction and post-route STA are still pending.
 ```
 

@@ -423,3 +423,39 @@ Result: REJECTED
 Notes: Started from the 400-DRC routed block. The trial copied the block, removed signal routes, recreated M1 tracks at start 0.088 with 0.152 pitch, and reran route_auto. Before route, check_routability still reported the same 8 ZRT-761 off-track M1 pin warnings. route_auto finished with 0 open nets but DRC exploded to 27260, dominated by 24981 illegal-track-route markers and 1104 off-grid markers. This rejects manual M1 track recreation as a route cleanup strategy. route_auto ended with a post-command internal hook error before follow-up reports; the script was updated to catch route_auto in future runs.
 Evidence: docs/backend/pin_access_track_probe.md, 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log, and 7_Backend_ICC2/4_Report/trials/m1_retrack_route_088/06_route/{check_routes.before_remove,check_routability.after_recreate,tracks.m1.after_recreate}.rpt.
 ```
+
+```text
+Date: 2026-05-08
+Command: dc_shell -topographical_mode -f 3_DFT/0_Script/run_write_scan_def_from_post_dft.tcl
+Stage: DFT scan DEF handoff recovery
+Result: PASS
+Notes: Read existing post-DFT topo DDC and wrote ICC2 scan DEF without rerunning insert_dft. The scan report shows chain0 length 2130, scan_in -> scan_out, scan_en, and clk_i. This file is backend handoff evidence; SPF remains ATPG protocol evidence.
+Evidence: 3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def and 3_DFT/4_Report/topo/scan_path.existing.scan_def_source.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/scan_def_m8/scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 scan DEF + M8 route trial
+Result: PASS_WITH_OPEN
+Notes: ICC2 read DEF SCANCHAINS and optimize_dft validated 1 scan chain. DFT wirelength improved from 54278 to 14900 in the first scan optimization pass. Final route has 0 open nets, legality 0, PG clean, and 398 route DRCs. This slightly improves 60util_m8 400 DRC, but does not close route.
+Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_m8/scan_def_m8.log and 7_Backend_ICC2/4_Report/trials/scan_def_m8/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=scan_def_advleg_color_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PLACE_ADVANCED_LEGALIZER=true PLACE_MULTI_CELL_PIN_ACCESS_CHECK=true PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS=true PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS=true PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING=true PLACE_SUPPORT_OFF_TRACK_VIA_REGION=true PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/scan_def_advleg_color_m8/scan_def_advleg_color_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 scan DEF + advanced legalizer + pin color trial
+Result: PASS_WITH_OPEN_REJECTED_FIX
+Notes: pin_color_align legality rule was enabled and route-stage legality reports 0 violations. PG connectivity and PG DRC are clean. Final route has 0 open nets but 605 route DRCs, identical to the advanced-legalizer trial without pin color alignment and worse than scan_def_m8 398. Rejected as route-closure setting. Note: the 3_Log output path directory was not pre-created, so the main ICC2 transcript was not captured; official reports under 4_Report are the evidence for this run.
+Evidence: docs/backend/scan_def_and_advanced_legalizer_trials.md, 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/04_place/place_legalize_app_options.rpt, and 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=scan_def_advleg_color_m8_blocked_detail icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/scan_def_advleg_color_m8_blocked_detail/scan_def_advleg_color_m8_blocked_detail.log -f 7_Backend_ICC2/0_Script/99_util/run_pin_access_blocked_detail.tcl; python3 scripts/summarize_cell_pin_access.py ...
+Stage: ICC2 blocked access detail after pin color trial
+Result: RECORDED
+Notes: Parser found 254 line-level blocked access point entries, concentrated in SDFFARX1_RVT 233, MUX41X1_HVT 16, and INVX8_LVT 5. ICC2 official final summary for this routed context says Pins with blocked access 0, so the parsed count must be treated as blocked access points, not official blocked pins.
+Evidence: 7_Backend_ICC2/3_Log/trials/scan_def_advleg_color_m8_blocked_detail/scan_def_advleg_color_m8_blocked_detail.log and 7_Backend_ICC2/4_Report/trials/scan_def_advleg_color_m8_blocked_detail/99_pin_access/{report_cell_pin_access.same_refs.details,blocked_access.compact_summary}.rpt.
+```

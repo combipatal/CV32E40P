@@ -215,6 +215,27 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/blocked_access.compact_summary.rpt
 ```
 
+## Placement Spreading Trial Decision
+
+```text
+Date: 2026-05-08
+Decision: reject pin-density/max-density spreading as a standalone route DRC fix
+Trial: pin_access_spread
+Options:
+  place.coarse.pin_density_aware = true
+  place.coarse.max_density = 0.70
+  place.coarse.target_routing_density = 0.70, tool used 0.80
+  place.coarse.increased_cell_expansion = true
+Result: route open nets 0, legality 0 violations, PG clean, check_routes DRC 390
+Blocked access result: official blocked pins worsened from 117 to 144; line-level blocked entries worsened from 125 to 150
+Reason: route DRC improves only slightly, while the actual pin access metric gets worse.
+Next: focus on scan DEF handoff, legalizer pin-track alignment, and lower-metal/via/contact setup instead of generic spreading.
+Evidence:
+  docs/backend/pin_access_drc_overlap_and_spread_trial.md
+  7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/pin_access_spread_blocked_detail/99_pin_access/blocked_access.compact_summary.rpt
+```
+
 ## Route Utilization Trial Decision
 
 ```text

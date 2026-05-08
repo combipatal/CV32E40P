@@ -238,6 +238,22 @@ Notes: create_pin_check_lib succeeded for RVT+LVT+HVT together and for each VT s
 
 ```text
 Date: 2026-05-08
+Command: python3 scripts/analyze_pin_access_drc_overlap.py
+Stage: ICC2 pin access / route DRC overlap
+Result: RECORDED
+Notes: Parsed 305 blocked access points and 400 route DRC markers. Nearest DRC distance counts: 13 within 2um, 23 within 5um, 51 within 10um, 193 within 25um, and 289 within 50um. There are 21 shared 50um hotspot buckets. Evidence: 7_Backend_ICC2/4_Report/trials/pin_access_drc_overlap/99_overlap/{overlap_summary.rpt,hotspot_overlap_50um.rpt,nearest_drc_per_blocked_point.tsv}.
+```
+
+```text
+Date: 2026-05-08
+Command: env TRIAL_NAME=pin_access_spread CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 PLACE_PIN_DENSITY_AWARE=true PLACE_MAX_DENSITY=0.70 PLACE_TARGET_ROUTING_DENSITY=0.70 PLACE_INCREASED_CELL_EXPANSION=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pin_access_spread/pin_access_spread.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 placement spreading route trial
+Result: REJECTED
+Notes: Pin-density/max-density spreading trial completed with open nets 0, legality 0 violations, and PG clean, but check_routes reports 390 DRCs. This is only slightly better than 60util_m8 400 DRC and worse than the detail-route 1iter evidence at 383. Post-trial report_cell_pin_access worsened official blocked pins from 117 to 144, with line-level entries 150: SDFFARX1_RVT 126, MUX41X1_HVT 22, INVX8_LVT 2. Evidence: docs/backend/pin_access_drc_overlap_and_spread_trial.md and 7_Backend_ICC2/4_Report/trials/pin_access_spread*/.
+```
+
+```text
+Date: 2026-05-08
 Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_initial.tcl | tee 7_Backend_ICC2/3_Log/06_route/route_initial.log
 Stage: ICC2 first-pass signal route
 Result: PASS_WITH_OPEN

@@ -4,7 +4,7 @@
 
 ```text
 Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, and blocked-access detail extraction completed; route DRC cleanup pending
+Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, and placement spreading trial completed; route DRC cleanup pending
 ```
 
 ## Next Milestone
@@ -70,7 +70,9 @@ Pin access / M1 track probe was run. check_libcell_pin_access needs a create_pin
 Manual M1 track recreation was rejected. It can remove visible off-track warnings in an already routed block probe, but after signal-route removal the warning returns and full route explodes to 27260 DRCs, dominated by 24981 illegal-track-route markers.
 Formal create_pin_check_lib flow was tested. create_pin_check_lib succeeds for mixed RVT/LVT/HVT and each VT library. check_libcell_pin_access analyze_lib_cell succeeds after setting pin_check.place.preplace_option_file. analyze_lib_pin remains blocked by LIB-001.
 Blocked access detail extraction was run. ICC2 official summary remains 117 pins with blocked access. Parsed detail has 125 line-level blocked entries: 116 SDFFARX1_RVT, 9 MUX41X1_HVT, and 0 INVX8_LVT.
-Conclusion: lower floorplan utilization, M8 bound, and blind detail-route looping help only slightly. Top PG port cleanup removes a warning but does not close route. Current evidence points to placed-context lower-metal access around SDFFARX1_RVT/MUX41X1_HVT, not simple M1 track recreation or globally broken stdcell access. Next route cleanup should compare blocked access instance coordinates against DRC hotspots, then test placement/scan handoff or spreading changes.
+Pin access / route DRC overlap was parsed. 289 of 305 blocked access points have a route DRC marker within 50um, and 193 are within 25um. They are related by physical region, but not always exact same-coordinate failures.
+Placement spreading trial was run and rejected. It reduced route DRC only from 400 to 390 while blocked access worsened from 117 to 144 official blocked pins.
+Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, and generic placement spreading do not close route. Current evidence points to placed-context lower-metal access around SDFFARX1_RVT/MUX41X1_HVT, with likely next focus on scan DEF handoff, legalizer pin-track alignment, and lower-metal/via/contact setup.
 Extraction and post-route STA are still pending.
 ```
 

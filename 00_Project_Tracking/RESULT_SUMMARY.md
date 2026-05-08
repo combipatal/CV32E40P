@@ -32,6 +32,8 @@ ICC2 pin access / M1 track probe | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/tri
 ICC2 M1 retrack route trial | ICC2 | REJECTED | 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log | after signal route removal, M1 track recreation at 0.088 still has 8 off-track warnings and route DRC explodes from 400 to 27260, dominated by illegal track route
 ICC2 create_pin_check_lib trial | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/{create_pin_check_lib_status,check_libcell_pin_access.all.analyze_lib_cell}.rpt | create_pin_check_lib succeeds for mixed-VT and per-VT refs; analyze_lib_cell succeeds after pin_check.place.preplace_option_file setup; analyze_lib_pin still fails with LIB-001
 ICC2 blocked access detail | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/{report_cell_pin_access.same_refs.details,blocked_access.compact_summary}.rpt | official summary has 117 blocked pins; parsed detail has 125 line-level blocked entries: SDFFARX1_RVT 116, MUX41X1_HVT 9, INVX8_LVT 0
+ICC2 pin access / DRC overlap | script | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_drc_overlap/99_overlap/overlap_summary.rpt | 305 blocked points vs 400 DRC markers; 289 blocked points have nearest DRC within 50um and 193 within 25um
+ICC2 pin-density spread trial | ICC2 | REJECTED | 7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt | open nets 0, legality 0, PG clean, but route DRC 390 and blocked access worsens to 144 official blocked pins; not a standalone fix
 ```
 
 ### Backend Init
@@ -73,6 +75,8 @@ Pin access / M1 track probe | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_acce
 M1 retrack full-route trial | REJECTED | 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log | route_auto after signal-route removal and M1 track recreate reports 0 open nets but 27260 DRCs; manual M1 track recreation rejected
 create_pin_check_lib analyze_lib_cell | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/create_pin_check_lib_trial/99_pin_check_lib/check_libcell_pin_access.all.analyze_lib_cell.rpt | mixed-VT pin-check lib created; analyze_lib_cell reports skipped 27 and met threshold 855; analyze_lib_pin remains blocked by LIB-001
 Blocked access detail extraction | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/blocked_access.compact_summary.rpt | official count 117 blocked pins; parsed detail line count 125, concentrated in SDFFARX1_RVT and MUX41X1_HVT
+Pin access / DRC overlap | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_drc_overlap/99_overlap/overlap_summary.rpt | 21 shared 50um buckets; nearest DRC type counts are Off-grid 123, Needs fat contact 112, Diff net spacing 54, Short 16
+Pin-density spread route trial | REJECTED | 7_Backend_ICC2/4_Report/trials/pin_access_spread/06_route/check_routes.rpt | check_routes DRC 390, official blocked pins 144; spreading worsens pin access despite slight DRC reduction
 ```
 
 ### Timing

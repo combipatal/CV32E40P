@@ -33,6 +33,28 @@ if {[info exists ::env(SIGNAL_MAX_ROUTING_LAYER)]} {
   set SIGNAL_MAX_ROUTING_LAYER $::env(SIGNAL_MAX_ROUTING_LAYER)
 }
 
+set CORE_UTILIZATION 0.60
+if {[info exists ::env(CORE_UTILIZATION)]} {
+  set CORE_UTILIZATION $::env(CORE_UTILIZATION)
+}
+
+set PLACE_PIN_DENSITY_AWARE ""
+set PLACE_MAX_DENSITY ""
+set PLACE_TARGET_ROUTING_DENSITY ""
+set PLACE_INCREASED_CELL_EXPANSION ""
+if {[info exists ::env(PLACE_PIN_DENSITY_AWARE)]} {
+  set PLACE_PIN_DENSITY_AWARE $::env(PLACE_PIN_DENSITY_AWARE)
+}
+if {[info exists ::env(PLACE_MAX_DENSITY)]} {
+  set PLACE_MAX_DENSITY $::env(PLACE_MAX_DENSITY)
+}
+if {[info exists ::env(PLACE_TARGET_ROUTING_DENSITY)]} {
+  set PLACE_TARGET_ROUTING_DENSITY $::env(PLACE_TARGET_ROUTING_DENSITY)
+}
+if {[info exists ::env(PLACE_INCREASED_CELL_EXPANSION)]} {
+  set PLACE_INCREASED_CELL_EXPANSION $::env(PLACE_INCREASED_CELL_EXPANSION)
+}
+
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
 set TRIAL_INIT_DIR $TRIAL_ROOT/01_init_design
 set TRIAL_FLOORPLAN_DIR $TRIAL_ROOT/02_floorplan
@@ -98,10 +120,10 @@ report_timing -max_paths 10 > $TRIAL_INIT_DIR/timing.rpt
 
 ################################################################################
 # 2. Floorplan
-# target core utilization만 65%에서 60%로 낮춥니다.
+# target core utilization을 trial 환경변수로 조절합니다.
+# 기본값은 기존 60% trial과 같습니다.
 ################################################################################
 
-set CORE_UTILIZATION 0.60
 set CORE_ASPECT_RATIO {1 1}
 set CORE_OFFSET_UM 20.0
 
@@ -252,9 +274,24 @@ report_qor > $TRIAL_POWER_DIR/qor.rpt
 ################################################################################
 # 4. Placement
 # scan DEF가 아직 없으므로 기존 first-pass와 같이 bypass하고 배치합니다.
+# pin access spreading trial에서는 env로 coarse placement option만 추가합니다.
 ################################################################################
 
 set_app_options -name place.coarse.continue_on_missing_scandef -value true
+if {$PLACE_PIN_DENSITY_AWARE ne ""} {
+  set_app_options -name place.coarse.pin_density_aware -value $PLACE_PIN_DENSITY_AWARE
+}
+if {$PLACE_MAX_DENSITY ne ""} {
+  set_app_options -name place.coarse.max_density -value $PLACE_MAX_DENSITY
+}
+if {$PLACE_TARGET_ROUTING_DENSITY ne ""} {
+  set_app_options -name place.coarse.target_routing_density -value $PLACE_TARGET_ROUTING_DENSITY
+}
+if {$PLACE_INCREASED_CELL_EXPANSION ne ""} {
+  set_app_options -name place.coarse.increased_cell_expansion -value $PLACE_INCREASED_CELL_EXPANSION
+}
+
+report_app_options place.coarse.* > $TRIAL_PLACE_DIR/place_coarse_app_options.rpt
 
 create_placement \
   -effort medium \

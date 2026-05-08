@@ -85,6 +85,9 @@ MUX41X2_HVT/S0 pin-access cause was confirmed. SAED32 HVT LEF gives S0 only one 
 SDFFARX1_RVT hotspot overlap was checked with coordinate-consistent current-block evidence. SDFFARX1_RVT has many blocked access points overall, but only 11 inside the hotspot. Those 11 all map to hotspot Needs-fat-contact DRCs, and ICC2 context shows each is near the x=259.8..260.2 M2 VSS PG stripe. SDFFARX1_RVT is therefore a hotspot contributor, not the sole root cause.
 Conclusion: lower floorplan utilization, M8 bound, blind detail-route looping, M1 track recreation, generic placement spreading, scan DEF handoff alone, hotspot partial blockage alone, and advanced legalizer/pin-color alignment do not identify or close the root cause. Do not continue manual cell moves or blind repair trials before the next cause probe.
 Updated root-cause view: PG M2 mesh is a contributing obstruction, and the strongest local model is x=260um M2 VSS PG stripe + stdcell pin access + M2/VIA1 contact legality. Next cause probe should isolate all DRC markers near the x=259.8..260.2 PG stripe and list the nearby ref-cell distribution.
+Backend fix trials were run. PG M2 offset 24/26/28um was rejected because each creates PG M1 spacing DRC. Hotspot 40% partial blockage is legal and PG-clean but only reaches 391 route DRC. The current best valid route is route_combo_scan_def_m8: open nets 0, legality 0, PG DRC clean, and check_routes 381 DRCs. Backend-only knobs still do not close route DRC.
+Next accepted baseline candidate: keep PG_M2_MESH_OFFSET=20.0, scan DEF input, M8 signal max layer, and route detail options generate_extra_off_grid_pin_tracks=true, drc_convergence_effort_level=high, optimize_wire_via_effort_level=high.
+Next fix class: front-end/library-driven cell selection cleanup, starting with MUX41X2_HVT avoidance feasibility and SDFFARX1_RVT alternative/pin-access treatment.
 Extraction and post-route STA are still pending.
 ```
 

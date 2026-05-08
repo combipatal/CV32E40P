@@ -93,6 +93,9 @@ Hotspot DRC-to-PG distance | RECORDED | 7_Backend_ICC2/4_Report/trials/root_caus
 PG M2 offset 30um probe | INVALID_FOR_CLOSURE_BUT_INFORMATIVE | 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | signal DRC 377, but PG DRC 97; diff spacing improves 120 -> 82 while fat-contact worsens 99 -> 127 and off-grid remains 170 -> 163
 Route extra off-grid pin tracks probe | OPEN | 7_Backend_ICC2/4_Report/trials/route_offgrid_tracks_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | route DRC 385 and open nets 0; PG clean; off-grid 170 -> 160 and needs-fat-contact 99 -> 84, so helpful but not root-cause closure
 Route via/DRC effort high probe | OPEN | 7_Backend_ICC2/4_Report/trials/route_via_effort_scan_def_m8/06_route/drc_detail/drc.matrix.rpt | route DRC 389 and open nets 0; PG clean; off-grid remains 163, so simple route effort is not the main cause
+PG M2 offset 24/26/28 sweep | REJECTED | 7_Backend_ICC2/4_Report/trials/pgm2off24_scan_def_m8/06_route/check_routes.rpt | signal route DRCs are 377/384/383 and open nets 0, but PG DRC creates 102/82/83 M1 insufficient-spacing errors; offset-only fix rejected
+Hotspot 40% partial blockage fix trial | OPEN | 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/check_routes.rpt | route DRC 391, open nets 0, legality 0, PG clean; local spreading alone is weak
+Route combo fix trial | BEST_CURRENT_OPEN | 7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/check_routes.rpt | route DRC 381, open nets 0, legality 0, PG clean; accepted as current backend baseline candidate, but route DRC remains open
 ```
 
 ### Timing

@@ -626,3 +626,29 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/sdffarx1_hotspot_context/99_context/sdffarx1_hotspot_context.rpt
   7_Backend_ICC2/4_Report/trials/sdffarx1_hotspot_context/99_context/report_cell_pin_access.hotspot_sdffarx1.details.rpt
 ```
+
+## Backend Fix Trial Decision
+
+```text
+Date: 2026-05-09
+Decision: keep PG_M2_MESH_OFFSET at 20.0um and use route_combo_scan_def_m8 as the current best backend baseline candidate
+Reason:
+  PG M2 offset trials at 24/26/28um reduce or shift signal DRC slightly, but all create PG DRC
+  hotspot 40% partial blockage is PG-clean and legal, but only reaches 391 route DRC
+  route combo keeps open nets 0, legality 0, PG DRC clean, and improves route DRC to 381
+Accepted route combo options:
+  route.detail.generate_extra_off_grid_pin_tracks=true
+  route.detail.drc_convergence_effort_level=high
+  route.detail.optimize_wire_via_effort_level=high
+Rejected as standalone fixes:
+  PG_M2_MESH_OFFSET=24.0, 26.0, 28.0, 30.0
+  hotspot 40% partial blockage
+Conclusion:
+  backend-only knobs improve 398 -> 381 but do not close route DRC
+  next fix class should be front-end/library-driven cell selection or pin-access treatment, while keeping route_combo as the ICC2 route baseline
+Evidence:
+  docs/backend/backend_fix_trials_2026_05_09.md
+  7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/pg_drc.rpt
+```

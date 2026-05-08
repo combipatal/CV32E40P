@@ -572,3 +572,30 @@ Result: ROOT_CAUSE_COMPONENT_CONFIRMED
 Notes: Baseline report-only analysis found 17 SDFFARX1 blocked points inside the hotspot, 14 within 5um of a DRC marker. Because the saved ICC2 block had moved to the route_via_effort trial, current-block reports were regenerated for coordinate-consistent evidence. Current block has 352 SDFFARX1 blocked points and 389 DRC markers; hotspot has 119 DRC markers and 11 SDFFARX1 blocked points. All 11 hotspot SDFFARX1 points have nearest DRC inside the hotspot, 10 are within 10um, 6 are within 5um, and all nearest DRCs are Needs fat contact. ICC2 context shows the hotspot points sit around the x=259.8..260.2 M2 VSS stripe. SDFFARX1 is a contributing root-cause component, not the whole hotspot cause.
 Evidence: docs/backend/sdffarx1_hotspot_overlap.md, 7_Backend_ICC2/4_Report/trials/sdffarx1_current_hotspot_overlap/99_overlap/sdffarx1_overlap_summary.rpt, 7_Backend_ICC2/4_Report/trials/sdffarx1_hotspot_context/99_context/sdffarx1_hotspot_context.rpt, and 7_Backend_ICC2/4_Report/trials/sdffarx1_hotspot_context/99_context/report_cell_pin_access.hotspot_sdffarx1.details.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=pgm2off24_scan_def_m8 ... PG_M2_MESH_OFFSET=24.0 icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pgm2off24_scan_def_m8/pgm2off24_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl; repeated with PG_M2_MESH_OFFSET=26.0 and 28.0.
+Stage: ICC2 PG M2 offset fix sweep
+Result: REJECTED
+Notes: 24um gives route DRC 377, 26um gives 384, and 28um gives 383, all with open nets 0. But all three create PG DRC: 102, 82, and 83 M1 insufficient-spacing errors respectively. PG offset remains a proven contributor, but offset-only is not a valid fix.
+Evidence: docs/backend/backend_fix_trials_2026_05_09.md and 7_Backend_ICC2/4_Report/trials/pgm2off{24,26,28}_scan_def_m8/06_route/{check_routes,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=hotspot_blk40_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def HOTSPOT_BLOCKAGE_ENABLE=1 HOTSPOT_BLOCKAGE_PERCENT=40 icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/hotspot_blk40_scan_def_m8/hotspot_blk40_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 hotspot local partial blockage fix trial
+Result: PASS_WITH_OPEN
+Notes: The hotspot {{215 195} {265 265}} 40% partial blockage keeps open nets 0, legality 0, and PG DRC clean, but final route DRC is 391. This is only a weak improvement over scan_def_m8_restore 398 and worse than route option probes, so hotspot density alone is not accepted as the fix.
+Evidence: docs/backend/backend_fix_trials_2026_05_09.md and 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/{check_routes,check_legality,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_scan_def_m8 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_scan_def_m8/route_combo_scan_def_m8.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route option combination fix trial
+Result: BEST_CURRENT_PASS_WITH_OPEN
+Notes: Combined route detail options keep open nets 0, legality 0, and PG DRC clean. check_routes reports 381 DRCs: diff-net spacing 127, min-area 3, needs-fat-contact 91, off-grid 157, same-net spacing 1, short 2. This is the best valid backend trial so far but still not route closure.
+Evidence: docs/backend/backend_fix_trials_2026_05_09.md and 7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/{check_routes,check_legality,route_detail_app_options,pg_drc}.rpt.
+```

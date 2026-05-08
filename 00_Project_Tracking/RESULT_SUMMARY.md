@@ -28,6 +28,8 @@ ICC2 PG top port cleanup | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trial
 ICC2 off-track pin diagnosis | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/{check_routability.verbose,offtrack_pin_objects}.rpt | 8 M1 off-track warnings map to stdcell pins: SDFFARX1_RVT/QN, INVX8_LVT/A, MUX41X1_HVT/S1; next focus is pin-access/track/contact setup
 ICC2 CO/VIA contact diagnosis | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/{contact_code_summary,check_routability.contact}.rpt | CO has no default contact, explaining ZRT-022; VIA1 has default VIA12SQ_C, so M1-M2 via setup is present
 ICC2 Milkyway reference trial | ICC2 | BLOCKED | 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log | direct MW ref conversion blocked: no icc_shell, Milkyway/MDataPrep license unavailable, export tar.gz missing; continue DB+LEF-built NDM path
+ICC2 pin access / M1 track probe | ICC2 | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_track_probe/99_pin_access_track/{report_cell_pin_access.flagged_cells,report_cell_pin_access.same_refs,check_routability.*}.rpt | flagged 8 cells have 0 blocked access pins, same ref-cell population has 117 blocked access pins; routed-block M1 offset probe alone is not enough evidence for a fix
+ICC2 M1 retrack route trial | ICC2 | REJECTED | 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log | after signal route removal, M1 track recreation at 0.088 still has 8 off-track warnings and route DRC explodes from 400 to 27260, dominated by illegal track route
 ```
 
 ### Backend Init
@@ -65,6 +67,8 @@ PG top port cleanup | PASS_WITH_OPEN | 7_Backend_ICC2/4_Report/trials/pg_termina
 Off-track M1 pin object diagnosis | RECORDED | 7_Backend_ICC2/4_Report/trials/offtrack_pin_diagnose/99_route_access/offtrack_pin_objects.rpt | remaining 8 off-track warnings are stdcell M1 pins, not top-level PG ports; ZRT-022 CO contact setup remains suspicious
 CO/VIA contact code diagnosis | RECORDED | 7_Backend_ICC2/4_Report/trials/contact_code_diagnose/99_contact_code/contact_code_summary.rpt | CO via_def/default count is 0/0, but VIA1 is 6/1 with default VIA12SQ_C; do not patch CO yet
 Milkyway reference open trial | BLOCKED | 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log | original SAED32 MW refs cannot be converted in current environment; DB+LEF-built NDM remains active backend path
+Pin access / M1 track probe | RECORDED | 7_Backend_ICC2/4_Report/trials/pin_access_track_probe/99_pin_access_track/report_cell_pin_access.flagged_cells.rpt | flagged 8 cells report 46 no-violation pins and 0 blocked access pins; same ref-cell population reports 117 blocked access pins
+M1 retrack full-route trial | REJECTED | 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log | route_auto after signal-route removal and M1 track recreate reports 0 open nets but 27260 DRCs; manual M1 track recreation rejected
 ```
 
 ### Timing

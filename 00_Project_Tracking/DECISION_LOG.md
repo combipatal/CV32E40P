@@ -364,3 +364,26 @@ Evidence:
   7_Backend_ICC2/2_Output/trials/mw_ref_open_trial/local_cell_libs/log/cv32e40p_icc2_lib_mwref_saed32nm_rvt_1p9m_export_icc2_frame.log
   7_Backend_ICC2/2_Output/trials/mw_ref_open_trial/local_cell_libs/log/cv32e40p_icc2_lib_mwref_saed32nm_rvt_1p9m_import_icc_fram.log
 ```
+
+## M1 Track Recreate Decision
+
+```text
+Date: 2026-05-08
+Decision: reject manual M1 track recreation as the next route-closure fix
+Reason: check_routability on an already routed block was misleading. Recreated M1 tracks removed visible ZRT-761 lines in that narrow probe, but a real reroute after signal route removal still had the 8 off-track warnings before route and then exploded route DRC.
+Probe evidence:
+  baseline routed block: 8 ZRT-761 off-track warnings
+  recreated M1 start 0.012/0.050/0.076/0.088/0.126 on routed block: no ZRT-761 lines
+Full-route evidence:
+  before trial route: 400 DRCs
+  after signal route removal + M1 start 0.088 recreate + route_auto: 27260 DRCs
+  open nets: 0
+  dominant DRC: illegal track route 24981
+Conclusion: simple M1 offset/recreate is not the root-cause fix. Continue with proper pin-access library checking, blocked-access pin identification, NDM/LEF setup review, and scan/placement handoff work.
+Evidence:
+  docs/backend/pin_access_track_probe.md
+  7_Backend_ICC2/3_Log/trials/pin_access_track_probe/pin_access_track_probe.log
+  7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log
+  7_Backend_ICC2/4_Report/trials/m1_retrack_route_088/06_route/check_routes.before_remove.rpt
+  7_Backend_ICC2/4_Report/trials/m1_retrack_route_088/06_route/check_routability.after_recreate.rpt
+```

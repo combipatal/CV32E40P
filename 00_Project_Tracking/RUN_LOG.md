@@ -373,3 +373,21 @@ Result: BLOCKED
 Notes: Tested whether original SAED32 Milkyway reference libraries can be used directly through create_lib -ref_libs. First failure required lib.configuration.icc_shell_exec or lib.setting.milkyway_exec. No IC Compiler 1 icc_shell exists in this install. Milkyway executable exists, and a wrapper translated -f/-output_log_file into Milkyway -file/-log. That removed the CLI argument failure, but Milkyway export still failed because Milkyway and MDataPrep license features are unavailable and no export tar.gz was created. Import then failed with FILE-002 and LM-010. Conclusion: direct Milkyway-reference ICC2 backend comparison is blocked by environment/tool/license. Continue with DB+LEF-built NDM and debug pin-access/track options there.
 Evidence: docs/backend/mw_ref_open_trial.md, 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/mw_ref_open_trial.log, 7_Backend_ICC2/3_Log/trials/mw_ref_open_trial/icc_milkyway_exec_wrapper.args.log, and 7_Backend_ICC2/2_Output/trials/mw_ref_open_trial/local_cell_libs/log/*_{export_icc2_frame,import_icc_fram}.log.
 ```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/pin_access_track_probe/pin_access_track_probe.log -f 7_Backend_ICC2/0_Script/99_util/run_pin_access_track_probe.tcl
+Stage: ICC2 pin access / M1 track offset probe
+Result: RECORDED
+Notes: check_libcell_pin_access is not directly usable on the current design library and reports PAC-001 because the library was not created by create_pin_check_lib. report_cell_pin_access works: the 8 flagged cells have 46 pins with no access violations and 0 blocked access pins, while the same three ref cell types across the design show 15316 pins with no access violations and 117 blocked access pins. M1 track offset probe on an already routed block shows baseline has 8 ZRT-761 off-track warnings, M1 start 0.000 is worse, and M1 starts 0.012/0.050/0.076/0.088/0.126 remove visible ZRT-761 lines. This is only a probe, not a route fix.
+Evidence: docs/backend/pin_access_track_probe.md, 7_Backend_ICC2/3_Log/trials/pin_access_track_probe/pin_access_track_probe.log, and 7_Backend_ICC2/4_Report/trials/pin_access_track_probe/99_pin_access_track/{pin_access_command_status,report_cell_pin_access.flagged_cells,report_cell_pin_access.same_refs,check_routability.*}.rpt.
+```
+
+```text
+Date: 2026-05-08
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log -f 7_Backend_ICC2/0_Script/99_util/run_m1_retrack_route_trial.tcl
+Stage: ICC2 M1 retrack full-route trial
+Result: REJECTED
+Notes: Started from the 400-DRC routed block. The trial copied the block, removed signal routes, recreated M1 tracks at start 0.088 with 0.152 pitch, and reran route_auto. Before route, check_routability still reported the same 8 ZRT-761 off-track M1 pin warnings. route_auto finished with 0 open nets but DRC exploded to 27260, dominated by 24981 illegal-track-route markers and 1104 off-grid markers. This rejects manual M1 track recreation as a route cleanup strategy. route_auto ended with a post-command internal hook error before follow-up reports; the script was updated to catch route_auto in future runs.
+Evidence: docs/backend/pin_access_track_probe.md, 7_Backend_ICC2/3_Log/trials/m1_retrack_route_088/m1_retrack_route_088.log, and 7_Backend_ICC2/4_Report/trials/m1_retrack_route_088/06_route/{check_routes.before_remove,check_routability.after_recreate,tracks.m1.after_recreate}.rpt.
+```

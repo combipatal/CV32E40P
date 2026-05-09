@@ -1184,3 +1184,12 @@ Result: REJECTED_AS_FIX
 Notes: The trial resized the same 43 matched NOR2X4_HVT/A2 cells directly to NOR2X1_HVT and marked them dont_touch. All 43 size_cell operations passed. Official check_routes reports open nets 0 and 109 total DRCs: Off-grid 106, Diff net spacing 2, and Short 1. Legality is 0, PG connectivity is clean, and PG DRC has no errors. This is much worse than the NOR2X4->NOR2X2 candidate at 67 DRC and similar to the no012 baseline at 110 DRC. Therefore smaller NOR2 drive is not monotonically better; X2 remains the best tested targeted NOR2 resize.
 Evidence: configs/backend/a2_edge_nor2x4_to_nor2x1_hvt_resize.tsv, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/pg_drc.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: python3 scripts/summarize_unmatched_drc_markers.py --drc-markers 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context/all_drc_markers.tsv --matched 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/drc_to_pin_access_coordinate_match.tsv --marker-context 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context_all/marker_context.rpt --out 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.rpt --tsv 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.tsv
+Stage: Post-ECO unmatched DRC marker classification
+Result: ROOT_CAUSE_REFINED
+Notes: In the 67-DRC best ECO candidate, 55 markers match nearby A2 pin-access points and 12 markers remain unmatched. The unmatched set is 4 Short, 4 Diff net spacing, and 4 Off-grid; 11 are on M1 and 1 is on M2. Marker context shows mostly SDFFARX1_RVT/SDFFASX1_RVT RSTB/VSS/Q/QN local interactions. This separates the residual issue into dominant A2 grid/contact markers plus a smaller flop/local-M1 class.
+Evidence: scripts/summarize_unmatched_drc_markers.py, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.tsv.
+```

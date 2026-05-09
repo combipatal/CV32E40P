@@ -927,3 +927,63 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/pg_drc.rpt
 ```
+
+## Post-ECO Unmatched 12-Marker Classification
+
+Purpose:
+
+```text
+The 67-DRC best ECO candidate has 55 markers that match nearby A2 pin-access
+points. The remaining 12 markers need a separate cause class before another
+fix trial.
+```
+
+Result:
+
+```text
+Total markers:      67
+Matched markers:    55
+Unmatched markers:  12
+
+Unmatched by type:
+  Short:             4
+  Diff net spacing:  4
+  Off-grid:          4
+
+Unmatched by layer:
+  M1:               11
+  M2:                1
+```
+
+Refs touched by unmatched markers:
+
+```text
+SDFFARX1_RVT  9
+SDFFASX1_RVT  2
+NBUFFX4_HVT   2
+NAND2X0_HVT   2
+MUX41X2_HVT   1
+NBUFFX8_HVT   1
+AND2X1_HVT    1
+```
+
+Interpretation:
+
+```text
+The unmatched 12 markers are mostly M1 local DRC near flop RSTB/VSS/Q/QN pins,
+not the dominant HVT OR/NOR A2 VIA1 off-grid class.
+
+So the current best candidate has two remaining classes:
+1. 55 matched A2 access/grid/contact markers.
+2. 12 residual M1 local markers around scan flops/buffers/small logic.
+
+The next fix should not treat all 67 markers as one cause.
+```
+
+Evidence:
+
+```text
+scripts/summarize_unmatched_drc_markers.py
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.tsv
+```

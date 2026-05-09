@@ -143,6 +143,7 @@ Targeted backend ECO resizing the 43 matched NOR2X4_HVT/A2 edge instances to NOR
 Post-ECO remaining DRC classification was run. Of 67 remaining DRC markers, 55 match Routable A2 access points within 0.08um. The matched class split is 43 NOR2X2_HVT/A2 edge-snapping, 10 OR2X4_HVT/A2 track-center mismatch, and 2 NOR2X4_HVT/A2 edge-snapping. Therefore the resize helped but did not eliminate the A2 route/check-grid issue; the next probe should target remaining NOR2X2/NOR2X4 A2 edge behavior or OR2X4 A2 track-center behavior, not broad cell bans.
 Targeted OR2X4_HVT/A2 downsizing was tested as an add-on to the current NOR2 resize ECO. The combined 52-cell ECO completed with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC worsened to 97. Current best remains the NOR2-only resize ECO at 67 DRC.
 Targeted NOR2X4_HVT/A2 resize-to-X1 was also tested. It completed with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC worsened to 109. X2 remains the best tested targeted NOR2 resize point; smaller drive is not a monotonic fix.
+Post-ECO unmatched marker classification was added. In the 67-DRC best ECO candidate, 55 markers match A2 access points and 12 do not. The 12 unmatched markers are mostly M1 local DRC around SDFFARX1_RVT/SDFFASX1_RVT RSTB/VSS/Q/QN pins, with 4 Short, 4 Diff net spacing, and 4 Off-grid. Treat this as a separate residual class from the dominant HVT OR/NOR A2 VIA1 off-grid issue.
 ```
 
 ## Fmax Estimate

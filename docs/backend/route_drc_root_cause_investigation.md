@@ -1783,3 +1783,150 @@ pin-swap-only ECO는 메인 closure 전략으로 중단한다.
 scripts/summarize_drc_marker_context.py
 scripts/match_drc_to_cell_pin_access.py
 ```
+
+## Placement Pin-Access Optimization Probe
+
+목적:
+
+```text
+remaining A2 DRC가 placement pin-access optimization으로 움직이는지 확인한다.
+```
+
+실행:
+
+```text
+env TRIAL_NAME=route_no012_pin_access_place_opt \
+  POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg \
+  POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.sdc \
+  SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.scan.def \
+  SIGNAL_MAX_ROUTING_LAYER=M8 \
+  ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true \
+  ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high \
+  ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high \
+  PG_M2_HOTSPOT_BLOCKAGE_ENABLE=true \
+  PLACE_MULTI_CELL_PIN_ACCESS_CHECK=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING=true \
+  icc2_shell -batch \
+  -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+```
+
+결과:
+
+```text
+check_routes: 110 DRC
+  Off-grid: 104
+  Diff net spacing: 5
+  Short: 1
+
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+log 핵심:
+
+```text
+To enable pin track alignment feature, the advanced legalizer has to be turned on.
+Pin access optimization did not move any cells.
+```
+
+해석:
+
+```text
+일반 pin-access placement 옵션만으로는 failing A2 access/grid pattern이 변하지 않는다.
+이 trial은 fix로 reject한다.
+advanced legalizer를 켠 controlled follow-up은 할 가치가 있다.
+그것도 실패하면 backend placement knob보다 structural/cell-mapping fix로 돌아간다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_pin_access_place_opt.log
+7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/pg_drc.rpt
+```
+
+## Advanced Legalizer Pin-Access Probe
+
+목적:
+
+```text
+advanced legalizer를 켜면 pin-access spreader가 A2 off-grid pattern을 줄이는지 확인한다.
+```
+
+실행:
+
+```text
+env TRIAL_NAME=route_no012_advlegalizer_pin_access_place_opt \
+  POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg \
+  POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.sdc \
+  SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.scan.def \
+  SIGNAL_MAX_ROUTING_LAYER=M8 \
+  ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true \
+  ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high \
+  ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high \
+  PG_M2_HOTSPOT_BLOCKAGE_ENABLE=true \
+  PLACE_ADVANCED_LEGALIZER=true \
+  PLACE_MULTI_CELL_PIN_ACCESS_CHECK=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING=true \
+  icc2_shell -batch \
+  -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+```
+
+결과:
+
+```text
+check_routes: 111 DRC
+  Off-grid: 111
+
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+log 핵심:
+
+```text
+Pin access cell spreader moved 1048 cells during placement.
+Pin access cell spreader moved 561 cells during later legalizer activity.
+Pin access optimization moved 0 cells.
+
+Pin track alignment needs:
+  place.legalize.enable_pin_color_alignment_check=true
+```
+
+해석:
+
+```text
+advanced legalizer movement 자체는 A2 lower-metal off-grid를 해결하지 못한다.
+결과는 no012 baseline 110보다 나쁜 111이다.
+이 trial은 fix로 reject한다.
+
+다만 ICC2가 요구하는 pin-track alignment 조건은 아직 완전히 만족하지 않았다.
+정확히 그 기능을 검증하려면 다음 isolated trial은:
+  PLACE_ADVANCED_LEGALIZER=true
+  PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK=true
+를 같이 켜야 한다.
+
+그 trial도 실패하면 placement knob 쪽은 중단하고,
+structural/cell-mapping fix로 넘어가는 것이 맞다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_advlegalizer_pin_access_place_opt.log
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/pg_drc.rpt
+```

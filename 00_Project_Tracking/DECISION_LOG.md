@@ -1508,3 +1508,77 @@ Evidence:
   scripts/match_drc_to_cell_pin_access.py
   /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
 ```
+
+## Placement Pin-Access Optimization Probe
+
+```text
+Date: 2026-05-09
+Decision: reject ordinary placement pin-access optimization as a standalone route DRC fix
+Reason:
+  trial route_no012_pin_access_place_opt enabled:
+    place multi-cell pin access check
+    optimize pin access access points
+    optimize pin access DRC variants
+    optimize pin access using cell spacing
+  ICC2 warned that pin track alignment requires:
+    place.legalize.enable_advanced_legalizer
+  log result:
+    Pin access optimization did not move any cells.
+  final check_routes:
+    total DRC: 110
+    Off-grid: 104
+    Diff net spacing: 5
+    Short: 1
+  clean checks:
+    open nets: 0
+    legality: 0
+    PG connectivity: clean
+    PG DRC: no errors
+Conclusion:
+  these options alone do not perturb the failing A2 access/grid pattern
+  the direct follow-up is one controlled probe with advanced legalizer enabled
+  if that also fails or worsens DRC, move back to structural/cell-mapping alternatives rather than more blind placement knobs
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_no012_pin_access_place_opt.log
+  7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_pin_access_place_opt/06_route/pg_drc.rpt
+```
+
+## Advanced Legalizer Pin-Access Probe
+
+```text
+Date: 2026-05-09
+Decision: reject advanced legalizer plus ordinary pin-access placement options as a standalone fix
+Reason:
+  trial route_no012_advlegalizer_pin_access_place_opt enabled:
+    place.legalize.enable_advanced_legalizer=true
+    multi-cell pin access check
+    pin-access access-point optimization
+    pin-access DRC variant optimization
+    pin-access cell-spacing optimization
+  placement did move cells:
+    pin access cell spreader moved 1048 cells during placement
+    pin access cell spreader moved 561 cells during later advanced legalizer activity
+  but actual pin access optimization moved 0 cells
+  ICC2 still warned:
+    pin track alignment needs place.legalize.enable_pin_color_alignment_check=true
+  final check_routes:
+    total DRC: 111
+    Off-grid: 111
+  comparison:
+    no012 baseline: 110 DRC
+    A1/A2 pin-swap trial: 103 DRC
+Conclusion:
+  advanced legalizer movement alone does not fix the A2 lower-metal off-grid pattern
+  this is not closure and not a current-best candidate
+  if checking the full ICC2 pin-track-alignment path, the next isolated probe must add enable_pin_color_alignment_check=true
+  otherwise move to structural/cell-mapping alternatives
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_no012_advlegalizer_pin_access_place_opt.log
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/pg_drc.rpt
+```

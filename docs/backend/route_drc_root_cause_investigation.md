@@ -3153,3 +3153,451 @@ SAED32 tech file은 직접 수정하지 않는다.
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/remaining_drc_via_window_classification.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/unmatched_drc_marker_summary.rpt
 ```
+
+## Targeted A2 VIA1 Route Blockage Probe
+
+목적:
+
+```text
+current-best 67 DRC 중 55개가 Routable A2 access point와 맞는다.
+해당 VIA1 access point를 좁게 막으면 router가 다른 access를 선택하는지 확인한다.
+```
+
+스크립트 변경:
+
+```text
+7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+
+추가 env:
+  ROUTE_BLOCKAGE_TSV
+  ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE
+
+TSV 형식:
+  name cx cy layers half_size net_types reason
+```
+
+전체 matched A2 blockage config:
+
+```text
+configs/backend/a2_matched_via1_blockages.tsv
+```
+
+Trial 1:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage
+
+blockage:
+  55 matched A2 VIA1 access points
+  half_size: 0.055um
+
+official check_routes:
+  open nets: 0
+  total DRC: 70
+  Diff net spacing: 7
+  Needs fat contact: 1
+  Off-grid: 5
+  Short: 57
+
+other checks:
+  legality: 0
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+Trial 2:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025
+
+blockage:
+  55 matched A2 VIA1 access points
+  half_size override: 0.025um
+
+official check_routes:
+  open nets: 0
+  total DRC: 67
+  Diff net spacing: 7
+  Off-grid: 1
+  Short: 59
+
+other checks:
+  legality: 0
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+해석:
+
+```text
+current-best는:
+  total DRC: 67
+  Off-grid: 59
+  Diff net spacing: 4
+  Short: 4
+
+A2 VIA1 blockage는 Off-grid를 크게 줄인다.
+0.055um: Off-grid 59 -> 5
+0.025um: Off-grid 59 -> 1
+
+하지만 Short가 크게 증가한다.
+0.055um: Short 4 -> 57
+0.025um: Short 4 -> 59
+
+따라서 A2 VIA1 access point는 원인에 직접 연결되어 있다.
+하지만 broad route blockage는 closure fix가 아니다.
+문제를 clean하게 없애지 않고 Off-grid를 Short로 바꾼다.
+```
+
+다음 probe:
+
+```text
+55개 전체 A2를 막지 않는다.
+OR2X4_HVT/A2 legal-window/no-default-track-center class만 좁게 분리해서 본다.
+목적은 Short 폭증 없이 10개 track-center mismatch class만 움직이는지 확인하는 것이다.
+```
+
+OR2X4-only blockage 결과:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025
+
+result:
+  INVALID_BLOCKAGE_TSV
+
+reason:
+  route_blockages.rpt에서 모든 blockage status=1
+  net_types를 {signal scan clock reset}처럼 braced 형태로 넣어서
+  simple TSV parser가 nested brace로 전달했다.
+
+official check_routes:
+  total DRC: 67
+
+판정:
+  blockage가 생성되지 않았으므로 비교용으로 쓰지 않는다.
+```
+
+수정:
+
+```text
+configs/backend/or2x4_a2_track_mismatch_via1_blockages.tsv
+
+net_types column:
+  before: {signal scan clock reset}
+  after : signal scan clock reset
+```
+
+스크립트 보강:
+
+```text
+7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+
+ROUTE_BLOCKAGE_TSV parser에서 net_types의 outer braces를 제거한다.
+따라서 다음부터는 braced/unbraced net_types 모두 같은 의미로 처리된다.
+```
+
+정정 run:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix
+
+blockage:
+  9 unique OR2X4_HVT/A2 VIA1 access points
+  half_size: 0.025um
+  route_blockages.rpt: all status=0
+
+official check_routes:
+  open nets: 0
+  total DRC: 114
+  Diff net spacing: 8
+  Needs fat contact: 2
+  Off-grid: 92
+  Short: 12
+
+other checks:
+  legality: 0
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+해석:
+
+```text
+OR2X4_HVT/A2 track-center mismatch class만 막아도 DRC가 크게 악화된다.
+따라서 route blockage는 전체 A2에도, OR2X4-only에도 closure fix가 아니다.
+
+중요한 원인 정보는 유지된다:
+  A2 VIA1 access policy를 건드리면 DRC class가 크게 변한다.
+
+하지만 해결 방향은 blockage가 아니라:
+  cell/library usage 선택
+  pin/via access setup
+  NDM/physical abstract 생성 조건
+  더 국소적인 ECO
+중 하나여야 한다.
+```
+
+복구:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials
+
+목적:
+  bad blockage trial 뒤 saved ICC2 block을 current-best 상태로 복구
+
+official check_routes:
+  open nets: 0
+  total DRC: 67
+  Diff net spacing: 4
+  Off-grid: 59
+  Short: 4
+
+other checks:
+  legality: 0
+  PG connectivity: clean
+  PG DRC: no errors
+
+주의:
+  route_auto 내부 로그는 66 DRC를 보였지만,
+  최종 공식 check_routes는 67 DRC다.
+  공식 current best는 계속 67 DRC로 둔다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/route_blockages.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/route_blockages.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025/06_route/route_blockages.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/route_blockages.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/pg_drc.rpt
+```
+
+## Post-Route Detail Repair Probe
+
+목적:
+
+```text
+route_auto 후 incremental route_detail repair를 더 돌리면
+남은 67개 DRC가 줄어드는지 확인한다.
+```
+
+trial:
+
+```text
+route_no012_nor2x4_to_nor2x2_eco_repair200
+```
+
+조건:
+
+```text
+post-DFT handoff:
+  no_or2x1_nor2x012_hvt
+
+ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+  dont_touch 유지
+
+PG:
+  VDD M2 hotspot blockage 유지
+
+route:
+  M8 max signal routing
+  route.detail.generate_extra_off_grid_pin_tracks=true
+  route.detail.drc_convergence_effort_level=high
+  route.detail.optimize_wire_via_effort_level=high
+  POST_ROUTE_DETAIL_REPAIR_ITERATIONS=200
+```
+
+pre-repair 공식 결과:
+
+```text
+check_routes.before_post_repair.rpt
+
+open nets: 0
+total DRC: 67
+Diff net spacing: 4
+Off-grid: 59
+Short: 4
+```
+
+post-repair 공식 결과:
+
+```text
+check_routes.rpt
+
+open nets: 0
+total DRC: 114
+Diff net spacing: 2
+Needs fat contact: 1
+Off-grid: 107
+Short: 4
+```
+
+기타 check:
+
+```text
+post_route_detail_repair.rpt: status 0
+check_legality.rpt: 0 violations
+pg_connectivity.rpt: floating std cells 0, floating hard macros 0
+pg_drc.rpt: no errors
+```
+
+해석:
+
+```text
+incremental detail repair는 명령 자체는 성공했지만 DRC를 악화시켰다.
+이 flow에서 남은 DRC는 단순 reroute 반복으로 풀리는 congestion 문제가 아니다.
+
+route_auto 내부에서 66까지 내려간 순간도 있었지만,
+공식 check_routes 기준은 pre-repair 67, post-repair 114다.
+따라서 accepted current best는 계속 67 DRC다.
+```
+
+판정:
+
+```text
+post-route detail repair 200은 closure fix로 기각한다.
+다음 fix는 반복 repair가 아니라 pin/via access setup, track-pattern/constraint,
+또는 더 구조적인 ECO/라이브러리 선택 쪽에서 찾아야 한다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/route_no012_nor2x4_to_nor2x2_eco_repair200.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/check_routes.before_post_repair.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/post_route_detail_repair.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/pg_drc.rpt
+```
+
+## M1/M2 Track Constraint Probe
+
+목적:
+
+```text
+report_tracks는 기본 track을 보여주지만 report_track_constraints는 비어 있었다.
+M1/M2 track constraint를 명시하면 preferred-grid 관련 route option과
+남은 A2 VIA1 off-grid 문제가 개선되는지 확인한다.
+```
+
+trial:
+
+```text
+route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core
+```
+
+조건:
+
+```text
+post-DFT handoff:
+  no_or2x1_nor2x012_hvt
+
+ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+  dont_touch 유지
+
+PG:
+  VDD M2 hotspot blockage 유지
+
+route:
+  M8 max signal routing
+  route.detail.generate_extra_off_grid_pin_tracks=true
+  route.detail.force_end_on_preferred_grid=true
+  route.detail.drc_convergence_effort_level=high
+  route.detail.optimize_wire_via_effort_level=high
+  TRACK_CONSTRAINT_M1M2_ENABLE=1
+```
+
+track constraint 적용 확인:
+
+```text
+track_constraints.rpt:
+  M1 status=0
+  M2 status=0
+
+track_constraints.after_set.rpt:
+  M1 horizontal, pitch 0.1520, width 0.0500
+  M2 vertical, pitch 0.1520, width 0.0560
+```
+
+최종 공식 결과:
+
+```text
+check_routes.rpt
+
+open nets: 0
+total DRC: 67
+Diff net spacing: 4
+Off-grid: 59
+Short: 4
+```
+
+기타 check:
+
+```text
+check_legality.rpt: 0 violations
+pg_connectivity.rpt: floating std cells 0, floating hard macros 0
+pg_drc.rpt: no errors
+```
+
+해석:
+
+```text
+명시적 M1/M2 track constraint는 적용됐다.
+하지만 final check_routes 기준 DRC는 67 그대로다.
+
+route_auto 내부에서는 66 DRC까지 내려갔지만,
+공식 check_routes는 67 DRC를 보고한다.
+따라서 accepted evidence는 67 DRC이며 clean이 아니다.
+
+이 probe는 단순 block-level track constraint 추가만으로
+남은 lower-metal A2 VIA1 off-grid/check-grid 문제가 해결되지 않음을 보인다.
+```
+
+판정:
+
+```text
+M1/M2 track constraint probe는 closure fix로 기각한다.
+current best는 계속 NOR2 resize ECO 공식 67 DRC 상태다.
+goal은 완료 처리하지 않는다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/track_constraints.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/track_constraints.after_set.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_drc.rpt
+```

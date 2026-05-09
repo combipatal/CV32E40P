@@ -72,6 +72,9 @@ set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ""
 set ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER ""
 set ROUTE_COMMON_ROTATE_DEFAULT_VIAS ""
 set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ""
+set ROUTE_BLOCKAGE_TSV ""
+set ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE ""
+set TRACK_CONSTRAINT_M1M2_ENABLE ""
 set POST_ROUTE_DETAIL_REPAIR_ITERATIONS ""
 set ECO_SWAP_FILE ""
 set ECO_SWAP_DONT_TOUCH ""
@@ -177,6 +180,15 @@ if {[info exists ::env(ROUTE_COMMON_ROTATE_DEFAULT_VIAS)]} {
 }
 if {[info exists ::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)]} {
   set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ $::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)
+}
+if {[info exists ::env(ROUTE_BLOCKAGE_TSV)]} {
+  set ROUTE_BLOCKAGE_TSV $::env(ROUTE_BLOCKAGE_TSV)
+}
+if {[info exists ::env(ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE)]} {
+  set ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE $::env(ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE)
+}
+if {[info exists ::env(TRACK_CONSTRAINT_M1M2_ENABLE)]} {
+  set TRACK_CONSTRAINT_M1M2_ENABLE $::env(TRACK_CONSTRAINT_M1M2_ENABLE)
 }
 if {[info exists ::env(POST_ROUTE_DETAIL_REPAIR_ITERATIONS)]} {
   set POST_ROUTE_DETAIL_REPAIR_ITERATIONS $::env(POST_ROUTE_DETAIL_REPAIR_ITERATIONS)
@@ -909,6 +921,91 @@ if {$ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ne ""} {
   set_app_options \
     -name route.auto_via_ladder.generate_center_track_on_off_grid_pattern_must_join_pin_shapes \
     -value $ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ
+}
+if {$TRACK_CONSTRAINT_M1M2_ENABLE ne ""} {
+  # M1/M2의 기본 track pitch를 block-level valid track constraint로 명시합니다.
+  # 목적은 preferred-grid 관련 option이 실제로 사용할 grid 의미를 얻는지 확인하는 것입니다.
+  set TRACK_CONSTRAINT_REPORT [open $TRIAL_ROUTE_DIR/track_constraints.rpt w]
+  puts $TRACK_CONSTRAINT_REPORT "TRACK_CONSTRAINT_M1M2_ENABLE=$TRACK_CONSTRAINT_M1M2_ENABLE"
+
+  set TC_STATUS_M1 [catch {
+    set_track_constraint \
+      -layers M1 \
+      -relative_to core \
+      -dir horizontal \
+      -space 0.152 \
+      -offset {0.0} \
+      -widths {0.050} \
+      -label cv32e40p_m1_horizontal_track
+  } TC_MSG_M1]
+  puts $TRACK_CONSTRAINT_REPORT "M1 status=$TC_STATUS_M1 msg=$TC_MSG_M1"
+
+  set TC_STATUS_M2 [catch {
+    set_track_constraint \
+      -layers M2 \
+      -relative_to core \
+      -dir vertical \
+      -space 0.152 \
+      -offset {0.0} \
+      -widths {0.056} \
+      -label cv32e40p_m2_vertical_track
+  } TC_MSG_M2]
+  puts $TRACK_CONSTRAINT_REPORT "M2 status=$TC_STATUS_M2 msg=$TC_MSG_M2"
+  close $TRACK_CONSTRAINT_REPORT
+
+  catch {report_track_constraints > $TRIAL_ROUTE_DIR/track_constraints.after_set.rpt}
+}
+if {$ROUTE_BLOCKAGE_TSV ne ""} {
+  # TSV로 지정한 작은 routing blockage를 route_auto 전에 만듭니다.
+  # 형식: name cx cy layers half_size net_types reason
+  # 목적: 반복 DRC access point만 막아 router가 다른 access를 선택하는지 봅니다.
+  set ROUTE_BLOCKAGE_REPORT [open $TRIAL_ROUTE_DIR/route_blockages.rpt w]
+  puts $ROUTE_BLOCKAGE_REPORT "route_blockage_tsv=$ROUTE_BLOCKAGE_TSV"
+  puts $ROUTE_BLOCKAGE_REPORT "format: name cx cy layers half_size net_types reason"
+
+  set ROUTE_BLOCKAGE_FP [open $ROUTE_BLOCKAGE_TSV r]
+  set ROUTE_BLOCKAGE_LINE_NO 0
+  while {[gets $ROUTE_BLOCKAGE_FP ROUTE_BLOCKAGE_LINE] >= 0} {
+    incr ROUTE_BLOCKAGE_LINE_NO
+    if {$ROUTE_BLOCKAGE_LINE_NO == 1} {
+      continue
+    }
+    set ROUTE_BLOCKAGE_LINE [string trim $ROUTE_BLOCKAGE_LINE]
+    if {$ROUTE_BLOCKAGE_LINE eq ""} {
+      continue
+    }
+
+    set RB_FIELDS [split $ROUTE_BLOCKAGE_LINE "\t"]
+    set RB_NAME [lindex $RB_FIELDS 0]
+    set RB_CX [lindex $RB_FIELDS 1]
+    set RB_CY [lindex $RB_FIELDS 2]
+    set RB_LAYERS [lindex $RB_FIELDS 3]
+    set RB_HALF_SIZE [lindex $RB_FIELDS 4]
+    if {$ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE ne ""} {
+      set RB_HALF_SIZE $ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE
+    }
+    set RB_NET_TYPES [lindex $RB_FIELDS 5]
+    set RB_NET_TYPES [string trim $RB_NET_TYPES "{}"]
+    set RB_REASON [lindex $RB_FIELDS 6]
+
+    set RB_LLX [expr {$RB_CX - $RB_HALF_SIZE}]
+    set RB_LLY [expr {$RB_CY - $RB_HALF_SIZE}]
+    set RB_URX [expr {$RB_CX + $RB_HALF_SIZE}]
+    set RB_URY [expr {$RB_CY + $RB_HALF_SIZE}]
+    set RB_BOUNDARY [list [list $RB_LLX $RB_LLY] [list $RB_URX $RB_URY]]
+
+    set RB_STATUS [catch {
+      create_routing_blockage \
+        -layers $RB_LAYERS \
+        -boundary $RB_BOUNDARY \
+        -net_types $RB_NET_TYPES \
+        -name_prefix $RB_NAME
+    } RB_MSG]
+
+    puts $ROUTE_BLOCKAGE_REPORT "status=$RB_STATUS name=$RB_NAME cx=$RB_CX cy=$RB_CY layers=$RB_LAYERS half_size=$RB_HALF_SIZE net_types={$RB_NET_TYPES} reason=$RB_REASON msg=$RB_MSG"
+  }
+  close $ROUTE_BLOCKAGE_FP
+  close $ROUTE_BLOCKAGE_REPORT
 }
 
 report_app_options route.common.* > $TRIAL_ROUTE_DIR/route_common_app_options.rpt

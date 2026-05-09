@@ -1355,3 +1355,66 @@ Result: OPEN_REJECTED_AS_BEST
 Notes: All 43 NOR2X4_HVT to NOR2X2_HVT ECO swaps passed and were kept dont_touch. Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 89 route DRCs, all Off-grid. This is worse than the original-EDK NDM current-best official 67 DRC result under the same no012/ECO/PG-block concept. Therefore libdir modify LEF is helpful for the clean 8.5ns handoff, but it does not combine better with the targeted no012 ECO flow.
 Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_routes.rpt.
 ```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage ... ROUTE_BLOCKAGE_TSV=configs/backend/a2_matched_via1_blockages.tsv ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus matched A2 VIA1 route blockage probe
+Result: OPEN_REJECTED_AS_BEST
+Notes: All 43 NOR2 resize ECO swaps passed and the 55 matched A2 VIA1 route blockages were created. Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 70 route DRCs: Diff net spacing 7, Needs fat contact 1, Off-grid 5, Short 57. Compared with current best 67 DRC, Off-grid drops from 59 to 5 but Short rises from 4 to 57. This proves the A2 VIA1 access points are causal, but broad 0.055um VIA1 blockage is not a closure fix.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/route_blockages.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025 ... ROUTE_BLOCKAGE_TSV=configs/backend/a2_matched_via1_blockages.tsv ROUTE_BLOCKAGE_HALF_SIZE_OVERRIDE=0.025 ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus smaller matched A2 VIA1 route blockage probe
+Result: OPEN_TIE_REJECTED_AS_FIX
+Notes: All 43 NOR2 resize ECO swaps passed and the matched A2 VIA1 route blockages were created with half_size 0.025um. Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 67 route DRCs: Diff net spacing 7, Off-grid 1, Short 59. This ties the current-best DRC count but changes the failure mode from mostly Off-grid to mostly Short. It is not cleaner than the current best and should not replace it.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/route_blockages.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_a2_via1_blockage_025/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025 ... ROUTE_BLOCKAGE_TSV=configs/backend/or2x4_a2_track_mismatch_via1_blockages.tsv ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus OR2X4 A2 route blockage probe
+Result: INVALID_BLOCKAGE_TSV
+Notes: Route completed with the same 67 DRC class mix as current best, but route_blockages.rpt shows status=1 for all OR2X4 blockages. The TSV used braced net_types, which the simple TSV parser turned into nested braces. Do not use this run for DRC comparison.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025/06_route/route_blockages.rpt and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025/06_route/check_routes.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix ... ROUTE_BLOCKAGE_TSV=configs/backend/or2x4_a2_track_mismatch_via1_blockages.tsv ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus corrected OR2X4 A2 route blockage probe
+Result: OPEN_REJECTED_AS_BEST
+Notes: The 9 unique OR2X4_HVT/A2 VIA1 route blockages were created with status=0. Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 114 route DRCs: Diff net spacing 8, Needs fat contact 2, Off-grid 92, Short 12. This is much worse than the current-best 67 DRC. OR2X4 A2 blockage is not a fix.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/route_blockages.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_or2x4_a2_blockage_025_fix/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials ... ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 restore saved block to current-best NOR2 resize ECO state after rejected blockage trials
+Result: RESTORED_CURRENT_BEST_OPEN
+Notes: All 43 NOR2 resize ECO swaps passed and no route blockage was used. Final official check_routes reports open nets 0 and 67 route DRCs: Diff net spacing 4, Off-grid 59, Short 4. The route_auto log briefly reported 66 DRC, but official check_routes remains 67, so the accepted current best is unchanged and not clean.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_blockage_trials/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_repair200 ... POST_ROUTE_DETAIL_REPAIR_ITERATIONS=200 ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/route_no012_nor2x4_to_nor2x2_eco_repair200.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus post-route detail repair
+Result: OPEN_REPAIR_REJECTED_AS_FIX
+Notes: Before post-repair, official check_routes matched current best: open nets 0 and 67 DRCs with Diff net spacing 4, Off-grid 59, Short 4. The 200-iteration incremental route_detail repair completed with status 0, but final official check_routes worsened to 114 DRCs: Diff net spacing 2, Needs fat contact 1, Off-grid 107, Short 4. Legality remains 0, PG connectivity is clean, and PG DRC has no errors. Therefore post-route detail repair is rejected for the current-best original-EDK NDM flow, and the accepted best remains 67 DRC.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/route_no012_nor2x4_to_nor2x2_eco_repair200.log, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/check_routes.before_post_repair.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/post_route_detail_repair.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_repair200/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core ... TRACK_CONSTRAINT_M1M2_ENABLE=1 ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID=true ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus M1/M2 track constraint probe
+Result: OPEN_REJECTED_AS_FIX
+Notes: M1 and M2 track constraints were accepted and report_track_constraints shows M1 horizontal and M2 vertical constraints on the core area. However final official check_routes remains open nets 0 and 67 route DRCs: Diff net spacing 4, Off-grid 59, Short 4. The route_auto log briefly reported 66 DRC, but final check_routes reports 67. Legality remains 0, PG connectivity is clean, and PG DRC has no errors. Therefore explicit M1/M2 track constraints do not close the current-best residual DRC.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core.log, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/track_constraints.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/track_constraints.after_set.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_drc.rpt.
+```

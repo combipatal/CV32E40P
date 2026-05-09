@@ -1964,3 +1964,34 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/pg_drc.rpt
 ```
+
+## Reject NOR2X4_HVT A2 Resize-To-X1
+
+```text
+Date: 2026-05-09
+Decision: reject targeted NOR2X4_HVT->NOR2X1_HVT as a route DRC fix
+Reason:
+  trial used the same 43 matched NOR2X4_HVT/A2 instances
+  all 43 size_cell operations passed and were marked dont_touch
+  official check_routes result:
+    open nets: 0
+    total route DRC: 109
+    Off-grid: 106
+    Diff net spacing: 2
+    Short: 1
+  comparison:
+    no012 baseline: 110 DRC
+    NOR2X4->NOR2X2 ECO: 67 DRC
+    NOR2X4->NOR2X1 ECO: 109 DRC
+Conclusion:
+  smaller NOR2 drive is not monotonically better for this DRC class
+  X2 remains the best tested targeted NOR2 resize point
+  the benefit likely comes from placement/routing outcome around the X2 cell, not simply reducing drive or area
+Evidence:
+  configs/backend/a2_edge_nor2x4_to_nor2x1_hvt_resize.tsv
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/01_init_design/eco_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/pg_drc.rpt
+```

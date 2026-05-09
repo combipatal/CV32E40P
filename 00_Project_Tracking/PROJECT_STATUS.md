@@ -142,6 +142,7 @@ The no012 matched DRC rows were classified by LEF via-window class. 87/103 match
 Targeted backend ECO resizing the 43 matched NOR2X4_HVT/A2 edge instances to NOR2X2_HVT was tested. All 43 swaps passed and were kept dont_touch. ICC2 route improved to 67 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. DRC detail is still dominated by VIA1 off-grid: M1 11, M2 2, VIA1 54. This is the current best backend ECO candidate, but it is not backend closure and not yet FE/FM-signed.
 Post-ECO remaining DRC classification was run. Of 67 remaining DRC markers, 55 match Routable A2 access points within 0.08um. The matched class split is 43 NOR2X2_HVT/A2 edge-snapping, 10 OR2X4_HVT/A2 track-center mismatch, and 2 NOR2X4_HVT/A2 edge-snapping. Therefore the resize helped but did not eliminate the A2 route/check-grid issue; the next probe should target remaining NOR2X2/NOR2X4 A2 edge behavior or OR2X4 A2 track-center behavior, not broad cell bans.
 Targeted OR2X4_HVT/A2 downsizing was tested as an add-on to the current NOR2 resize ECO. The combined 52-cell ECO completed with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC worsened to 97. Current best remains the NOR2-only resize ECO at 67 DRC.
+Targeted NOR2X4_HVT/A2 resize-to-X1 was also tested. It completed with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC worsened to 109. X2 remains the best tested targeted NOR2 resize point; smaller drive is not a monotonic fix.
 ```
 
 ## Fmax Estimate

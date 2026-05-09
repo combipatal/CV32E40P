@@ -2552,3 +2552,114 @@ OR2X4_HVT-only dont_use가 111 DRC로 실패한 이유도 설명된다.
 그 trial은 16-row class만 겨냥했고,
 주류인 87-row NOR2 A2 edge-snapping class를 직접 해결하지 못했다.
 ```
+
+## Targeted NOR2X4_HVT A2 Resize ECO Trial
+
+목적:
+
+```text
+no012 baseline의 matched DRC 103개 중 85개가 NOR2X4_HVT/A2 edge-snapping class다.
+그래서 broad NOR2X4_HVT dont_use가 아니라,
+문제 좌표와 매칭된 NOR2X4_HVT instance 43개만 NOR2X2_HVT로 줄여서 확인했다.
+```
+
+설정:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco
+
+base netlist:
+  3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg
+
+ECO swap file:
+  configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
+
+ECO:
+  43 targeted NOR2X4_HVT -> NOR2X2_HVT
+  ECO_SWAP_DONT_TOUCH=true
+```
+
+결과:
+
+```text
+eco_swap:
+  PASS size_cell: 43
+  DONT_TOUCH: 43
+
+official check_routes:
+  open nets: 0
+  total DRC: 67
+  Off-grid: 59
+  Diff net spacing: 4
+  Short: 4
+
+DRC detail matrix:
+  Diff net spacing:
+    M1: 3
+    M2: 1
+  Off-grid:
+    M1: 4
+    M2: 1
+    VIA1: 54
+  Short:
+    M1: 4
+  totals by layer:
+    M1: 11
+    M2: 2
+    VIA1: 54
+
+other checks:
+  legality: 0 violations
+  PG connectivity: clean
+  PG DRC: no errors
+  ZRT-044 MUX41X2_HVT/S0 remains
+```
+
+비교:
+
+```text
+no012 baseline:
+  110 DRC
+
+A1/A2 pin-swap ECO:
+  103 DRC
+
+OR2X4_HVT add-on dont_use:
+  111 DRC
+
+targeted NOR2X4_HVT -> NOR2X2_HVT ECO:
+  67 DRC
+```
+
+해석:
+
+```text
+이 trial은 현재까지 가장 강한 원인-수정 증거다.
+dominant class였던 NOR2X4_HVT/A2 edge-snapping을 직접 건드리자 DRC가 110 -> 67로 감소했다.
+
+하지만 이것은 backend ECO route candidate다.
+NOR2X4와 NOR2X2는 같은 Boolean 기능의 drive-strength variant이므로 의도상 논리는 유지되지만,
+아직 Formality/ECO equivalence로 signoff한 결과는 아니다.
+따라서 backend closure나 signoff 완료라고 기록하면 안 된다.
+```
+
+다음 판단:
+
+```text
+1. 남은 67 DRC marker context를 다시 추출한다.
+2. 남은 VIA1 off-grid 54개의 ref/pin class를 재분류한다.
+3. 효과가 유지되면 이 fix를 FE/FM-backed mapping 또는 ECO-equivalence flow로 정식화한다.
+```
+
+증거:
+
+```text
+configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/drc.matrix.rpt
+```

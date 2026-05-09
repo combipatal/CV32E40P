@@ -1863,3 +1863,41 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.rpt
   7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.tsv
 ```
+
+## Accept Targeted NOR2X4_HVT A2 Resize As Current Backend ECO Candidate
+
+```text
+Date: 2026-05-09
+Decision: keep targeted NOR2X4_HVT/A2 edge resize ECO as the current best backend candidate
+Reason:
+  43 matched NOR2X4_HVT/A2 edge instances were resized to NOR2X2_HVT
+  all 43 size_cell operations passed
+  all 43 resized cells were marked dont_touch
+  official check_routes result:
+    open nets: 0
+    total route DRC: 67
+    Off-grid: 59
+    Diff net spacing: 4
+    Short: 4
+  detailed matrix:
+    M1: 11
+    M2: 2
+    VIA1: 54
+  comparison:
+    no012 baseline: 110 DRC
+    A1/A2 pin-swap candidate: 103 DRC
+    OR2X4_HVT add-on dont_use: 111 DRC
+Conclusion:
+  dominant NOR2X4_HVT/A2 edge-snapping class is a real closure lever
+  broad NOR2X4_HVT dont_use remains rejected because it caused 481 DRC
+  this ECO is backend-only evidence and must not be called signoff closure
+  next signoff-quality direction is to convert the fix into a FE/FM-backed mapping or ECO-equivalence flow
+Evidence:
+  configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/01_init_design/eco_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_drc.rpt
+```

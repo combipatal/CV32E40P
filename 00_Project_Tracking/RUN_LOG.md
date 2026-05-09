@@ -1139,3 +1139,21 @@ Result: STRONGER_ROOT_CAUSE_MODEL
 Notes: Joined the 103 matched no012 DRC-to-pin-access rows with marker context ref names and LEF via-window classification. There are 52 unique access points and no missing inputs. 87/103 marker rows are or_nor_a2_legal_track_edge_snapping, mainly NOR2X4_HVT/A2 85 rows plus NOR2X0_HVT/A2 2 rows. 16/103 marker rows are legal_window_no_default_track_center, all OR2X4_HVT/A2. No matched no012 row belongs to the true no-window blocked-access class. This explains why OR2X4_HVT-only dont_use did not close route DRC: it targeted the 16-row minority class and left the dominant NOR2X4_HVT/A2 edge-snapping class.
 Evidence: scripts/classify_drc_by_lef_via_window.py, 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.rpt, and 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.tsv.
 ```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.sdc SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.scan.def CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 targeted NOR2X4_HVT/A2 edge resize ECO route trial
+Result: BEST_BACKEND_ECO_CANDIDATE_BUT_NOT_CLOSED
+Notes: The trial resized 43 targeted NOR2X4_HVT instances to NOR2X2_HVT and marked them dont_touch. All 43 size_cell operations passed. Official check_routes reports open nets 0 and 67 total DRCs: Off-grid 59, Diff net spacing 4, and Short 4. Legality is 0, PG connectivity is clean, and PG DRC has no errors. This improves the no012 baseline from 110 DRC and the A1/A2 pin-swap candidate from 103 DRC, making NOR2X4_HVT/A2 edge access the strongest current root-cause/fix lever. This is backend ECO evidence only; it is not yet FE/FM-signed closure.
+Evidence: configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env DRC_DETAIL_DIR=7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl
+Stage: ICC2 DRC detail extraction for targeted NOR2X4_HVT/A2 edge resize ECO
+Result: PASS_EXTRACTION
+Notes: Detailed DRC matrix confirms 67 route DRCs. By type/layer: Diff net spacing M1 3 and M2 1; Off-grid M1 4, M2 1, and VIA1 54; Short M1 4. Totals by layer are M1 11, M2 2, and VIA1 54. Remaining DRC is still dominated by VIA1 off-grid, so backend is not closed.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/drc.by_type.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/drc.by_layer.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/check_routes.detail_source.rpt.
+```

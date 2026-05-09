@@ -1130,3 +1130,12 @@ Result: STRONGER_ROOT_CAUSE_MODEL
 Notes: Parsed SAED32 Milkyway tech VIA12SQ_C and selected HVT/LVT LEF pins. MUX41X2_HVT/S0 and RDFFNSRX1_HVT/CLK have no legal M1 center window for the default VIA12SQ_C lower M1 enclosure, matching the create_pin_check_lib PDC-001 blocked-access class. NOR2X0/1/2/4_HVT A2 pins do have legal VIA1 track centers, so the remaining A2 off-grid issue is not pure pin-metal insufficiency. NOR2X4_HVT/A2 has legal X max 0.608, matching the previous observed local access X=0.608 edge condition. OR2X4_HVT/A2 and OR2X1_HVT/A1 have legal geometry windows but no default M1 track center inside those windows, supporting a track/access snapping mismatch class.
 Evidence: scripts/analyze_lef_pin_via_windows.py and 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/lef_pin_via_windows.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: python3 scripts/classify_drc_by_lef_via_window.py --match-tsv 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv --marker-context 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt --tech-file /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf --hvt-lef /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef --out 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.rpt --detail-out 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.tsv
+Stage: Offline no012 DRC via-window class quantification
+Result: STRONGER_ROOT_CAUSE_MODEL
+Notes: Joined the 103 matched no012 DRC-to-pin-access rows with marker context ref names and LEF via-window classification. There are 52 unique access points and no missing inputs. 87/103 marker rows are or_nor_a2_legal_track_edge_snapping, mainly NOR2X4_HVT/A2 85 rows plus NOR2X0_HVT/A2 2 rows. 16/103 marker rows are legal_window_no_default_track_center, all OR2X4_HVT/A2. No matched no012 row belongs to the true no-window blocked-access class. This explains why OR2X4_HVT-only dont_use did not close route DRC: it targeted the 16-row minority class and left the dominant NOR2X4_HVT/A2 edge-snapping class.
+Evidence: scripts/classify_drc_by_lef_via_window.py, 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.rpt, and 7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.tsv.
+```

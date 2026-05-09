@@ -1842,3 +1842,24 @@ Evidence:
   scripts/analyze_lef_pin_via_windows.py
   7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/lef_pin_via_windows.rpt
 ```
+
+## Prioritize NOR2X4_HVT A2 Edge-Snapping Over OR2X4 Track Mismatch
+
+```text
+Date: 2026-05-09
+Decision: make NOR2X4_HVT/A2 edge-snapping the first remaining no012 fix target
+Reason:
+  classified the 103 matched no012 DRC-to-pin-access rows by LEF via-window class
+  87/103 marker rows are OR/NOR A2 legal-track edge-snapping
+  85/103 are specifically NOR2X4_HVT/A2
+  16/103 are OR2X4_HVT/A2 legal-window/no-default-track-center
+  0/103 matched rows are true no-window blocked-access pins
+Conclusion:
+  OR2X4_HVT-only dont_use failed because it targeted the 16-row minority class
+  MUX41X2_HVT/S0 remains a ZRT-044/pin-check issue but not the matched no012 DRC majority
+  next controlled fix/probe should target NOR2X4_HVT/A2 edge access or the NDM/via access setup that handles it
+Evidence:
+  scripts/classify_drc_by_lef_via_window.py
+  7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.rpt
+  7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.tsv
+```

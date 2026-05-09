@@ -2488,3 +2488,67 @@ pin geometry는 가능하지만 기본 M1 track center가 window 안에 없다.
 4. 다음 fix는 broad dont_use가 아니라,
    NDM/tech via rule setup 확인 또는 A2/OR pin access를 바꾸는 controlled mapping/ECO여야 한다.
 ```
+
+## No012 Remaining DRC Class Quantification
+
+목적:
+
+```text
+LEF pin VIA1 window probe는 ref/pin별 정적 분석이다.
+이번에는 no012 110 DRC baseline의 실제 matched marker 103개에 그 class를 붙인다.
+```
+
+방법:
+
+```text
+script:
+  scripts/classify_drc_by_lef_via_window.py
+
+inputs:
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt
+  /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+  /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+
+outputs:
+  7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.rpt
+  7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/no012_drc_via_window_classification.tsv
+```
+
+결과:
+
+```text
+matched marker rows: 103
+unique access points: 52
+missing inputs: none
+
+By marker row class:
+  87 or_nor_a2_legal_track_edge_snapping
+  16 legal_window_no_default_track_center
+
+By unique access point class:
+  44 or_nor_a2_legal_track_edge_snapping
+   8 legal_window_no_default_track_center
+
+By ref/pin/class marker rows:
+  85 NOR2X4_HVT/A2 or_nor_a2_legal_track_edge_snapping
+  16 OR2X4_HVT/A2 legal_window_no_default_track_center
+   2 NOR2X0_HVT/A2 or_nor_a2_legal_track_edge_snapping
+```
+
+해석:
+
+```text
+no012 remaining matched DRC 대부분은 blocked pin-access class가 아니다.
+실제 남은 matched DRC의 87/103은 legal track center가 있는 OR/NOR A2 edge-snapping class다.
+16/103은 OR2X4_HVT/A2의 legal-window/no-default-track-center class다.
+
+따라서 다음 fix 우선순위는:
+  1. NOR2X4_HVT/A2 edge access를 직접 피하는 controlled ECO 또는 NDM/via access setup 확인
+  2. OR2X4_HVT/A2 track-center mismatch를 별도 처리
+  3. MUX41X2_HVT/S0 같은 no-window blocked pin은 ZRT-044 cleanup 대상으로 별도 관리
+
+OR2X4_HVT-only dont_use가 111 DRC로 실패한 이유도 설명된다.
+그 trial은 16-row class만 겨냥했고,
+주류인 87-row NOR2 A2 edge-snapping class를 직접 해결하지 못했다.
+```

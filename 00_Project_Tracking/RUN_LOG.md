@@ -968,3 +968,30 @@ Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
 Notes: Saved ICC2 block was restored to the no_or2x1_nor2x012_hvt baseline after rejecting the via-ladder center-track probe. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors.
 Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/route_combo_no_or2x1_nor2x012_hvt_restore4.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/pg_drc.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: python3 scripts/analyze_a2_lef_access_alignment.py --lef /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef --match-tsv 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv --marker-context 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt --out 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_lef_access_alignment.rpt
+Stage: Offline A2 LEF/access alignment root-cause probe
+Result: STRONGER_ROOT_CAUSE_MODEL
+Notes: The 103 matched A2 DRC/access markers reduce to 52 unique A2 access points: 43 NOR2X4_HVT, 8 OR2X4_HVT, and 1 NOR2X0_HVT. For NOR2X4_HVT/A2, all observed local access X values are 0.608, exactly the maximum legal X center for default VIA1 M1 enclosure on the A2 M1 rectangle. 33 of 43 NOR2X4_HVT access points are inside the A2 M1 pin shape but enclosure-tight. NOR2 HVT drive variants and NOR2X4 LVT/RVT share the same A2 M1 geometry, explaining why targeted LVT swap did not solve the issue.
+Evidence: scripts/analyze_a2_lef_access_alignment.py and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_lef_access_alignment.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no012_connect_within_m1_pins ... ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER='{M1 via_standard_cell_pins}' ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route access policy trial for standard-cell M1 pin-contained via connection
+Result: REJECTED_AS_FIX_BUT_STRONG_CAUSE_EVIDENCE
+Notes: The option route.common.connect_within_pins_by_layer_name was applied as {M1 via_standard_cell_pins}. Final check_routes reports 148 DRCs: Connection not within pin 43, Diff net spacing 38, Less than minimum area 1, Needs fat contact 26, Off-grid 31, and Short 9. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors. This is worse than the 110 baseline, so it is not a fix. However, Off-grid drops from 104 to 31 while new pin-containment DRCs appear, confirming the remaining issue is controlled by pin-contained via/access behavior around A2.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/route_common_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x012_hvt_restore5 ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route restore after rejected M1 pin-contained via trial
+Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Saved ICC2 block was restored to the no_or2x1_nor2x012_hvt baseline. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/route_combo_no_or2x1_nor2x012_hvt_restore5.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/pg_drc.rpt.
+```

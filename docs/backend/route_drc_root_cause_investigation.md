@@ -1331,3 +1331,168 @@ legality: 0
 PG connectivity: clean
 PG DRC: no errors
 ```
+
+## A2 LEF Access Alignment Probe
+
+남은 A2 marker 103개를 unique access point 52개로 줄인 뒤, HVT LEF의 A2 pin shape와 비교했다.
+
+실행:
+
+```text
+python3 scripts/analyze_a2_lef_access_alignment.py \
+  --lef /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef \
+  --match-tsv 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv \
+  --marker-context 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt \
+  --out 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_lef_access_alignment.rpt
+```
+
+결과:
+
+```text
+unique A2 access points: 52
+
+by ref:
+  NOR2X4_HVT: 43
+  OR2X4_HVT : 8
+  NOR2X0_HVT: 1
+
+M1 enclosure status:
+  NOR2X4_HVT inside_m1_but_enclosure_tight: 33
+  NOR2X4_HVT full_m1_enclosure_ok        : 10
+  OR2X4_HVT  full_m1_enclosure_ok        : 8
+  NOR2X0_HVT inside_m1_but_enclosure_tight: 1
+```
+
+핵심 수치:
+
+```text
+NOR2X4_HVT/A2 M1 RECT: 0.489 0.553 0.663 0.733
+default VIA1 M1 requirement:
+  cut_width 0.050
+  M1 enc_x 0.030
+  M1 enc_y 0.005
+
+VIA1 center legal X max on NOR2X4_HVT/A2 M1:
+  0.663 - (0.050/2 + 0.030) = 0.608
+
+observed local access X:
+  NOR2X4_HVT: 0.608 for all 43 points
+```
+
+판단:
+
+```text
+NOR2X4_HVT/A2 access point는 M1 pin 내부에 있지만,
+대부분 default VIA1 M1 enclosure legal window의 오른쪽 끝에 정확히 붙어 있다.
+
+그래서 report_cell_pin_access는 Routable로 판단할 수 있지만,
+route/check 단계에서는 via/contact snapping 또는 off-grid check에서 걸릴 수 있다.
+
+이것은 "blocked access"가 아니라
+edge-of-legal-window pin access + VIA1/contact snapping/grid mismatch 모델이다.
+```
+
+VT 비교:
+
+```text
+NOR2X0_HVT/NOR2X1_HVT/NOR2X2_HVT/NOR2X4_HVT A2 M1 shape는 동일하다.
+NOR2X4_LVT/RVT도 HVT와 A2 M1 shape가 동일하다.
+OR2X4_LVT/RVT도 HVT와 A2 M1 shape가 동일하다.
+```
+
+따라서:
+
+```text
+matched A2 HVT -> LVT swap이 안 먹힌 이유가 설명된다.
+단순 VT swap은 pin geometry를 바꾸지 않는다.
+NOR2X4_HVT broad dont_use는 구조 재합성을 크게 유발해서 이미 rejected다.
+다음 fix는 broad VT replacement가 아니라 route access policy 또는 controlled structural/cell-mapping 대안을 봐야 한다.
+```
+
+증거:
+
+```text
+scripts/analyze_a2_lef_access_alignment.py
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_lef_access_alignment.rpt
+```
+
+## M1 Pin-Contained Via Route Policy Trial
+
+edge-of-legal-window 모델을 직접 건드리는 route option을 시험했다.
+
+조건:
+
+```text
+trial: route_combo_no012_connect_within_m1_pins
+route.common.connect_within_pins_by_layer_name={M1 via_standard_cell_pins}
+```
+
+man-page 의미:
+
+```text
+M1 standard-cell pin에 연결할 때 via를 pin shape 내부에 포함되도록 제한한다.
+```
+
+결과:
+
+```text
+check_routes DRC: 148
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+
+DRC:
+  Connection not within pin: 43
+  Diff net spacing: 38
+  Less than minimum area: 1
+  Needs fat contact: 26
+  Off-grid: 31
+  Short: 9
+```
+
+판단:
+
+```text
+fix로는 reject.
+baseline 110보다 나쁘다.
+
+하지만 원인 증거로는 강하다.
+Off-grid가 104 -> 31로 크게 줄었다.
+대신 Connection-not-within-pin / Needs-fat-contact가 생겼다.
+
+즉 남은 DRC는 A2 pin-contained VIA1/access geometry에 의해 지배된다.
+route가 pin 내부 제한을 만족하려 하면 다른 lower-metal rule로 튄다.
+```
+
+복구:
+
+```text
+trial: route_combo_no_or2x1_nor2x012_hvt_restore5
+check_routes DRC: 110
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+다음 방향:
+
+```text
+broad VT replacement는 더 이상 우선순위가 아니다.
+route access policy만으로도 완전 해결은 어렵다.
+다음 fix 후보는 controlled structural/cell-mapping change다.
+예: remaining NOR2X4_HVT A2 edge instances만 다른 구조로 바꾸는 합성/ECO 후보를 만든 뒤,
+full FE equivalence와 backend DRC를 같이 확인한다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/route_common_app_options.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/check_routes.rpt
+```

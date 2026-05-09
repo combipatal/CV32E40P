@@ -1352,3 +1352,70 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_drc.rpt
 ```
+
+## A2 Edge-of-Legal-Window Root Cause Model
+
+```text
+Date: 2026-05-09
+Decision: treat remaining 110-route-DRC issue as A2 edge-of-legal-window access plus VIA1/contact snapping/grid mismatch
+Reason:
+  103 matched A2 marker/access rows reduce to 52 unique A2 access points
+  unique points by ref:
+    NOR2X4_HVT: 43
+    OR2X4_HVT: 8
+    NOR2X0_HVT: 1
+  NOR2X4_HVT/A2 LEF M1 rectangle:
+    x1=0.489 x2=0.663
+  default VIA1 M1 enclosure requirement:
+    cut_width/2 + enc_x = 0.050/2 + 0.030 = 0.055
+  maximum legal VIA1 center X on that A2 M1 rectangle:
+    0.663 - 0.055 = 0.608
+  observed local access X:
+    NOR2X4_HVT: 0.608 for all 43 unique access points
+  33 of 43 NOR2X4_HVT access points are inside M1 but enclosure-tight
+  NOR2 HVT drive variants share the same A2 M1 geometry
+  NOR2X4_LVT/RVT share the same A2 M1 geometry as NOR2X4_HVT
+Conclusion:
+  the remaining issue is not solved by VT swap because pin geometry does not change
+  report_cell_pin_access can call the point routable because it is just legal or near legal
+  route/check can still produce Off-grid when generated via/contact snaps or checks at the edge
+  do not broadly ban NOR2X4_HVT
+  next candidates should be route access policy or controlled structural/cell-mapping alternatives, not broad VT replacement
+Evidence:
+  scripts/analyze_a2_lef_access_alignment.py
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_lef_access_alignment.rpt
+```
+
+## M1 Pin-Contained Via Route Policy Rejection
+
+```text
+Date: 2026-05-09
+Decision: reject route.common.connect_within_pins_by_layer_name={M1 via_standard_cell_pins} as a fix
+Reason:
+  option was selected because remaining A2 access points are at the edge of the legal VIA1-on-M1 window
+  app option applied correctly:
+    route.common.connect_within_pins_by_layer_name {M1 via_standard_cell_pins}
+  final check_routes worsens from 110 to 148:
+    Connection not within pin: 43
+    Diff net spacing: 38
+    Less than minimum area: 1
+    Needs fat contact: 26
+    Off-grid: 31
+    Short: 9
+  open nets remain 0
+  legality remains 0
+  PG connectivity and PG DRC remain clean
+Conclusion:
+  forcing M1 standard-cell pin-contained via connection is not a usable fix
+  but the DRC class conversion is important:
+    Off-grid drops 104 -> 31
+    pin-containment and fat-contact errors appear
+  this confirms the remaining issue is controlled by pin-contained VIA1/access geometry around A2
+  next fix class should be controlled structural/cell-mapping changes or a more surgical access policy, not broad VT replacement
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_drc.rpt
+```

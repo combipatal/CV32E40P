@@ -72,6 +72,7 @@ set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ""
 set ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER ""
 set ROUTE_COMMON_ROTATE_DEFAULT_VIAS ""
 set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ""
+set POST_ROUTE_DETAIL_REPAIR_ITERATIONS ""
 set ECO_SWAP_FILE ""
 set ECO_SWAP_DONT_TOUCH ""
 set ECO_PIN_SWAP_FILE ""
@@ -177,6 +178,9 @@ if {[info exists ::env(ROUTE_COMMON_ROTATE_DEFAULT_VIAS)]} {
 if {[info exists ::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)]} {
   set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ $::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)
 }
+if {[info exists ::env(POST_ROUTE_DETAIL_REPAIR_ITERATIONS)]} {
+  set POST_ROUTE_DETAIL_REPAIR_ITERATIONS $::env(POST_ROUTE_DETAIL_REPAIR_ITERATIONS)
+}
 if {[info exists ::env(ECO_SWAP_FILE)]} {
   set ECO_SWAP_FILE $::env(ECO_SWAP_FILE)
 }
@@ -211,6 +215,9 @@ file mkdir $TRIAL_ROUTE_DIR
 if {[file exists $ICC2_LIB_DIR]} {
   file delete -force $ICC2_LIB_DIR
 }
+
+# env로 ICC2_LIB_DIR를 별도 trial 위치로 바꾸면 부모 폴더가 없을 수 있습니다.
+file mkdir [file dirname $ICC2_LIB_DIR]
 
 create_lib $ICC2_LIB_DIR \
   -technology $TECH_FILE \
@@ -911,6 +918,26 @@ report_app_options route.auto_via_ladder.* > $TRIAL_ROUTE_DIR/route_auto_via_lad
 check_routability > $TRIAL_ROUTE_DIR/check_routability.rpt
 
 route_auto
+
+if {$POST_ROUTE_DETAIL_REPAIR_ITERATIONS ne ""} {
+  # route_auto 후 detail route를 한 번 더 incremental repair로 돌립니다.
+  # auto route 옵션만 바꾸는 trial과 구분하기 위해 before/after report를 따로 남깁니다.
+  check_routes > $TRIAL_ROUTE_DIR/check_routes.before_post_repair.rpt
+
+  set POST_REPAIR_STATUS [catch {
+    route_detail \
+      -incremental true \
+      -initial_drc_from_input true \
+      -start_iteration 1 \
+      -max_number_iterations $POST_ROUTE_DETAIL_REPAIR_ITERATIONS
+  } POST_REPAIR_MSG]
+
+  set POST_REPAIR_REPORT [open $TRIAL_ROUTE_DIR/post_route_detail_repair.rpt w]
+  puts $POST_REPAIR_REPORT "iterations: $POST_ROUTE_DETAIL_REPAIR_ITERATIONS"
+  puts $POST_REPAIR_REPORT "status: $POST_REPAIR_STATUS"
+  puts $POST_REPAIR_REPORT "message: $POST_REPAIR_MSG"
+  close $POST_REPAIR_REPORT
+}
 
 check_routes > $TRIAL_ROUTE_DIR/check_routes.rpt
 report_qor > $TRIAL_ROUTE_DIR/qor.rpt

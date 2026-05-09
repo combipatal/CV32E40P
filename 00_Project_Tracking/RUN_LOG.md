@@ -1283,3 +1283,57 @@ Result: CLEANED
 Notes: Removed local generated logs, SVF files, Formality work state, DC/DFT work_topo directories, Milkyway design libraries, root command logs, and small tool scratch files. Preserved 2_Output and 4_Report directories because they contain reproducible handoff files and report evidence referenced by the project tracking docs. After cleanup, find reports 0 remaining *.log and *.svf files in the workspace.
 Evidence retained: 2_Synthesis/4_Report, 2.5_FM_R2N/4_Report, 3_DFT/4_Report, 4_ATPG/4_Report, 5_FM_N2N/4_Report, 6_STA/4_Report, 7_Backend_ICC2/4_Report, and generated handoff files under each stage's 2_Output directory.
 ```
+
+```text
+Date: 2026-05-09
+Command: lm_shell -batch -file 7_Backend_ICC2/0_Script/00_setup/build_saed32_ndm_libdir_modify.tcl
+Stage: ICC2 NDM build from libdir modify LEF
+Result: PASS_WITH_WARNINGS
+Notes: Built RVT/LVT/HVT TT NDMs using the existing SAED32 TT DB timing libraries and the modify LEFs under /DATA/home/edu135/lib/libdir/LEF/modify. This keeps the frontend logical/timing setup unchanged while changing backend physical abstracts only. Build completed. Warnings are similar to the original NDM build class: bus bit character, duplicate timing arcs, PG pin direction auto-fix, and large M1 blockage messages.
+Evidence: 7_Backend_ICC2/3_Log/00_setup/build_saed32_ndm_libdir_modify.log and 7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=libdir_modify_8p5ns_scan_def_m8 ... NDM_RVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/saed32rvt_tt.ndm NDM_LVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/saed32lvt_tt.ndm NDM_HVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/saed32hvt_tt.ndm icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 backend route trial with libdir modify LEF NDM and unchanged 8.5ns post-DFT handoff
+Result: OPEN_BUT_IMPROVED
+Notes: Route completed with open nets 0, legality 0, PG DRC clean, and 151 route DRCs. DRC classes are Diff net spacing 6, Off-grid 143, and Short 2. ZRT-044 for MUX41X2_HVT/S0 remains. This is not backend closure, but it is a large improvement versus the fair original-EDK 8.5ns baseline.
+Evidence: 7_Backend_ICC2/3_Log/trials/libdir_modify_8p5ns_scan_def_m8/route.log, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8/01_init_design/ref_libs.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8/06_route/check_legality.rpt, and 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=edk_original_8p5ns_scan_def_m8 ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 fair baseline route trial with original EDK NDM and unchanged 8.5ns post-DFT handoff
+Result: OPEN_BASELINE
+Notes: Route completed with open nets 0, legality 0, PG DRC clean, and 412 route DRCs. DRC classes are Diff net spacing 112, Less than minimum area 5, Needs fat contact 128, Off-grid 165, and Short 2. This baseline proves the libdir modify LEF improvement is real under the same netlist, SDC, scan DEF, utilization, and route options.
+Evidence: 7_Backend_ICC2/3_Log/trials/libdir_modify_8p5ns_scan_def_m8/edk_original_route.log, 7_Backend_ICC2/4_Report/trials/edk_original_8p5ns_scan_def_m8/01_init_design/ref_libs.rpt, 7_Backend_ICC2/4_Report/trials/edk_original_8p5ns_scan_def_m8/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/edk_original_8p5ns_scan_def_m8/06_route/check_legality.rpt, and 7_Backend_ICC2/4_Report/trials/edk_original_8p5ns_scan_def_m8/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=libdir_modify_8p5ns_scan_def_m9 SIGNAL_MAX_ROUTING_LAYER=M9 ... NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/*.ndm icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 libdir modify LEF route trial with M9 max signal layer
+Result: OPEN_BUT_BEST_LIBDIR_AUTO_ROUTE
+Notes: Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 147 route DRCs. DRC classes are Diff net spacing 7, Off-grid 138, and Short 2. Compared with the libdir M8 baseline at 151 DRC, allowing M9 improves only 4 DRCs, so this is a small auto-route improvement, not backend closure.
+Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=libdir_modify_8p5ns_scan_def_m8_repair200 SIGNAL_MAX_ROUTING_LAYER=M8 POST_ROUTE_DETAIL_REPAIR_ITERATIONS=200 ... NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/*.ndm icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 libdir modify LEF route trial with M8 and post-route detail repair
+Result: OPEN_REPAIR_WEAK
+Notes: route_auto before repair was 151 DRC. Incremental route_detail repair completed with status 0 and final check_routes is 150 DRC: Diff net spacing 6, Off-grid 142, Short 2. Open nets remain 0, legality is 0, PG connectivity is clean, and PG DRC is clean. The 200-iteration repair loop removes only 1 DRC, so this is not an effective closure knob.
+Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/check_routes.before_post_repair.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/post_route_detail_repair.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=libdir_modify_8p5ns_scan_def_m9_repair200 SIGNAL_MAX_ROUTING_LAYER=M9 POST_ROUTE_DETAIL_REPAIR_ITERATIONS=200 ... NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/*.ndm icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 libdir modify LEF route trial with M9 and post-route detail repair
+Result: OPEN_REPAIR_REJECTED_AS_BEST
+Notes: route_auto before repair was 147 DRC. Incremental route_detail repair completed with status 0 but final check_routes worsened to 149 DRC: Diff net spacing 6, Off-grid 141, Short 2. Open nets remain 0, legality is 0, PG connectivity is clean, and PG DRC is clean. M9 alone remains better than M9 plus repair.
+Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.before_post_repair.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/post_route_detail_repair.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/pg_drc.rpt.
+```

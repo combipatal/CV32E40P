@@ -2060,3 +2060,55 @@ Evidence:
   6_STA/4_Report/post_dft_topo_8p5ns_sdf/post_dft.func_tt_8p5ns_sdf.global_timing.rpt
   4_ATPG/4_Report/stuck_at_topo_8p5ns/summary.rpt
 ```
+
+## Try libdir modify LEF For Backend Only
+
+```text
+Date: 2026-05-09
+Decision: accept libdir modify LEF as a useful backend investigation input, but not as backend closure
+Reason:
+  user found ../lib/libdir/LEF/modify with full stdcell macro LEFs
+  frontend should remain unchanged because 8.5ns FE closure is already clean
+  changing backend NDM physical abstracts is a controlled way to test whether original EDK LEF/NDM physical data caused route DRC
+Comparison:
+  same 8.5ns post-DFT netlist, SDC, scan DEF, utilization, and route options
+  original EDK NDM route DRC: 412
+  libdir modify LEF NDM route DRC: 151
+  both have open nets 0, legality 0, and PG DRC clean
+Conclusion:
+  modified LEF significantly improves backend routing
+  original EDK physical abstract is a major contributor to route DRC
+  closure is still open because 151 DRC remains, mostly Off-grid 143
+  ZRT-044 for MUX41X2_HVT/S0 still remains
+Evidence:
+  docs/backend/libdir_modify_lef_trial_2026_05_09.md
+  7_Backend_ICC2/4_Report/trials/edk_original_8p5ns_scan_def_m8/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8/06_route/check_routes.rpt
+```
+
+## Do Not Treat Auto-Route M9/Repair As Backend Closure
+
+```text
+Date: 2026-05-09
+Decision: keep M9 as the best simple libdir route option, but do not pursue blind detail-repair loops as the main fix
+Reason:
+  user asked to test:
+    1. libdir modify LEF + M9 signal max layer
+    2. libdir modify LEF + M8 post-route repair
+    3. libdir modify LEF + M9 post-route repair
+Results:
+  libdir M8 baseline: 151 DRC
+  libdir M9: 147 DRC
+  libdir M8 repair200: 150 DRC
+  libdir M9 repair200: 149 DRC
+  all trials: open nets 0, legality 0, PG connectivity clean, PG DRC clean
+Conclusion:
+  M9 gives a small improvement
+  post-route detail repair is weak and can make the result worse
+  remaining DRC is still mostly Off-grid
+  root cause remains lower-metal pin/via/grid physical abstract behavior, not simple routing effort
+Evidence:
+  7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.rpt
+```

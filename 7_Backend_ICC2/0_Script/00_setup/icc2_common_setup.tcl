@@ -26,6 +26,18 @@ set NDM_RVT $PROJECT_ROOT/7_Backend_ICC2/2_Output/00_setup/ndm/saed32rvt_tt.ndm
 set NDM_LVT $PROJECT_ROOT/7_Backend_ICC2/2_Output/00_setup/ndm/saed32lvt_tt.ndm
 set NDM_HVT $PROJECT_ROOT/7_Backend_ICC2/2_Output/00_setup/ndm/saed32hvt_tt.ndm
 
+# library trial에서는 Front-End netlist는 그대로 두고 NDM만 바꿔 비교합니다.
+# 예: NDM_RVT=.../ndm_libdir_modify/saed32rvt_tt.ndm
+if {[info exists ::env(NDM_RVT)]} {
+  set NDM_RVT $::env(NDM_RVT)
+}
+if {[info exists ::env(NDM_LVT)]} {
+  set NDM_LVT $::env(NDM_LVT)
+}
+if {[info exists ::env(NDM_HVT)]} {
+  set NDM_HVT $::env(NDM_HVT)
+}
+
 # technology와 RC 관련 파일입니다.
 set TECH_FILE $SAED32_ROOT/tech/milkyway/saed32nm_1p9m_mw.tf
 set TLUPLUS_MAX $SAED32_ROOT/tech/star_rcxt/saed32nm_1p9m_Cmax.tluplus
@@ -54,6 +66,11 @@ set POWER_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/03_power
 set PLACE_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/04_place
 set CTS_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/05_cts
 set ROUTE_REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/06_route
+
+# 같은 trial을 반복할 때 기존 main ICC2 lib를 덮지 않게 env로 분리할 수 있습니다.
+if {[info exists ::env(ICC2_LIB_DIR)]} {
+  set ICC2_LIB_DIR $::env(ICC2_LIB_DIR)
+}
 
 file mkdir $PROJECT_ROOT/7_Backend_ICC2/2_Output/00_setup
 file mkdir $SETUP_LOG_DIR

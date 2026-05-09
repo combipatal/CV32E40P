@@ -178,3 +178,98 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/post_route_detail_repair.rpt
 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.rpt
 ```
+
+## Combination with NOR2 resize ECO
+
+Date: 2026-05-10
+
+두 가지 조합을 확인했다.
+
+### clean 8.5ns handoff + stale ECO file
+
+이 trial은 비교 기준으로 쓰면 안 된다.
+
+```text
+Trial: libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco
+Netlist: clean 8.5ns post-DFT
+ECO file: configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
+Route DRC: 147
+Open nets: 0
+Legality: 0
+PG connectivity/DRC: clean
+```
+
+문제:
+
+```text
+42 ECO swaps failed
+1 ECO target was missing
+```
+
+원인:
+
+```text
+ECO file instance list was generated from the no_or2x1_nor2x012_hvt netlist.
+Clean 8.5ns synthesis has different instance/ref mapping.
+```
+
+판단:
+
+```text
+This is effectively another M9-only libdir route result, not a valid ECO result.
+```
+
+### matching no012 handoff + NOR2 resize ECO
+
+기존 best 67-DRC flow와 같은 계열로 맞춰서 비교했다.
+
+```text
+Trial: libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock
+Netlist: post_dft_topo_no_or2x1_nor2x012_hvt
+Physical library: libdir modify LEF NDM
+ECO: 43x NOR2X4_HVT -> NOR2X2_HVT
+PG: VDD/M2 hotspot blockage
+Signal max layer: M8
+```
+
+결과:
+
+```text
+ECO swaps: 43 PASS, dont_touch applied
+Open nets: 0
+Route DRC: 89
+DRC class: Off-grid 89
+Legality: 0 violations
+PG connectivity: VDD/VSS floating wires/vias/std cells all 0
+PG DRC: no errors found
+ZRT-044 MUX41X2_HVT/S0 warning: still present
+```
+
+비교:
+
+```text
+Original EDK NDM + no012 NOR2 resize ECO + PG block: 67 DRC
+libdir modify LEF NDM + no012 NOR2 resize ECO + PG block: 89 DRC
+```
+
+판단:
+
+```text
+libdir modify LEF is useful for the clean 8.5ns backend handoff.
+It is not better for the current no012 targeted ECO path.
+Current best backend evidence remains the original-EDK NDM no012 NOR2 resize ECO result at official 67 DRC.
+Backend is still open, not closed.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_routes.rpt
+```

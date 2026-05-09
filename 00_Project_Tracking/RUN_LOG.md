@@ -1337,3 +1337,21 @@ Result: OPEN_REPAIR_REJECTED_AS_BEST
 Notes: route_auto before repair was 147 DRC. Incremental route_detail repair completed with status 0 but final check_routes worsened to 149 DRC: Diff net spacing 6, Off-grid 141, Short 2. Open nets remain 0, legality is 0, PG connectivity is clean, and PG DRC is clean. M9 alone remains better than M9 plus repair.
 Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.before_post_repair.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/post_route_detail_repair.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/pg_drc.rpt.
 ```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco SIGNAL_MAX_ROUTING_LAYER=M9 ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_8p5ns/cv32e40p_synth_wrap.post_dft_topo_8p5ns.vg ... NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/*.ndm icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 libdir modify LEF clean-8.5ns route trial with stale NOR2 ECO file
+Result: INVALID_ECO_COMPARISON
+Notes: Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 147 route DRCs: Diff net spacing 7, Off-grid 138, Short 2. However the requested ECO file did not apply to the clean 8.5ns netlist: 42 resize operations failed and 1 target was missing because the ECO instance list was generated from the no_or2x1_nor2x012_hvt netlist. Treat this as an M9-only libdir result, not a valid ECO result.
+Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_nor2x4_to_nor2x2_eco/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock SIGNAL_MAX_ROUTING_LAYER=M8 PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg ... NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_libdir_modify/*.ndm icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 libdir modify LEF trial on current-best no012 NOR2 resize ECO flow
+Result: OPEN_REJECTED_AS_BEST
+Notes: All 43 NOR2X4_HVT to NOR2X2_HVT ECO swaps passed and were kept dont_touch. Route completed with open nets 0, legality 0, PG connectivity clean, PG DRC clean, and 89 route DRCs, all Off-grid. This is worse than the original-EDK NDM current-best official 67 DRC result under the same no012/ECO/PG-block concept. Therefore libdir modify LEF is helpful for the clean 8.5ns handoff, but it does not combine better with the targeted no012 ECO flow.
+Evidence: 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/libdir_modify_no012_nor2x4_to_nor2x2_eco_m8_pgblock/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_routes.rpt.
+```

@@ -1127,3 +1127,75 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin/06_route/pg_drc.rpt
 ```
+
+## NOR2 Resize ECO + Force End On Preferred Grid Trial
+
+Purpose:
+
+```text
+Test whether ending detail-route segments on preferred grid reduces the
+remaining A2 off-grid/contact markers.
+```
+
+Run:
+
+```text
+route_no012_nor2x4_to_nor2x2_force_end_grid
+
+Base ECO:
+  43 NOR2X4_HVT -> NOR2X2_HVT
+
+Additional route option:
+  route.detail.force_end_on_preferred_grid = true
+```
+
+Result:
+
+```text
+Route DRC: 67
+Open nets: 0
+Placement legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+DRC split:
+
+```text
+Off-grid:          59
+Diff net spacing:   4
+Short:              4
+```
+
+Important log message:
+
+```text
+Information: Option route.detail.force_end_on_preferred_grid will be ignored
+since none of the layers have preferred grid. (ZRT-703)
+```
+
+Interpretation:
+
+```text
+This is not a closure fix.
+
+The app option is set in ICC2, but the router says it is ignored for the
+current layer/grid setup. Official final check_routes stays at 67 DRC.
+
+The route_auto log again temporarily reports 66 DRC near the end, but the
+accepted count remains the official check_routes 67 DRC.
+
+This points back to tech/NDM preferred-grid definition or VIA/contact generation
+rather than route.detail.force_end_on_preferred_grid.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_force_end_grid.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/route_detail_app_options.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/pg_drc.rpt
+```

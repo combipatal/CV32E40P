@@ -1582,3 +1582,39 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_access_place_opt/06_route/pg_drc.rpt
 ```
+
+## Pin Color Alignment Probe
+
+```text
+Date: 2026-05-09
+Decision: reject pin-color check alone as a route DRC fix, but add explicit layer support for the next pin-track alignment probe
+Reason:
+  trial route_no012_advlegalizer_pin_color_pin_access_place_opt enabled:
+    place.legalize.enable_advanced_legalizer=true
+    place.legalize.enable_pin_color_alignment_check=true
+    multi-cell pin access check
+    pin-access access-point optimization
+    pin-access DRC variant optimization
+    pin-access cell-spacing optimization
+  legality result:
+    pin_color_align: 0 violations
+    total legality violations: 0
+  route result:
+    total DRC: 111
+    Off-grid: 111
+  log result:
+    pin track alignment disabled because place.legalize.pin_color_alignment_layers had no valid layer
+    pin access cell spreader moved cells
+    pin access optimization moved 0 cells
+Conclusion:
+  pin-color legality check is not the same as full pin-track alignment
+  this trial is not a fix and not a current-best route candidate
+  script support was added for PLACE_PIN_COLOR_ALIGNMENT_LAYERS so the next precise probe can set layers such as {M1 M2}
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt.log
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/pg_drc.rpt
+  7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+```

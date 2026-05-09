@@ -2961,3 +2961,78 @@ placement/routing setup, 또는 NDM-generation/setup 확인이어야 한다.
 7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/man_force_end_on_preferred_grid.rpt
 /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```
+
+## NOR2 Resize + A1/A2 Pin-Swap Combination Trial
+
+가설:
+
+```text
+NOR2X4->NOR2X2 resize 후에도 같은 instance의 A2 access가 남아서 67 DRC가 유지된다면,
+resize와 A1/A2 pin-swap을 같이 적용했을 때 DRC가 더 줄 수 있다.
+```
+
+실험:
+
+```text
+trial: route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap
+
+ECO_SWAP_FILE:
+  configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
+
+ECO_PIN_SWAP_FILE:
+  configs/backend/a2_edge_commutative_pin_swap.tsv
+```
+
+적용 결과:
+
+```text
+NOR2X4_HVT -> NOR2X2_HVT size_cell PASS: 43
+A1/A2 pin swap PASS: 52
+miss/fail rows: 0
+```
+
+route 결과:
+
+```text
+official check_routes:
+  open nets: 0
+  total DRC: 112
+  Off-grid: 107
+  Diff net spacing: 4
+  Short: 1
+
+detailed matrix:
+  M1: 4
+  M2: 54
+  VIA1: 54
+
+other checks:
+  legality: 0 violations
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+해석:
+
+```text
+가설은 기각한다.
+
+resize와 pin-swap은 단순히 합쳐서 좋아지는 fix가 아니다.
+조합 후 DRC가 67 -> 112로 악화되므로, pin-swap이 placement/CTS/routing 재수렴을
+흔들어 NOR2 resize benefit을 잃게 만든 것으로 본다.
+
+현재 best는 계속 NOR2X4_HVT -> NOR2X2_HVT targeted ECO 단독 67 DRC다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/01_init_design/eco_pin_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
+```

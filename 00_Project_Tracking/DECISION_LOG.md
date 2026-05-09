@@ -1995,3 +1995,44 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x1_eco/06_route/pg_drc.rpt
 ```
+
+## Reject NOR2 Resize Plus A1/A2 Pin-Swap Combination
+
+```text
+Date: 2026-05-09
+Decision: reject combined NOR2X4_HVT->NOR2X2_HVT resize plus A1/A2 pin-swap as a route DRC fix
+Reason:
+  trial combined two previously tested backend-only ECO ideas:
+    43 matched NOR2X4_HVT->NOR2X2_HVT size_cell operations
+    52 commutative A1/A2 pin swaps
+  all ECO operations applied:
+    size_cell PASS: 43
+    pin_swap PASS: 52
+    miss/fail rows: 0
+  official check_routes result:
+    open nets: 0
+    total route DRC: 112
+    Off-grid: 107
+    Diff net spacing: 4
+    Short: 1
+  detailed matrix:
+    M1: 4
+    M2: 54
+    VIA1: 54
+  comparison:
+    NOR2-only resize ECO: 67 DRC
+    pin-swap-only ECO: 103 DRC
+    combined resize+pin-swap ECO: 112 DRC
+Conclusion:
+  pin-swap does not combine constructively with the current NOR2 resize ECO
+  the combination perturbs placement/CTS/routing enough to lose the 67-DRC benefit
+  current best remains NOR2X4_HVT->NOR2X2_HVT targeted ECO only
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/01_init_design/eco_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/01_init_design/eco_pin_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
+```

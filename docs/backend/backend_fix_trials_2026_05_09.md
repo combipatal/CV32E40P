@@ -1274,3 +1274,89 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/man_force_end_on_preferred_grid.rpt
 /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```
+
+## NOR2 Resize ECO + A1/A2 Pin-Swap Combination Trial
+
+Purpose:
+
+```text
+Check whether the NOR2X4_HVT->NOR2X2_HVT resize benefit and the commutative
+A1/A2 pin-swap benefit combine.
+```
+
+Run:
+
+```text
+route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap
+
+Base:
+  no_or2x1_nor2x012_hvt post-DFT netlist
+  scan DEF enabled
+  60% core utilization
+  M8 signal max layer
+  VDD/M2 hotspot PG blockage
+
+ECOs:
+  43 NOR2X4_HVT -> NOR2X2_HVT, dont_touch=true
+  52 commutative A1/A2 pin swaps
+```
+
+ECO application:
+
+```text
+size_cell PASS: 43
+pin_swap PASS: 52
+miss/fail rows: 0
+```
+
+Result:
+
+```text
+Route DRC: 112
+Open nets: 0
+Placement legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+DRC split:
+
+```text
+Off-grid:          107
+Diff net spacing:   4
+Short:              1
+```
+
+Layer matrix:
+
+```text
+M1:    4
+M2:   54
+VIA1: 54
+```
+
+Interpretation:
+
+```text
+Rejected as a fix.
+
+This is worse than the NOR2-only resize ECO at 67 DRC.
+The combination perturbs placement/CTS/routing enough to lose the resize benefit.
+
+Conclusion:
+  Do not combine broad A1/A2 pin-swap with the current NOR2 resize ECO.
+  Current best remains targeted NOR2X4_HVT -> NOR2X2_HVT only.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/01_init_design/eco_pin_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
+```

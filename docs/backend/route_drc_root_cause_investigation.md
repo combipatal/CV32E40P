@@ -1496,3 +1496,111 @@ full FE equivalence와 backend DRC를 같이 확인한다.
 7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_drc.rpt
 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/check_routes.rpt
 ```
+
+## Targeted A1/A2 Pin-Swap ECO Trial
+
+원인 모델:
+
+```text
+NOR/OR 2-input gate는 A1/A2가 commutative다.
+남은 DRC가 A2 pin edge access에 몰려 있으므로,
+문제 instance의 A1/A2 net을 바꾸면 같은 논리를 유지하면서 다른 physical pin을 쓸 수 있다.
+```
+
+주의:
+
+```text
+이것은 post-DFT backend ECO trial이다.
+최종 implementation fix로 쓰려면 equivalence 전략이 필요하다.
+현재는 route DRC 원인과 fix 방향 확인용이다.
+```
+
+목록 생성:
+
+```text
+script: scripts/select_a2_commutative_pin_swaps.py
+output: configs/backend/a2_edge_commutative_pin_swap.tsv
+
+selected cells:
+  NOR2X4_HVT: 43
+  OR2X4_HVT : 8
+  NOR2X0_HVT: 1
+  total     : 52
+```
+
+trial:
+
+```text
+trial: route_combo_no012_a2_pin_swap
+ECO_PIN_SWAP_FILE=configs/backend/a2_edge_commutative_pin_swap.tsv
+```
+
+결과:
+
+```text
+ECO pin swap:
+  PASS: 52
+  FAIL: 0
+
+check_routes DRC: 103
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+DRC matrix:
+
+```text
+                 | M1  M2   VIA1  | TOTALS BY TYPE
+-----------------------------------------------------
+Diff net spacing | 1   1    -     | 2
+Off-grid         | 2   48   51    | 101
+-----------------------------------------------------
+                 | M1  M2   VIA1  | 103
+TOTALS BY LAYER  | 3   49   51    |
+```
+
+판단:
+
+```text
+baseline 110 -> pin-swap 103.
+Short class가 사라지고 Diff net spacing도 5 -> 2로 줄었다.
+Off-grid는 104 -> 101로 소폭 감소했다.
+
+즉 physical pin choice가 영향을 주는 것은 맞다.
+그러나 DRC 0이 아니므로 closure는 아니다.
+```
+
+대표 marker context:
+
+```text
+remaining representative refs:
+  NOR2X4_HVT  : dominant
+  OR2X4_HVT   : still present
+  FADDX2_HVT  : present
+  SDFFARX1_RVT: present
+```
+
+다음 방향:
+
+```text
+1. remaining 103 DRC가 기존 52 swapped cell 주변인지, 새 cell/pin으로 이동했는지 확인
+2. 추가 commutative pin swap 후보가 있는지 확인
+3. 효과가 있으면 backend ECO가 아니라 synthesis/cell-mapping 단계로 옮겨 FE equivalence 포함 flow로 재현
+4. 최종 backend closure 전까지 "verified implementation fix"로 부르지 않는다
+```
+
+증거:
+
+```text
+configs/backend/a2_edge_commutative_pin_swap.tsv
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/01_init_design/eco_pin_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/representative_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/marker_context.rpt
+```

@@ -72,6 +72,7 @@ set ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER ""
 set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ""
 set ECO_SWAP_FILE ""
 set ECO_SWAP_DONT_TOUCH ""
+set ECO_PIN_SWAP_FILE ""
 if {[info exists ::env(PLACE_PIN_DENSITY_AWARE)]} {
   set PLACE_PIN_DENSITY_AWARE $::env(PLACE_PIN_DENSITY_AWARE)
 }
@@ -174,6 +175,9 @@ if {[info exists ::env(ECO_SWAP_FILE)]} {
 if {[info exists ::env(ECO_SWAP_DONT_TOUCH)]} {
   set ECO_SWAP_DONT_TOUCH $::env(ECO_SWAP_DONT_TOUCH)
 }
+if {[info exists ::env(ECO_PIN_SWAP_FILE)]} {
+  set ECO_PIN_SWAP_FILE $::env(ECO_PIN_SWAP_FILE)
+}
 
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
 set TRIAL_INIT_DIR $TRIAL_ROOT/01_init_design
@@ -273,6 +277,64 @@ if {$ECO_SWAP_FILE ne ""} {
   }
   close $ECO_SWAP_FP
   close $ECO_SWAP_REPORT
+}
+
+if {$ECO_PIN_SWAP_FILE ne ""} {
+  # Commutative gate의 A1/A2 net만 서로 바꿉니다.
+  # TSV 형식: cell ref pin_a pin_b reason
+  set ECO_PIN_SWAP_REPORT [open $TRIAL_INIT_DIR/eco_pin_swap.rpt w]
+  puts $ECO_PIN_SWAP_REPORT "eco_pin_swap_file=$ECO_PIN_SWAP_FILE"
+  puts $ECO_PIN_SWAP_REPORT "format: cell ref pin_a pin_b reason"
+
+  set ECO_PIN_SWAP_FP [open $ECO_PIN_SWAP_FILE r]
+  set ECO_PIN_SWAP_LINE_NO 0
+  while {[gets $ECO_PIN_SWAP_FP ECO_PIN_SWAP_LINE] >= 0} {
+    incr ECO_PIN_SWAP_LINE_NO
+    if {$ECO_PIN_SWAP_LINE_NO == 1} {
+      continue
+    }
+    if {$ECO_PIN_SWAP_LINE eq ""} {
+      continue
+    }
+
+    set ECO_PIN_SWAP_FIELDS [split $ECO_PIN_SWAP_LINE "\t"]
+    set ECO_CELL_NAME [lindex $ECO_PIN_SWAP_FIELDS 0]
+    set ECO_REF_NAME [lindex $ECO_PIN_SWAP_FIELDS 1]
+    set ECO_PIN_A_NAME [lindex $ECO_PIN_SWAP_FIELDS 2]
+    set ECO_PIN_B_NAME [lindex $ECO_PIN_SWAP_FIELDS 3]
+    set ECO_REASON [lindex $ECO_PIN_SWAP_FIELDS 4]
+
+    set ECO_PIN_A [get_pins -quiet ${ECO_CELL_NAME}/${ECO_PIN_A_NAME}]
+    set ECO_PIN_B [get_pins -quiet ${ECO_CELL_NAME}/${ECO_PIN_B_NAME}]
+    if {[sizeof_collection $ECO_PIN_A] == 0 || [sizeof_collection $ECO_PIN_B] == 0} {
+      puts $ECO_PIN_SWAP_REPORT "MISS_PIN cell=$ECO_CELL_NAME ref=$ECO_REF_NAME pin_a=$ECO_PIN_A_NAME pin_b=$ECO_PIN_B_NAME reason=$ECO_REASON"
+      continue
+    }
+
+    set ECO_NET_A [get_nets -quiet -of_objects $ECO_PIN_A]
+    set ECO_NET_B [get_nets -quiet -of_objects $ECO_PIN_B]
+    if {[sizeof_collection $ECO_NET_A] == 0 || [sizeof_collection $ECO_NET_B] == 0} {
+      puts $ECO_PIN_SWAP_REPORT "MISS_NET cell=$ECO_CELL_NAME ref=$ECO_REF_NAME pin_a=$ECO_PIN_A_NAME pin_b=$ECO_PIN_B_NAME reason=$ECO_REASON"
+      continue
+    }
+
+    set ECO_NET_A_NAME [get_object_name $ECO_NET_A]
+    set ECO_NET_B_NAME [get_object_name $ECO_NET_B]
+    set ECO_STATUS [catch {
+      disconnect_net -net $ECO_NET_A $ECO_PIN_A
+      disconnect_net -net $ECO_NET_B $ECO_PIN_B
+      connect_net -net $ECO_NET_A $ECO_PIN_B
+      connect_net -net $ECO_NET_B $ECO_PIN_A
+    } ECO_MSG]
+
+    if {$ECO_STATUS == 0} {
+      puts $ECO_PIN_SWAP_REPORT "PASS cell=$ECO_CELL_NAME ref=$ECO_REF_NAME pin_a=$ECO_PIN_A_NAME net_a=$ECO_NET_A_NAME pin_b=$ECO_PIN_B_NAME net_b=$ECO_NET_B_NAME reason=$ECO_REASON"
+    } else {
+      puts $ECO_PIN_SWAP_REPORT "FAIL cell=$ECO_CELL_NAME ref=$ECO_REF_NAME pin_a=$ECO_PIN_A_NAME net_a=$ECO_NET_A_NAME pin_b=$ECO_PIN_B_NAME net_b=$ECO_NET_B_NAME reason=$ECO_REASON msg=$ECO_MSG"
+    }
+  }
+  close $ECO_PIN_SWAP_FP
+  close $ECO_PIN_SWAP_REPORT
 }
 
 if {$SCAN_DEF_FILE ne ""} {

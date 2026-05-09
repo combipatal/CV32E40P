@@ -1419,3 +1419,42 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_combo_no012_connect_within_m1_pins/06_route/pg_drc.rpt
 ```
+
+## Targeted A1/A2 Pin-Swap ECO Candidate
+
+```text
+Date: 2026-05-09
+Decision: accept targeted commutative A1/A2 pin swap as current best backend candidate, not final closure
+Reason:
+  remaining A2 DRCs are edge-of-legal-window access issues on commutative OR/NOR gates
+  selected 52 cells from matched A2 DRC/access coordinates:
+    NOR2X4_HVT: 43
+    OR2X4_HVT: 8
+    NOR2X0_HVT: 1
+  all 52 ECO pin swaps applied:
+    A1 net and A2 net were swapped per selected cell
+  final check_routes improves:
+    previous baseline: 110 DRC
+    pin-swap trial: 103 DRC
+  final DRC mix:
+    Off-grid: 101
+    Diff net spacing: 2
+  clean checks:
+    open nets: 0
+    legality: 0
+    PG connectivity: clean
+    PG DRC: no errors
+Conclusion:
+  targeted A1/A2 pin swap is better than broad NOR2X4_HVT dont_use and better than VT swap
+  it confirms the physical pin choice matters
+  it is still not backend closure because route DRC is not 0
+  it is not signoff-ready because the post-DFT ECO needs an equivalence strategy before being treated as a final implementation change
+Evidence:
+  configs/backend/a2_edge_commutative_pin_swap.tsv
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/01_init_design/eco_pin_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
+```

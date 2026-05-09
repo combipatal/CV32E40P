@@ -995,3 +995,30 @@ Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
 Notes: Saved ICC2 block was restored to the no_or2x1_nor2x012_hvt baseline. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors.
 Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/route_combo_no_or2x1_nor2x012_hvt_restore5.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore5/06_route/pg_drc.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: python3 scripts/select_a2_commutative_pin_swaps.py --match-tsv 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv --marker-context 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt --out configs/backend/a2_edge_commutative_pin_swap.tsv
+Stage: Generate targeted commutative A1/A2 ECO pin-swap list
+Result: PASS
+Notes: Generated 52 targeted pin swaps from matched A2 DRC/access points: NOR2X4_HVT 43, OR2X4_HVT 8, and NOR2X0_HVT 1. These refs are commutative two-input OR/NOR gates, so A1/A2 net swapping is functionally equivalent in principle. Formal equivalence has not yet been run for the ECO netlist.
+Evidence: scripts/select_a2_commutative_pin_swaps.py and configs/backend/a2_edge_commutative_pin_swap.tsv.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no012_a2_pin_swap ... ECO_PIN_SWAP_FILE=configs/backend/a2_edge_commutative_pin_swap.tsv ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 targeted commutative A1/A2 pin-swap ECO route trial
+Result: CURRENT_BEST_CAUSE_CANDIDATE_NOT_CLOSED
+Notes: All 52 targeted A1/A2 pin swaps were applied. Final check_routes reports 103 DRCs: Off-grid 101 and Diff net spacing 2. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors. This improves the previous 110 DRC baseline to 103 and removes the Short class. It is not backend closure, and the post-DFT ECO still needs formal equivalence strategy before signoff use.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/01_init_design/eco_pin_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env DRC_DETAIL_DIR=7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/drc_detail icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl; env DRC_REPORT=... OUT_DIR=... python3 scripts/select_drc_representatives.py; env REPORT_DIR=... MARKER_FILE=... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl
+Stage: Detailed DRC decomposition for targeted A1/A2 pin-swap ECO trial
+Result: PASS
+Notes: Detailed matrix confirms 103 DRCs: M1 3, M2 49, VIA1 51; Off-grid 101 and Diff net spacing 2. Representative marker context still points mostly to NOR2X4_HVT, with OR2X4_HVT, FADDX2_HVT, and SDFFARX1_RVT also visible in the representative context.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/representative_summary.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/marker_context.rpt.
+```

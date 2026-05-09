@@ -1473,22 +1473,38 @@ Reason:
     FADDX2_HVT: 2
     NOR2X2_HVT: 2
     SDFFARX1_RVT: 2
-  pin distribution by marker count:
+  broad marker-context pin overlap:
     A1: 99
     VSS: 87
     VDD: 82
     CI/B/A/RSTB: 2 each
+  this broad overlap is not sufficient to identify the actual failing access point
+  coordinate match against report_cell_pin_access gives stronger evidence:
+    97 of 103 markers match a Routable A2 access point within 0.08um
+    0 markers have blocked access as the nearest matched point
+    matched classes are Off-grid VIA1 50 and Off-grid M2 47
+  blocked access after pin swap is dominated by other refs:
+    SDFFARX1_RVT: 136 line-level blocked entries
+    MUX41X1_HVT : 14
+    NOR2X4_HVT/A1: 2
   NOR2X4_HVT LEF confirms both input pins are small lower-metal access shapes:
     A2 M1 RECT 0.4890 0.5530 0.6630 0.7330
     A1 M1 RECT 0.2490 0.6310 0.4210 0.8150
 Conclusion:
-  pin choice matters, but swapping A2 to A1 mostly moves the same lower-metal via/grid problem
+  pin choice matters numerically, but the trial mostly leaves DRC at A2 physical access points
+  broad context overlap made A1 look dominant, but coordinate matching shows A2 remains dominant
+  the remaining issue is not blocked pin access
+  the remaining issue is Routable A2 access versus route/check grid or generated VIA1/M2 geometry mismatch
   the next fix should avoid creating these problematic OR/NOR pin-access situations structurally
   likely direction is synthesis/cell-mapping constraint or controlled decomposition for the affected OR/NOR population
   backend-only pin-swap remains useful evidence, not signoff-ready implementation
 Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context.rpt
   7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context_summary.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/blocked_access.compact_summary.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/drc_to_pin_access_coordinate_match.summary.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/a2_access_grid_mismatch_after_pin_swap.rpt
   scripts/summarize_drc_marker_context.py
+  scripts/match_drc_to_cell_pin_access.py
   /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
 ```

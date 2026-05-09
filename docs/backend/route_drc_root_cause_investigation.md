@@ -1656,12 +1656,11 @@ RSTB   2
 Y      1
 ```
 
-판단:
+주의:
 
 ```text
-A2 문제를 A1으로 단순 이동시킨 성격이 강하다.
-physical pin choice는 영향을 준다.
-하지만 OR/NOR lower-metal input pin access 자체가 빡빡해서 pin-swap만으로 closure가 안 된다.
+이 pin leaf count는 marker 주변 search box에 들어온 pin 집계다.
+실제 DRC center와 가장 가까운 access point를 뜻하지 않는다.
 ```
 
 LEF에서 NOR2X4_HVT input geometry:
@@ -1673,6 +1672,84 @@ A1 M1 RECT 0.2490 0.6310 0.4210 0.8150
 
 둘 다 input pin 폭이 작고,
 route가 VIA1/contact를 legal grid에 맞춰 넣을 여유가 작다.
+
+### Coordinate Match Correction
+
+더 강한 검증을 위해 DRC marker center와
+`report_cell_pin_access -details` access point를 같은 cell 기준으로 좌표 매칭했다.
+
+실행:
+
+```text
+env TRIAL_NAME=route_combo_no012_a2_pin_swap \
+  REPORT_DIR=7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap \
+  icc2_shell -batch \
+  -f 7_Backend_ICC2/0_Script/99_util/run_remaining_drc_pin_access_detail.tcl
+
+python3 scripts/match_drc_to_cell_pin_access.py \
+  --drc-markers 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/all_drc_markers.tsv \
+  --marker-context 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context.rpt \
+  --pin-access 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/report_cell_pin_access.targets.details.rpt \
+  --out 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/drc_to_pin_access_coordinate_match.tsv \
+  --summary 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/drc_to_pin_access_coordinate_match.summary.rpt
+```
+
+결과:
+
+```text
+markers: 103
+matched within 0.08um: 97
+unmatched: 6
+
+By access status:
+  Routable: 97
+
+By pin:
+  A2: 97
+
+Matched DRC:
+  Off-grid VIA1: 50
+  Off-grid M2  : 47
+```
+
+blocked access summary:
+
+```text
+line_level_blocked_entries: 152
+
+By ref:
+  SDFFARX1_RVT: 136
+  MUX41X1_HVT : 14
+  NOR2X4_HVT  : 2
+
+By ref/pin:
+  NOR2X4_HVT/A1: 2
+```
+
+즉:
+
+```text
+pin-swap 이후에도 남은 주요 DRC는 blocked access가 아니다.
+남은 주요 DRC는 A1으로 이동한 것도 아니다.
+97/103 marker가 report_cell_pin_access상 Routable A2 point와 직접 좌표 매칭된다.
+```
+
+grid mismatch:
+
+```text
+reported access X delta to nearest track: 0.000 for 95/97
+marker center X delta to nearest track:
+  -0.027: 56
+  -0.002: 37
+```
+
+해석:
+
+```text
+report_cell_pin_access는 A2 point를 routable로 본다.
+하지만 실제 route/check marker는 그 point 근처에서 M2/VIA1 off-grid로 발생한다.
+원인은 blocked pin이 아니라 routable A2 access와 route/check grid 또는 generated VIA1/M2 geometry mismatch다.
+```
 
 남은 비-swap marker 8개:
 
@@ -1687,7 +1764,7 @@ all_101, all_102: NOR2X4_HVT A1/VDD/VSS
 
 ```text
 pin-swap-only ECO는 메인 closure 전략으로 중단한다.
-다음 fix는 구조적으로 이 pin-access 상황을 덜 만들게 해야 한다.
+다음 fix는 구조적으로 이 A2 edge-access 상황을 덜 만들게 해야 한다.
 후보:
   1. affected OR/NOR population을 합성/cell-mapping 단계에서 다른 구조로 유도
   2. NOR2X4_HVT broad dont_use는 이미 481 DRC로 reject였으므로 더 좁은 조건 필요
@@ -1700,5 +1777,9 @@ pin-swap-only ECO는 메인 closure 전략으로 중단한다.
 7_Backend_ICC2/3_Log/trials/route_combo_no012_a2_pin_swap/marker_context_all.log
 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context.rpt
 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/blocked_access.compact_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/drc_to_pin_access_coordinate_match.summary.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/a2_access_grid_mismatch_after_pin_swap.rpt
 scripts/summarize_drc_marker_context.py
+scripts/match_drc_to_cell_pin_access.py
 ```

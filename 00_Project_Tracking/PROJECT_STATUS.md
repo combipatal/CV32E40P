@@ -137,7 +137,8 @@ A2 marker-shape geometry was analyzed. Matched A2 access points are on-track in 
 VIA12 contact-code fit was analyzed. Observed A2 M2 marker bboxes exactly match VIA12/VIA12SQ_C metal dimensions plus one 0.152um routing pitch. This makes the remaining off-grid marker geometry contact-code-derived rather than random congestion residue.
 Default-via rotation was tested with route.common.rotate_default_vias=false and rejected. It worsened route DRC to 310 while keeping open nets 0, legality 0, PG connectivity clean, and PG DRC clean. This means rotated VIA12 usage alone is not the root cause, although via/contact generation policy clearly changes the failure mode.
 Narrow OR2X4_HVT add-on avoidance was tested through FE and backend. FE passed, but ICC2 route reports 111 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. This is worse than the no012 110-DRC baseline and the A1/A2 pin-swap 103-DRC candidate, so OR2X4_HVT-only add-on avoidance is rejected as a fix.
-Next backend action should move to NDM/tech/via/pin-access setup inspection or a more controlled structural mapping change rather than broad cell bans.
+LEF pin via-window analysis was run. MUX41X2_HVT/S0 and RDFFNSRX1_HVT/CLK have no legal default VIA12SQ_C M1 center window, confirming a blocked-access library class. NOR2X*_HVT/A2 pins do have legal VIA1 track centers, so the remaining A2 off-grid problem is access/contact/check-grid snapping at the legal-window edge, not simple pin-metal absence. OR2X4_HVT/A2 and OR2X1_HVT/A1 have legal windows but no default M1 track center inside the window, confirming a separate track-center mismatch class.
+Next backend action should split the fix strategy by class: blocked-access pins, A2 edge snapping, and OR track-center mismatch. Broad cell bans should remain rejected unless a targeted structural mapping change has FE and backend evidence.
 ```
 
 ## Fmax Estimate

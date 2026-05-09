@@ -1820,3 +1820,25 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_drc.rpt
 ```
+
+## Split Remaining Backend DRC Into Pin/Via Classes
+
+```text
+Date: 2026-05-09
+Decision: stop treating all remaining no012 lower-metal DRC as one cell-ban problem
+Reason:
+  LEF pin via-window analysis separates the remaining issue into at least three classes:
+    1. blocked-access pins with no default VIA12SQ_C M1 center window
+    2. HVT NOR2 A2 pins with legal VIA1 track center but edge-sensitive access/contact snapping
+    3. OR pins with legal pin window but no default M1 track center in the legal center window
+  MUX41X2_HVT/S0 and RDFFNSRX1_HVT/CLK are class 1 and match create_pin_check_lib PDC-001.
+  NOR2X*_HVT/A2 is class 2; it has legal VIA1 track center, so broad dont_use is not justified by pin-window absence.
+  OR2X4_HVT/A2 and OR2X1_HVT/A1 are class 3, consistent with the prior OR2X1_HVT avoidance improvement.
+Conclusion:
+  next fix strategy must be class-specific
+  do not broaden HVT cell bans without a targeted prediction and route evidence
+  inspect NDM/tech/via access setup or make controlled structural mapping/ECO changes
+Evidence:
+  scripts/analyze_lef_pin_via_windows.py
+  7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/lef_pin_via_windows.rpt
+```

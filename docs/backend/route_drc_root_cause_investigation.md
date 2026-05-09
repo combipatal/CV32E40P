@@ -2395,3 +2395,96 @@ A1/A2 pin-swap 103보다도 나쁘다.
 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_drc.rpt
 ```
+
+## LEF Pin VIA1 Window Probe
+
+목적:
+
+```text
+남은 route DRC를 더 줄이기 전에,
+문제 pin 자체가 기본 VIA12SQ_C를 받을 물리 window를 갖는지 분리 확인한다.
+```
+
+방법:
+
+```text
+script:
+  scripts/analyze_lef_pin_via_windows.py
+
+inputs:
+  /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+  /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_lvt/lef/saed32nm_lvt_1p9m.lef
+
+output:
+  7_Backend_ICC2/4_Report/trials/ndm_pin_via_setup_probe/99_static/lef_pin_via_windows.rpt
+```
+
+기준 contact:
+
+```text
+VIA12SQ_C
+cut: 0.050 x 0.050
+lower M1 enclosure: x 0.030, y 0.005
+required M1 center margin: x 0.055, y 0.030
+```
+
+핵심 결과:
+
+```text
+NOR2X4_HVT/A2:
+  M1 rect: 0.489 0.553 0.663 0.733
+  legal center window: 0.544 0.583 0.608 0.703
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+NOR2X0/1/2_HVT/A2:
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+OR2X4_HVT/A2:
+  legal center window exists
+  but no default M1 track center in that window
+  verdict: PIN_HAS_LEGAL_WINDOW_BUT_NO_DEFAULT_TRACK_CENTER
+
+OR2X1_HVT/A1:
+  legal center window exists
+  but no default M1 track center in that window
+  verdict: PIN_HAS_LEGAL_WINDOW_BUT_NO_DEFAULT_TRACK_CENTER
+
+MUX41X2_HVT/S0:
+  M1 rect height: 0.050
+  required y margin total: 0.060
+  verdict: PIN_HAS_NO_LEGAL_VIA1_CENTER_WINDOW
+
+RDFFNSRX1_HVT/CLK:
+  M1 shapes are too thin in X or Y for default VIA12SQ_C
+  verdict: PIN_HAS_NO_LEGAL_VIA1_CENTER_WINDOW
+```
+
+해석:
+
+```text
+MUX41X2_HVT/S0와 RDFFNSRX1_HVT/CLK는 create_pin_check_lib PDC-001과 일치한다.
+이 둘은 실제 LEF pin metal 기준으로도 기본 VIA1 window가 없다.
+
+반대로 NOR2X*_HVT/A2는 legal VIA1 track center가 존재한다.
+따라서 남은 A2 off-grid를 "pin metal이 물리적으로 너무 작다" 하나로 설명하면 안 된다.
+
+NOR2X4_HVT/A2의 legal X 최대값은 0.608이고,
+기존 A2 access 분석에서 실제 local access X도 0.608에 몰렸다.
+즉 A2 문제는 legal window 부재가 아니라,
+legal window edge에 있는 access point와 VIA12 contact generation/check-grid snapping의 상호작용이다.
+
+OR2X4_HVT/A2와 OR2X1_HVT/A1은 중간 상태다.
+pin geometry는 가능하지만 기본 M1 track center가 window 안에 없다.
+이것은 OR2X1_HVT avoidance가 큰 효과를 낸 이유와 맞는다.
+```
+
+다음 방향:
+
+```text
+1. MUX41X2_HVT/S0, RDFFNSRX1_HVT/CLK는 blocked pin-access class로 따로 취급한다.
+2. NOR2X*_HVT/A2는 NDM/via/contact/access snapping class로 취급한다.
+3. OR2X*_HVT 계열은 track-center mismatch class로 취급한다.
+4. 다음 fix는 broad dont_use가 아니라,
+   NDM/tech via rule setup 확인 또는 A2/OR pin access를 바꾸는 controlled mapping/ECO여야 한다.
+```

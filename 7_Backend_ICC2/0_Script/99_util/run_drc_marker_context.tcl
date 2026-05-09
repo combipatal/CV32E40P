@@ -37,9 +37,14 @@ puts $out "marker_file=$MARKER_FILE"
 puts $out ""
 
 set line_no 0
+set has_tag_column 1
 while {[gets $fp line] >= 0} {
   incr line_no
   if {$line_no == 1} {
+    set header_fields [split $line "\t"]
+    if {[lindex $header_fields 0] ne "tag"} {
+      set has_tag_column 0
+    }
     continue
   }
   if {$line eq ""} {
@@ -47,16 +52,29 @@ while {[gets $fp line] >= 0} {
   }
 
   set fields [split $line "\t"]
-  set tag [lindex $fields 0]
-  set error_id [lindex $fields 1]
-  set error_type [lindex $fields 2]
-  set error_layer [lindex $fields 3]
-  set cx [lindex $fields 4]
-  set cy [lindex $fields 5]
-  set x1 [lindex $fields 7]
-  set y1 [lindex $fields 8]
-  set x2 [lindex $fields 9]
-  set y2 [lindex $fields 10]
+  if {$has_tag_column} {
+    set tag [lindex $fields 0]
+    set error_id [lindex $fields 1]
+    set error_type [lindex $fields 2]
+    set error_layer [lindex $fields 3]
+    set cx [lindex $fields 4]
+    set cy [lindex $fields 5]
+    set x1 [lindex $fields 7]
+    set y1 [lindex $fields 8]
+    set x2 [lindex $fields 9]
+    set y2 [lindex $fields 10]
+  } else {
+    set error_id [lindex $fields 0]
+    set error_type [lindex $fields 1]
+    set error_layer [lindex $fields 2]
+    set cx [lindex $fields 3]
+    set cy [lindex $fields 4]
+    set x1 [lindex $fields 6]
+    set y1 [lindex $fields 7]
+    set x2 [lindex $fields 8]
+    set y2 [lindex $fields 9]
+    set tag "all_${error_id}"
+  }
 
   set margin 0.25
   set llx [expr {$x1 - $margin}]

@@ -1022,3 +1022,12 @@ Result: PASS
 Notes: Detailed matrix confirms 103 DRCs: M1 3, M2 49, VIA1 51; Off-grid 101 and Diff net spacing 2. Representative marker context still points mostly to NOR2X4_HVT, with OR2X4_HVT, FADDX2_HVT, and SDFFARX1_RVT also visible in the representative context.
 Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/representative_summary.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/marker_context.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: env REPORT_DIR=7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all MARKER_FILE=7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/all_drc_markers.tsv icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl; python3 scripts/summarize_drc_marker_context.py --context .../marker_context.rpt --swap-file configs/backend/a2_edge_commutative_pin_swap.tsv --out .../marker_context_summary.rpt
+Stage: Full remaining-marker context extraction after targeted A1/A2 pin-swap ECO
+Result: PASS
+Notes: The marker context utility now supports both representative TSVs with a tag column and all-marker TSVs without one. Full context for all 103 remaining markers was extracted and summarized. 95 of 103 markers are still near cells already touched by the A1/A2 pin-swap ECO. Ref distribution by marker count is NOR2X4_HVT 81, OR2X4_HVT 16, FADDX2_HVT 2, NOR2X2_HVT 2, and SDFFARX1_RVT 2. Pin-leaf distribution is A1 99, VSS 87, VDD 82, CI 2, B 2, A 2, RSTB 2, and Y 1. This shows the A2 issue mostly moved to A1 on the same physical cell population, so commutative pin swap alone is not a closure fix.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no012_a2_pin_swap/marker_context_all.log, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context_summary.rpt, and scripts/summarize_drc_marker_context.py.
+```

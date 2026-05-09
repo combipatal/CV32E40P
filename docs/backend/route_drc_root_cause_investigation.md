@@ -1604,3 +1604,101 @@ configs/backend/a2_edge_commutative_pin_swap.tsv
 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/representative_summary.rpt
 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context/marker_context.rpt
 ```
+
+## Remaining Marker Context After A1/A2 Pin Swap
+
+전체 103개 remaining marker를 모두 ICC2에서 다시 context 추출했다.
+
+이 과정에서 utility를 수정했다:
+
+```text
+script: 7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl
+change: tag column이 있는 representative TSV와 tag column이 없는 all-marker TSV를 모두 지원
+```
+
+집계 script:
+
+```text
+scripts/summarize_drc_marker_context.py
+```
+
+결과:
+
+```text
+markers: 103
+markers_with_swapped_cells: 95
+```
+
+즉 pin-swap 이후 남은 DRC 대부분은
+새로운 cell 집단으로 옮겨간 것이 아니라,
+이미 swap한 같은 cell 집단 주변에 남아 있다.
+
+ref별 marker count:
+
+```text
+NOR2X4_HVT   81
+OR2X4_HVT    16
+FADDX2_HVT    2
+NOR2X2_HVT    2
+SDFFARX1_RVT  2
+```
+
+pin leaf별 marker count:
+
+```text
+A1    99
+VSS   87
+VDD   82
+CI     2
+B      2
+A      2
+RSTB   2
+Y      1
+```
+
+판단:
+
+```text
+A2 문제를 A1으로 단순 이동시킨 성격이 강하다.
+physical pin choice는 영향을 준다.
+하지만 OR/NOR lower-metal input pin access 자체가 빡빡해서 pin-swap만으로 closure가 안 된다.
+```
+
+LEF에서 NOR2X4_HVT input geometry:
+
+```text
+A2 M1 RECT 0.4890 0.5530 0.6630 0.7330
+A1 M1 RECT 0.2490 0.6310 0.4210 0.8150
+```
+
+둘 다 input pin 폭이 작고,
+route가 VIA1/contact를 legal grid에 맞춰 넣을 여유가 작다.
+
+남은 비-swap marker 8개:
+
+```text
+all_28, all_29: FADDX2_HVT around A/B/CI
+all_75, all_76: SDFFARX1_RVT RSTB/VSS diff-net spacing
+all_85, all_86: OR2X4_HVT A1/VDD
+all_101, all_102: NOR2X4_HVT A1/VDD/VSS
+```
+
+다음 방향:
+
+```text
+pin-swap-only ECO는 메인 closure 전략으로 중단한다.
+다음 fix는 구조적으로 이 pin-access 상황을 덜 만들게 해야 한다.
+후보:
+  1. affected OR/NOR population을 합성/cell-mapping 단계에서 다른 구조로 유도
+  2. NOR2X4_HVT broad dont_use는 이미 481 DRC로 reject였으므로 더 좁은 조건 필요
+  3. backend ECO로 증명한 뒤, 효과 있으면 FE synthesis/DFT/FM/PT까지 되돌려 정식 flow로 재현
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_combo_no012_a2_pin_swap/marker_context_all.log
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context_summary.rpt
+scripts/summarize_drc_marker_context.py
+```

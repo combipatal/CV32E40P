@@ -1458,3 +1458,37 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/pg_drc.rpt
   7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## A1/A2 Pin-Swap Follow-Up Diagnosis
+
+```text
+Date: 2026-05-09
+Decision: do not continue pin-swap-only ECO as the main closure strategy
+Reason:
+  full marker context was extracted for all 103 remaining DRCs after the A1/A2 swap
+  95 of 103 remaining markers are still near cells already touched by the pin-swap ECO
+  ref distribution by marker count:
+    NOR2X4_HVT: 81
+    OR2X4_HVT : 16
+    FADDX2_HVT: 2
+    NOR2X2_HVT: 2
+    SDFFARX1_RVT: 2
+  pin distribution by marker count:
+    A1: 99
+    VSS: 87
+    VDD: 82
+    CI/B/A/RSTB: 2 each
+  NOR2X4_HVT LEF confirms both input pins are small lower-metal access shapes:
+    A2 M1 RECT 0.4890 0.5530 0.6630 0.7330
+    A1 M1 RECT 0.2490 0.6310 0.4210 0.8150
+Conclusion:
+  pin choice matters, but swapping A2 to A1 mostly moves the same lower-metal via/grid problem
+  the next fix should avoid creating these problematic OR/NOR pin-access situations structurally
+  likely direction is synthesis/cell-mapping constraint or controlled decomposition for the affected OR/NOR population
+  backend-only pin-swap remains useful evidence, not signoff-ready implementation
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_marker_context_all/marker_context_summary.rpt
+  scripts/summarize_drc_marker_context.py
+  /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+```

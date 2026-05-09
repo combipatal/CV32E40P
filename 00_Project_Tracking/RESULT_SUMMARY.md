@@ -168,6 +168,8 @@ R2N no_or2x1_nor2x012_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HV
 N2N no_or2x1_nor2x012_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x012_hvt pre-DFT vs post-DFT remains equivalent in functional mode
 R2N no_or2x1_nor2x0124_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT + NOR2X4_HVT avoidance synthesis remains equivalent to RTL
 N2N no_or2x1_nor2x0124_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x0124_hvt pre-DFT vs post-DFT remains equivalent in functional mode
+R2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Narrow OR2X4_HVT add-on avoidance synthesis remains equivalent to RTL
+N2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x012_or2x4_hvt pre-DFT vs post-DFT remains equivalent in functional mode
 ```
 
 ### DFT/ATPG

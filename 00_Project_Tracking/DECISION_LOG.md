@@ -1759,3 +1759,32 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/pg_drc.rpt
 ```
+
+## Narrow OR2X4_HVT Add-On Probe
+
+```text
+Date: 2026-05-09
+Decision: create and keep a front-end validated OR2X4_HVT add-on dont_use probe for the next backend route test
+Reason:
+  no012 full marker context still shows a smaller but repeated OR2X4_HVT/A2 population
+  broad NOR2X4_HVT dont_use is already rejected because it worsened route DRC to 481
+  OR2X4_HVT-only add-on is a narrower structural/cell-mapping change
+  it avoids testing another broad ban before checking a smaller targeted contributor
+FE result:
+  DC topo: completed
+  R2N Formality: 2243 passing, 0 failing
+  DFT insertion: post-DFT netlist, SDC, SDF, SPF, scan DEF generated
+  N2N Formality: 2243 passing, 0 failing
+  PrimeTime post-DFT SDF: no setup or hold violations in global timing
+  PT physical constraint violations remain backend-deferred, as in earlier flows
+Conclusion:
+  safe enough to use as the next backend route handoff
+  not a closure claim until ICC2 route DRC, legality, PG connectivity, and PG DRC are checked
+Evidence:
+  2_Synthesis/0_Script/run_compile_10ns_topo_no_or2x1_nor2x012_or2x4_hvt.tcl
+  2.5_FM_R2N/0_Script/run_fm_r2n_topo_no_or2x1_nor2x012_or2x4_hvt.tcl
+  3_DFT/0_Script/run_insert_dft_10ns_topo_no_or2x1_nor2x012_or2x4_hvt.tcl
+  5_FM_N2N/0_Script/run_fm_n2n_topo_no_or2x1_nor2x012_or2x4_hvt.tcl
+  6_STA/0_Script/run_pt_post_dft_10ns_sdf_no_or2x1_nor2x012_or2x4_hvt.tcl
+  6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x012_or2x4_hvt/post_dft_no_or2x1_nor2x012_or2x4_hvt.func_tt_10ns_sdf.global_timing.rpt
+```

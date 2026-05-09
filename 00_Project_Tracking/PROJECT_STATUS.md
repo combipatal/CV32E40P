@@ -147,6 +147,7 @@ Post-ECO unmatched marker classification was added. In the 67-DRC best ECO candi
 The NOR2 resize ECO plus M1 connect-within-pin route option was tested and rejected as a fix. It reduced Off-grid from 59 to 15 but increased total DRC from 67 to 109 by introducing 45 Needs-fat-contact and 21 Connection-not-within-pin markers. This confirms the lower-metal pin/via access cause model but shows the option is the wrong closure knob.
 After the rejected connect-within-pin trial, the saved ICC2 block was restored to the NOR2 resize ECO current-best state. Official final check_routes is still 67 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. The route log observed 66 DRC internally before final checking, but the accepted evidence remains the official 67-DRC check_routes result.
 The NOR2 resize ECO plus route.detail.force_end_on_preferred_grid=true trial was tested and rejected. ICC2 says the option is ignored because the current layers have no preferred grid. Official check_routes remains 67 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. This points back to tech/NDM grid definition or contact generation rather than this route knob.
+SAED32 Milkyway tech defines M1/M2 pitch and onWireTrack, and VIA1 onWireTrack/onGrid, but that is still not enough for ICC2 to treat layers as having preferred grid for route.detail.force_end_on_preferred_grid. Next cause work should inspect ICC2/NDM route track or preferred-grid setup before adding more route knobs.
 ```
 
 ## Fmax Estimate

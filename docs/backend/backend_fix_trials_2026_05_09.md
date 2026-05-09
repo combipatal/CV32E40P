@@ -1189,6 +1189,19 @@ This points back to tech/NDM preferred-grid definition or VIA/contact generation
 rather than route.detail.force_end_on_preferred_grid.
 ```
 
+Tech-file observation:
+
+```text
+SAED32 Milkyway tech has layer pitch and onWireTrack entries:
+  M1 pitch = 0.152, onWireTrack = 1
+  M2 pitch = 0.152, onWireTrack = 1
+  VIA1 onWireTrack = 1, onGrid = 1
+
+But ICC2 still reports that route.detail.force_end_on_preferred_grid is ignored
+because no layer has preferred grid. Therefore ICC2's preferred-grid concept is
+not satisfied by these pitch/onWireTrack entries alone.
+```
+
 Evidence:
 
 ```text
@@ -1198,4 +1211,5 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/check_legality.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/pg_drc.rpt
+/DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```

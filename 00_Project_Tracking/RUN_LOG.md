@@ -1085,3 +1085,12 @@ Result: STRONGER_ROOT_CAUSE_MODEL
 Notes: Joined matched A2 report_cell_pin_access points with actual check_routes marker bboxes. All 103 matched rows had marker rows. The access points are on track in X, but marker centers repeat deterministic shifts from the access point: dx=-0.027/dy=0.000 for 32 rows, dx=-0.002/dy=0.035 for 22, dx=-0.027/dy=0.035 for 20, and dx=-0.002/dy=0.000 for 17. VIA1 markers all have bbox 0.050x0.202. M2 markers split into bbox 0.110x0.212 for 31 and 0.060x0.262 for 20. This confirms the remaining A2 problem is not blocked access or missing pin-track alignment; it is generated M2/VIA1 shape snapping or route/check grid behavior from a valid A2 access point.
 Evidence: scripts/analyze_a2_marker_shape_geometry.py and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: python3 scripts/analyze_via12_contact_marker_fit.py --tech-file /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf --marker-geometry 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt --out 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt
+Stage: Offline VIA12 contact-code to A2 marker-geometry fit probe
+Result: STRONGER_ROOT_CAUSE_MODEL
+Notes: Parsed SAED32 Milkyway tech file VIA12 contact codes and fit them against the observed A2 marker bbox dimensions. The M2 marker 0.110x0.212 count 31 exactly matches VIA12SQ lower metal dimensions plus one 0.152um routing pitch. The M2 marker 0.060x0.262 count 20 exactly matches default VIA12SQ_C upper M2 dimensions plus one 0.152um routing pitch. VIA12SQ_C is default and asymmetric: upper M2 0.060x0.110, lower M1 0.110x0.060. This confirms the off-grid marker geometry is contact-code derived, strengthening the generated VIA1/M2 patch snapping or route/check grid cause model.
+Evidence: scripts/analyze_via12_contact_marker_fit.py, /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt.
+```

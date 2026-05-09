@@ -1696,3 +1696,35 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
   7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/all_drc_markers.tsv
 ```
+
+## VIA12 Contact-Code Fit Probe
+
+```text
+Date: 2026-05-09
+Decision: treat the remaining A2 off-grid marker geometry as derived from VIA12 contact-code dimensions plus routing-pitch extension
+Reason:
+  parsed SAED32 Milkyway tech file:
+    /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+  default contact:
+    VIA12SQ_C
+  VIA12SQ_C dimensions:
+    cut: 0.050 x 0.050
+    upper M2 metal: 0.060 x 0.110
+    lower M1 metal: 0.110 x 0.060
+    asymmetric upper/lower enclosure
+  observed A2 M2 markers:
+    0.110 x 0.212 count 31
+      exact fit: VIA12SQ lower metal 0.110 x 0.060 plus one 0.152um pitch in Y
+    0.060 x 0.262 count 20
+      exact fit: VIA12SQ_C upper M2 metal 0.060 x 0.110 plus one 0.152um pitch in Y
+Conclusion:
+  the marker geometry is not arbitrary congestion residue
+  the M2 off-grid marker bboxes are contact-code-derived
+  remaining cause is most likely generated VIA1/M2 access patch snapping or route/check grid behavior from A2 access
+  this makes NDM/tech/via setup and structural cell-mapping the next useful directions
+  further placement-only options should not be prioritized
+Evidence:
+  scripts/analyze_via12_contact_marker_fit.py
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt
+  /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+```

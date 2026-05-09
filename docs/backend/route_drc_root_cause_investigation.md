@@ -2171,3 +2171,77 @@ scripts/analyze_a2_marker_shape_geometry.py
 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/all_drc_markers.tsv
 ```
+
+## VIA12 Contact-Code Fit Probe
+
+목적:
+
+```text
+observed M2/VIA1 marker bbox가 SAED32 VIA12 contact-code 치수에서 나온 것인지 확인한다.
+이것이 맞으면 원인은 congestion보다 via/contact generation 쪽에 더 가깝다.
+```
+
+실행:
+
+```text
+python3 scripts/analyze_via12_contact_marker_fit.py \
+  --tech-file /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf \
+  --marker-geometry 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt \
+  --out 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt
+```
+
+tech file 핵심:
+
+```text
+default contact: VIA12SQ_C
+
+VIA12SQ_C:
+  cut          : 0.050 x 0.050
+  upper M2     : 0.060 x 0.110
+  lower M1     : 0.110 x 0.060
+  asymmetric upper/lower enclosure
+
+VIA12SQ:
+  cut          : 0.050 x 0.050
+  upper metal  : 0.110 x 0.060
+  lower metal  : 0.110 x 0.060
+```
+
+fit 결과:
+
+```text
+observed M2 marker 0.110 x 0.212 count=31
+  exact fit: VIA12SQ lower metal 0.110 x 0.060 + one 0.152um pitch in Y
+
+observed M2 marker 0.060 x 0.262 count=20
+  exact fit: VIA12SQ_C upper M2 metal 0.060 x 0.110 + one 0.152um pitch in Y
+```
+
+해석:
+
+```text
+M2 marker bbox가 VIA12 contact-code metal dimension과 routing pitch 조합으로 정확히 설명된다.
+따라서 이 off-grid class는 random congestion residue가 아니다.
+
+강해진 원인 모델:
+  A2 access point는 존재하고 X track 위에 있음
+  그 access에서 생성되는 VIA1/M2 patch가 contact-code 치수와 pitch 조합으로 만들어짐
+  그 patch 중심 또는 bbox가 route/check grid와 반복적으로 어긋남
+
+다음 방향:
+  NDM/tech/via setup 확인
+  또는 A2 OR/NOR geometry를 피하는 structural/cell-mapping fix
+
+우선순위 낮아진 방향:
+  placement spreading
+  pin-color alignment
+  generic pin-access legalizer knob
+```
+
+증거:
+
+```text
+scripts/analyze_via12_contact_marker_fit.py
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt
+/DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+```

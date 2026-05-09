@@ -33,6 +33,7 @@ open_block -edit $TOP_NAME
 
 set TARGET_CELLS [get_cells -quiet -hierarchical -filter { \
   ref_name==NOR2X4_HVT || \
+  ref_name==NOR2X2_HVT || \
   ref_name==OR2X4_HVT || \
   ref_name==NOR2X0_HVT || \
   ref_name==SDFFARX1_RVT || \

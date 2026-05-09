@@ -2652,6 +2652,95 @@ NOR2X4와 NOR2X2는 같은 Boolean 기능의 drive-strength variant이므로 의
 3. 효과가 유지되면 이 fix를 FE/FM-backed mapping 또는 ECO-equivalence flow로 정식화한다.
 ```
 
+## Remaining 67 DRC Classification After Resize ECO
+
+목적:
+
+```text
+NOR2X4_HVT -> NOR2X2_HVT resize ECO가 DRC를 110 -> 67로 줄였지만,
+남은 67개가 어떤 class인지 다시 확인한다.
+```
+
+방법:
+
+```text
+1. drc.detailed.rpt에서 all_drc_markers.tsv 생성
+2. ICC2에서 all 67 marker 주변 context 추출
+3. report_cell_pin_access -details 재실행
+4. marker center와 pin access point를 0.08um threshold로 coordinate match
+5. LEF/VIA12SQ_C 기준으로 matched row class 재분류
+```
+
+결과:
+
+```text
+remaining markers:
+  total: 67
+  Off-grid VIA1: 54
+  Off-grid M1: 4
+  Off-grid M2: 1
+  Diff net spacing M1: 3
+  Diff net spacing M2: 1
+  Short M1: 4
+
+marker context:
+  markers near swapped cells: 43
+  top refs by marker count:
+    NOR2X2_HVT: 43
+    OR2X4_HVT: 10
+    SDFFARX1_RVT: 9
+    NOR2X4_HVT: 2
+
+coordinate match:
+  markers: 67
+  matched: 55
+  unmatched: 12
+  matched access status: 55 Routable
+  matched pin: 55 A2
+
+LEF via-window class:
+  45 or_nor_a2_legal_track_edge_snapping
+  10 legal_window_no_default_track_center
+
+By ref/pin/class:
+  43 NOR2X2_HVT/A2 or_nor_a2_legal_track_edge_snapping
+  10 OR2X4_HVT/A2 legal_window_no_default_track_center
+   2 NOR2X4_HVT/A2 or_nor_a2_legal_track_edge_snapping
+```
+
+해석:
+
+```text
+resize ECO는 효과가 있다.
+하지만 A2 access/grid 문제 자체를 제거한 것은 아니다.
+
+남은 matched DRC 대부분은 여전히 Routable A2 access point와 직접 맞는다.
+따라서 "pin이 blocked라서 못 뚫는다"가 아니라,
+legal A2 access point 주변에서 VIA1/M2 generated shape가 check grid와 맞지 않는 문제다.
+
+겉보기 marker context에는 A1/VSS도 많이 나오지만,
+coordinate matching 기준으로는 A2가 더 정확한 원인 좌표다.
+search box가 작아도 stdcell rail/pin이 같이 잡히기 때문이다.
+```
+
+다음 후보:
+
+```text
+1. NOR2X2_HVT/A2 edge-snapping 잔여 43개를 더 낮은 drive 또는 다른 구조로 바꾸는 controlled ECO
+2. OR2X4_HVT/A2 legal-window/no-default-track-center 10개를 별도 처리
+3. unmatched 12개 marker를 따로 분리해서 ref/pin/shape 수동 확인
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context/representative_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context_all/marker_context_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/blocked_access.compact_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/drc_to_pin_access_coordinate_match.summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/remaining_drc_via_window_classification.rpt
+```
+
 증거:
 
 ```text

@@ -1901,3 +1901,34 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_drc.rpt
 ```
+
+## Remaining DRC After NOR2X4 Resize Is Still A2 Access/Grid Dominated
+
+```text
+Date: 2026-05-09
+Decision: do not treat the NOR2X4->NOR2X2 ECO as final closure
+Reason:
+  remaining DRC count is 67
+  55/67 remaining markers match report_cell_pin_access Routable A2 points within 0.08um
+  matched rows by class:
+    45 OR/NOR A2 legal-track edge-snapping
+    10 legal-window/no-default-track-center
+  matched rows by ref/pin:
+    43 NOR2X2_HVT/A2 edge-snapping
+    10 OR2X4_HVT/A2 track-center mismatch
+    2 NOR2X4_HVT/A2 edge-snapping
+  12/67 markers are not matched by the current 0.08um pin-access coordinate threshold
+Conclusion:
+  the ECO reduced DRC by changing the geometry/placement/routing outcome around the dominant NOR2X4 class
+  the underlying residual class is still A2 route/check-grid behavior
+  next trial should be narrow and class-specific:
+    remaining NOR2X2/NOR2X4 A2 edge behavior
+    OR2X4 A2 track-center mismatch
+    12 unmatched markers
+  avoid broad cell bans unless a prediction is tied to one of these classes
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context/representative_summary.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context_all/marker_context_summary.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/drc_to_pin_access_coordinate_match.summary.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/remaining_drc_via_window_classification.rpt
+```

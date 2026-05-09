@@ -1932,3 +1932,35 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/drc_to_pin_access_coordinate_match.summary.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/remaining_drc_via_window_classification.rpt
 ```
+
+## Reject Targeted OR2X4_HVT A2 Downsize Add-On
+
+```text
+Date: 2026-05-09
+Decision: reject targeted OR2X4_HVT->OR2X2_HVT add-on as a route DRC fix
+Reason:
+  trial kept current 43 NOR2X4_HVT->NOR2X2_HVT swaps
+  added 9 matched OR2X4_HVT->OR2X2_HVT swaps
+  all 52 size_cell operations passed and were marked dont_touch
+  official check_routes result:
+    open nets: 0
+    total route DRC: 97
+    Off-grid: 89
+    Diff net spacing: 4
+    Needs fat contact: 1
+    Short: 3
+  comparison:
+    NOR2-only resize ECO: 67 DRC
+    NOR2+OR2 resize ECO: 97 DRC
+Conclusion:
+  OR2X4_HVT/A2 track-center mismatch is not fixed by simple OR2X4->OR2X2 downsizing
+  current best remains NOR2-only resize ECO
+  next OR2 fix, if attempted, must change pin/access topology or route/via behavior, not just drive strength
+Evidence:
+  configs/backend/a2_edge_nor2x4_nor2x2_plus_or2x4_or2x2_hvt_resize.tsv
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/01_init_design/eco_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/pg_drc.rpt
+```

@@ -2731,6 +2731,82 @@ search box가 작아도 stdcell rail/pin이 같이 잡히기 때문이다.
 3. unmatched 12개 marker를 따로 분리해서 ref/pin/shape 수동 확인
 ```
 
+## Targeted OR2X4_HVT A2 Downsize Add-On Trial
+
+목적:
+
+```text
+resize 후 남은 matched DRC 중 10개가 OR2X4_HVT/A2 legal-window/no-default-track-center class였다.
+그래서 기존 NOR2X4->NOR2X2 ECO에 OR2X4->OR2X2 targeted resize 9개를 추가했다.
+```
+
+설정:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco
+
+ECO swap file:
+  configs/backend/a2_edge_nor2x4_nor2x2_plus_or2x4_or2x2_hvt_resize.tsv
+
+ECO:
+  43 NOR2X4_HVT -> NOR2X2_HVT
+   9 OR2X4_HVT  -> OR2X2_HVT
+  ECO_SWAP_DONT_TOUCH=true
+```
+
+결과:
+
+```text
+eco_swap:
+  PASS size_cell: 52
+  DONT_TOUCH: 52
+
+official check_routes:
+  open nets: 0
+  total DRC: 97
+  Off-grid: 89
+  Diff net spacing: 4
+  Needs fat contact: 1
+  Short: 3
+
+other checks:
+  legality: 0 violations
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+비교:
+
+```text
+NOR2-only resize ECO:
+  67 DRC
+
+NOR2+OR2 targeted resize ECO:
+  97 DRC
+```
+
+해석:
+
+```text
+OR2X4_HVT/A2 track-center mismatch는 단순 OR2X4->OR2X2 drive downsize로 해결되지 않는다.
+오히려 전체 route DRC가 67 -> 97로 악화된다.
+
+따라서 현재 best는 계속 NOR2-only resize ECO다.
+OR2 class를 건드리려면 drive strength 변경보다 pin/access topology 또는 routing/via behavior를 바꿔야 한다.
+```
+
+증거:
+
+```text
+configs/backend/a2_edge_nor2x4_nor2x2_plus_or2x4_or2x2_hvt_resize.tsv
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_or2x4_to_or2x2_eco/06_route/pg_drc.rpt
+```
+
 증거:
 
 ```text

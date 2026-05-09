@@ -14,6 +14,7 @@ N2N | Formality | PASS | 5_FM_N2N/4_Report/n2n_topo.*.rpt | pre-DFT topo netlist
 ATPG | TetraMAX | PASS_WITH_NOTE | 4_ATPG/4_Report/stuck_at_topo/summary.rpt | stuck-at reached 98.64% test coverage; TMAX DRC has 6 Z3 wire-contention warnings
 SDF STA | PrimeTime | PASS_WITH_NOTE | 6_STA/4_Report/topo_sdf/pre_dft.func_tt_10ns_sdf.*.rpt | SDF annotated with 0 errors; setup/hold clean; max_cap residual remains
 Post-DFT SDF STA | PrimeTime | PASS_WITH_NOTE | 6_STA/4_Report/post_dft_topo_sdf/post_dft.func_tt_10ns_sdf.*.rpt | post-DFT SDF annotated with 0 errors; setup/hold clean; max_cap residual remains
+8.5 ns FE closure | DC/FM/DFT/PT/TetraMAX | PASS_WITH_NOTE | 2_Synthesis/4_Report/topo_8p5ns, 3_DFT/4_Report/topo_8p5ns, 6_STA/4_Report/post_dft_topo_8p5ns_sdf, 4_ATPG/4_Report/stuck_at_topo_8p5ns | clean baseline mixed-VT flow, no backend dont_use workaround; setup/hold clean; known DFT/ATPG/electrical notes remain
 ICC2 init_design | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/2_Output/01_init_design/cv32e40p_icc2_lib | post-DFT netlist linked and saved as physical design; no floorplan yet; check_design has 0 errors and 14004 warnings
 ICC2 floorplan initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/02_floorplan/{design_physical,utilization,qor}.rpt | rectangular floorplan created; utilization 65.40%; 382 pins created; no power plan yet
 ICC2 placement initial | ICC2 | PASS_WITH_NOTE | 7_Backend_ICC2/4_Report/04_place/check_legality.rpt | 14083 cells placed/legalized; 0 legality violations; no scan DEF, so placement uses continue_on_missing_scandef
@@ -134,6 +135,8 @@ NOR2X4->NOR2X2 ECO + A1/A2 pin-swap route trial | REJECTED | 7_Backend_ICC2/4_Re
 Stage | Clock | WNS | TNS | Area | Power | Notes
 Post-synth pre-DFT topo/SDF | 10 ns | 1.61 ns | 0.00 ns | 45313.37 cell area | see topo post_compile.power.rpt | DC Graphical topo + PT SDF STA timing clean, DRC not clean
 Post-DFT topo/SDF | 10 ns | 1.48 ns | 0.00 ns | 49449.82 cell area | see post_dft.power.rpt | DFT inserted; PT post-DFT SDF STA setup/hold clean, hold slack 0.03 ns
+Post-synth pre-DFT topo | 8.5 ns | 0.41 ns | 0.00 ns | 45394.19 cell area | see topo_8p5ns post_compile.power.rpt | DC Graphical topo timing clean; backend dont_use variants not used
+Post-DFT topo/SDF | 8.5 ns | 0.44 ns | 0.00 ns | 49429.48 cell area | see topo_8p5ns post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; hold slack 0.04 ns; SDF annotation errors 0
 ICC2 initial placement | 10 ns | 0.57 ns | not summarized | 49449.8147 cell area | not summarized | pre-CTS/pre-route ICC2 timing estimate with TLU+ RC after PG closure
 ICC2 first-pass CTS | 10 ns | 1.98 ns listed worst setup path | not summarized | 58348.41 design area in log final QoR | not summarized | post-CTS/pre-signal-route timing estimate; listed worst hold slack 0.02 ns
 ICC2 first-pass route | 10 ns | 2.00 ns listed worst setup path | not summarized | 58348.41 cell area | not summarized | post-route estimate with detailed routed nets; listed worst hold slack 0.02 ns; route DRC not clean
@@ -152,6 +155,7 @@ no_or2x1_nor2x0124_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns 
 ```text
 Basis | Clock | Worst Setup Slack | Estimated Critical Delay | Ideal Fmax | Next Trial
 Post-DFT topo/SDF STA | 10.00 ns | 1.48 ns | 8.52 ns | 117.4 MHz | 8.5 ns first, then 8.0 ns if clean
+Post-DFT topo/SDF STA | 8.50 ns | 0.44 ns | 8.06 ns | 124.1 MHz | 8.0 ns only if the user wants a stretch trial
 ```
 
 ### Equivalence
@@ -160,6 +164,8 @@ Post-DFT topo/SDF STA | 10.00 ns | 1.48 ns | 8.52 ns | 117.4 MHz | 8.5 ns first,
 Stage | Tool | Result | Passing | Failing | Notes
 R2N topo | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Functional mode constants applied; reverse clock-gating enabled; undriven scan_out marked don't-verify
 N2N post-DFT topo | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Functional mode constants applied; scan_out don't-verify; 74 clock-gate LAT not compared
+R2N topo 8.5ns | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Clean baseline mixed-VT 8.5 ns synthesis remains equivalent to RTL
+N2N post-DFT topo 8.5ns | Formality W-2024.09-SP5 | PASS | 2243 | 0 | 8.5 ns pre-DFT vs post-DFT remains equivalent in functional mode
 R2N no_mux41x_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | MUX41X*_HVT avoidance synthesis remains equivalent to RTL
 N2N no_mux41x_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_mux41x_hvt pre-DFT vs post-DFT remains equivalent in functional mode
 R2N no_or2x1_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HVT avoidance synthesis remains equivalent to RTL
@@ -186,4 +192,9 @@ Fault coverage | 98.55% | 82949 collapsed faults, DT 81697, PT 99, UD 74, AU 14,
 Test coverage | 98.64% | 448 internal basic_scan patterns; ATPG stopped after meeting 98% target
 no_mux41x_hvt fault coverage | 98.51% | 82941 collapsed faults, DT 81662, PT 94, UD 77, AU 14, ND 1094
 no_mux41x_hvt test coverage | 98.61% | 448 internal basic_scan patterns; ATPG stopped after meeting 98% target
+8.5ns scan chains | 1 | muxed scan
+8.5ns scan length | 2130 | TetraMAX traced chain0 scan_in -> scan_out
+8.5ns DFT DRC | PASS_WITH_NOTE | 1 TEST-505 constant-1 clock-gate note; 2130 valid scan cells
+8.5ns fault coverage | 98.31% | 83009 collapsed faults, DT 81553, PT 111, UD 75, AU 14, ND 1256
+8.5ns test coverage | 98.40% | 416 internal basic_scan patterns; ATPG stopped after meeting 98% target
 ```

@@ -2036,3 +2036,27 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_drc.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## Use Clean Baseline For 8.5 ns Front-End Finish
+
+```text
+Date: 2026-05-09
+Decision: use clean mixed-VT baseline scripts for 8.5 ns front-end closure
+Reason:
+  the user is time-limited and wants a front-end finish point
+  backend route DRC workaround dont_use scripts were useful cause experiments, but they are not the cleanest portfolio front-end story
+  baseline 10 ns topo/DFT scripts did not contain backend workaround set_dont_use commands
+  8.5 ns should measure real timing headroom of the intended mixed-VT flow, not a backend-specific cell-ban variant
+Action:
+  created separate 8.5 ns scripts and SDC with _8p5ns paths
+  kept backend dont_use experiments as evidence
+  did not delete backend experiment scripts
+Result:
+  8.5 ns front-end closure trial passed with notes
+Evidence:
+  constraints/cv32e40p_func_8p5ns.sdc
+  2_Synthesis/0_Script/run_compile_8p5ns_topo.tcl
+  3_DFT/0_Script/run_insert_dft_8p5ns_topo.tcl
+  6_STA/4_Report/post_dft_topo_8p5ns_sdf/post_dft.func_tt_8p5ns_sdf.global_timing.rpt
+  4_ATPG/4_Report/stuck_at_topo_8p5ns/summary.rpt
+```

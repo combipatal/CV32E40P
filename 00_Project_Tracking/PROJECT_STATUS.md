@@ -3,14 +3,14 @@
 ## Current Phase
 
 ```text
-Front-End baseline completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
+Front-End baseline completed; 8.5 ns front-end closure trial completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
 Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, advanced legalizer/pin-color trial, DRC marker context probe, hotspot partial blockage probe, route DRC root-cause hypothesis write-up, hotspot DRC-to-PG distance probe, PG M2 offset probe, PG blockage trials, route grid option probes, and current-best DRC geometry residue analysis completed; root cause narrowed but route DRC not closed
 ```
 
 ## Next Milestone
 
 ```text
-Target OR2X1_HVT and NOR2X*_HVT lower-metal pin/contact behavior on the current-best 368 DRC route before further broad fix trials.
+Use 8.5 ns front-end closure as the time-limited portfolio finish point unless the user explicitly asks for an 8.0 ns stretch run or backend continuation.
 ```
 
 ## Frozen Baseline
@@ -20,6 +20,17 @@ Run: tt_mvt_10ns_scan1
 Commit: 5473b61
 Status: Front-End baseline complete
 Meaning: 10 ns topo synthesis, R2N, DFT topo, N2N, post-DFT SDF STA, and stuck-at ATPG are reproducible from scripts.
+Not included: production signoff, post-route STA, IR/EM, GDS signoff.
+```
+
+## Current Front-End Best
+
+```text
+Run: tt_mvt_8p5ns_scan1
+Status: Front-End timing closure trial complete
+Meaning: clean baseline mixed-VT 8.5 ns topo synthesis, R2N, DFT topo, N2N, post-DFT SDF STA, and stuck-at ATPG completed.
+PT post-DFT SDF STA: setup/hold clean, WNS 0.44 ns, hold slack 0.04 ns, SDF read errors 0.
+ATPG: 98.40% test coverage, 98.31% fault coverage, 416 patterns.
 Not included: production signoff, post-route STA, IR/EM, GDS signoff.
 ```
 
@@ -39,6 +50,7 @@ Not included: production signoff, post-route STA, IR/EM, GDS signoff.
 [x] TetraMAX stuck-at ATPG
 [x] PrimeTime STA
 [x] Portfolio summary tables
+[x] 8.5 ns front-end closure trial
 ```
 
 ## Current Notes
@@ -49,6 +61,9 @@ SPF is written after insert_dft so TetraMAX sees chain0 length 2130.
 TetraMAX stuck-at ATPG reached 98.64% test coverage and 98.55% fault coverage.
 Remaining notes: DC DFT TEST-505 constant-1 clock gate, TetraMAX Z3 wire contention warnings, and physical max_cap/max_transition cleanup deferred to backend.
 Active synthesis script is only 2_Synthesis/0_Script/run_compile_10ns_topo.tcl.
+8.5 ns clean baseline scripts now exist under *_8p5ns_topo.tcl and constraints/cv32e40p_func_8p5ns.sdc. They do not use backend DRC workaround dont_use lists.
+8.5 ns front-end closure trial passed with notes: DC pre-DFT WNS 0.41 ns, DFT post-DFT WNS 0.44 ns, PT post-DFT SDF setup slack 0.44 ns, PT hold slack 0.04 ns, R2N/N2N 2243 passing and 0 failing, ATPG 98.40% test coverage and 98.31% fault coverage.
+Backend DRC workaround dont_use variant scripts are retained as experiment evidence only. They are not the active front-end finish path.
 ICC2 can open/link/save the post-DFT netlist as a physical design library.
 Initial ICC2 floorplan exists: rectangular core, 65.40% utilization, 382 pins created.
 ICC2 placement exists: 14083 cells legalized with 0 legality violations after PG closure refresh.
@@ -162,5 +177,6 @@ Clock: 10.00 ns
 Worst setup slack: 1.48 ns
 Estimated critical path delay: 8.52 ns
 Ideal Fmax: about 117.4 MHz
-Next trial: 8.5 ns first; 8.0 ns if 8.5 ns remains clean enough
+8.5 ns result: passed FE closure with notes; estimated critical path delay about 8.06 ns and ideal Fmax about 124.1 MHz
+Next trial: 8.0 ns only as stretch; 8.5 ns is the better portfolio finish point for current time constraints
 ```

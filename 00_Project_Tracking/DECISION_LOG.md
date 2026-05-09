@@ -1659,3 +1659,40 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_connectivity.rpt
   7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_drc.rpt
 ```
+
+## A2 Marker Shape Geometry Probe
+
+```text
+Date: 2026-05-09
+Decision: treat the remaining no012 A2 off-grid class as generated M2/VIA1 shape snapping or route/check grid behavior, not placement pin-access closure
+Reason:
+  joined report_cell_pin_access A2 points to check_routes marker bboxes
+  matched rows: 103
+  missing marker rows: 0
+  matched classes:
+    Off-grid VIA1: 52
+    Off-grid M2  : 51
+  report_cell_pin_access A2 access point:
+    X is on routing track for all matched rows
+  marker center minus access point:
+    dx=-0.027 dy=0.000: 32
+    dx=-0.002 dy=0.035: 22
+    dx=-0.027 dy=0.035: 20
+    dx=-0.002 dy=0.000: 17
+  marker bbox dimensions:
+    VIA1: 0.050 x 0.202 for 52/52
+    M2  : 0.110 x 0.212 for 31/51
+    M2  : 0.060 x 0.262 for 20/51
+Conclusion:
+  access points are not blocked and are not generally off-track in X
+  the repeated marker shifts and M2/VIA1 bbox dimensions point to generated via/metal patch snapping from A2
+  more placement pin-access options are unlikely to close this class
+  the next meaningful directions are:
+    NDM/tech/via setup inspection or adjustment
+    structural/cell-mapping change that avoids the problematic A2 access geometry
+Evidence:
+  scripts/analyze_a2_marker_shape_geometry.py
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/all_drc_markers.tsv
+```

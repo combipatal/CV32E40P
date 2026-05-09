@@ -2095,3 +2095,79 @@ DR finished with 110 violations.
 7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_drc.rpt
 ```
+
+## A2 Marker Shape Geometry Probe
+
+목적:
+
+```text
+report_cell_pin_access가 말하는 A2 access point와
+check_routes가 실제 error로 잡은 M2/VIA1 marker bbox를 조인한다.
+
+access point가 track 위인데도 DRC가 나는지,
+아니면 access point 자체가 off-track인지 분리한다.
+```
+
+실행:
+
+```text
+python3 scripts/analyze_a2_marker_shape_geometry.py \
+  --match-tsv 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv \
+  --drc-markers 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/all_drc_markers.tsv \
+  --out 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt
+```
+
+결과:
+
+```text
+matched rows: 103
+missing marker rows: 0
+
+matched DRC:
+  Off-grid VIA1: 52
+  Off-grid M2  : 51
+
+marker center minus access point:
+  dx=-0.027 dy=0.000 : 32
+  dx=-0.002 dy=0.035 : 22
+  dx=-0.027 dy=0.035 : 20
+  dx=-0.002 dy=0.000 : 17
+
+marker bbox dimensions:
+  VIA1 0.050 x 0.202 : 52
+  M2   0.110 x 0.212 : 31
+  M2   0.060 x 0.262 : 20
+
+access point track delta:
+  X = 0.000 for all matched rows
+```
+
+해석:
+
+```text
+report_cell_pin_access의 A2 access point는 X 방향 routing track 위에 있다.
+하지만 check_routes marker 중심은 access point에서 반복적인 shift를 가진다.
+
+즉 access point 자체가 완전히 잘못된 위치인 것이 아니다.
+문제는 그 access point에서 생성된 VIA1/M2 patch가
+route/check grid와 맞지 않는 형태로 snap되거나 생성되는 쪽이다.
+
+이 결과는 다음 가설들을 약화한다:
+  blocked pin access
+  missing pin-color legality
+  missing M1/M2 pin-track alignment
+  placement spreading 부족
+
+남는 방향:
+  NDM/tech/via setup 쪽 확인
+  또는 A2 OR/NOR geometry를 피하는 structural/cell-mapping fix
+```
+
+증거:
+
+```text
+scripts/analyze_a2_marker_shape_geometry.py
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/all_drc_markers.tsv
+```

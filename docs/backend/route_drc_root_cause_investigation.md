@@ -2010,3 +2010,88 @@ structural/cell-mapping fix로 넘어가는 것이 맞다.
 7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/pg_drc.rpt
 ```
+
+## Explicit M1/M2 Pin-Track Alignment Probe
+
+목적:
+
+```text
+이전 pin-color trial은 layer 지정이 없어 pin-track alignment가 disable됐다.
+이번에는 M1/M2를 명시해서 실제 pin-track alignment path를 확인한다.
+```
+
+실행:
+
+```text
+env TRIAL_NAME=route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt \
+  POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg \
+  POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.sdc \
+  SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.scan.def \
+  SIGNAL_MAX_ROUTING_LAYER=M8 \
+  ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true \
+  ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high \
+  ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high \
+  PG_M2_HOTSPOT_BLOCKAGE_ENABLE=true \
+  PLACE_ADVANCED_LEGALIZER=true \
+  PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK=true \
+  PLACE_PIN_COLOR_ALIGNMENT_LAYERS='{M1 M2}' \
+  PLACE_MULTI_CELL_PIN_ACCESS_CHECK=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS=true \
+  PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING=true \
+  icc2_shell -batch \
+  -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+```
+
+결과:
+
+```text
+check_routes: 110 DRC
+  Off-grid: 110
+
+open nets: 0
+legality: 0
+pin_color_align legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+log 핵심:
+
+```text
+place.legalize.pin_color_alignment_layers M1 M2
+Pin access cell spreader moved 1100 cells during placement.
+Pin access cell spreader moved 541 cells during later legalizer activity.
+Pin access optimization moved 0 cells.
+DR finished with 110 violations.
+```
+
+해석:
+
+```text
+이번에는 M1/M2 layer 지정이 적용됐다.
+따라서 이전의 incomplete probe 문제는 해소됐다.
+
+하지만 route DRC는 no012 baseline 110과 동일하다.
+그리고 A1/A2 pin-swap trial 103보다 나쁘다.
+
+결론:
+  placement pin-access
+  advanced legalizer
+  pin-color legality
+  M1/M2 pin-track alignment
+
+이 계열 knob는 standalone closure path가 아니다.
+다음은 structural/cell-mapping 또는 NDM/tech/via setup 확인으로 넘어간다.
+특히 A2 OR/NOR lower-metal access mismatch를 줄이는 방향이어야 한다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt.log
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_drc.rpt
+```

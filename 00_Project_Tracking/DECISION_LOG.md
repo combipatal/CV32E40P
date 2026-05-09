@@ -1618,3 +1618,44 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_pin_access_place_opt/06_route/pg_drc.rpt
   7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
 ```
+
+## Explicit M1/M2 Pin-Track Alignment Probe
+
+```text
+Date: 2026-05-09
+Decision: reject explicit M1/M2 pin-track alignment as the standalone route DRC closure path
+Reason:
+  trial route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt enabled:
+    place.legalize.enable_advanced_legalizer=true
+    place.legalize.enable_pin_color_alignment_check=true
+    place.legalize.pin_color_alignment_layers={M1 M2}
+    multi-cell pin access check
+    pin-access access-point optimization
+    pin-access DRC variant optimization
+    pin-access cell-spacing optimization
+  log confirms:
+    place.legalize.pin_color_alignment_layers M1 M2
+    pin access cell spreader moved 1100 cells during placement
+    pin access cell spreader moved 541 cells during later legalizer activity
+    pin access optimization moved 0 cells
+  final check_routes:
+    total DRC: 110
+    Off-grid: 110
+  clean checks:
+    open nets: 0
+    legality: 0
+    pin_color_align legality: 0
+    PG connectivity: clean
+    PG DRC: no errors
+Conclusion:
+  this fully exercises the intended placement pin-track alignment knob for M1/M2
+  it does not improve over the no012 110-DRC baseline
+  placement pin-access/pin-color/pin-track knobs should stop here unless a new, specific tool manual cause appears
+  next fix direction should return to structural/cell-mapping or NDM/tech/via setup for the A2 lower-metal access mismatch
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt.log
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_advlegalizer_pin_color_m1m2_pin_access_place_opt/06_route/pg_drc.rpt
+```

@@ -2900,3 +2900,64 @@ configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/pg_drc.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## Preferred-Grid Probe After Force-End Trial
+
+목적:
+
+```text
+force_end_on_preferred_grid trial이 왜 67 DRC 그대로였는지 확인한다.
+기본 track이 없는 문제인지, ICC2 preferred-grid semantics 문제인지 구분한다.
+```
+
+관찰:
+
+```text
+ICC2 W-2024.09:
+  set_preferred_routing_direction command 없음
+  report_preferred_routing_direction command 없음
+
+현재 block:
+  M1/M3/M5/M7/M9 routing_direction = horizontal
+  M2/M4/M6/M8/MRDL routing_direction = vertical
+  M1/M2 track start = 0.088
+  M1/M2 track pitch = 0.152
+  track attribute = default
+
+하지만 다음 layer attribute는 없음:
+  preferred_direction
+  on_wire_track
+  on_grid
+```
+
+해석:
+
+```text
+basic routing track은 존재한다.
+하지만 route.detail.force_end_on_preferred_grids가 요구하는 ICC2 preferred-grid
+기술 의미는 현재 NDM/tech setup에서 충족되지 않는다.
+
+SAED32 tech file은 공정/library collateral이므로 직접 수정하지 않는다.
+현재 closure 방향은 tech rule 수정이 아니라 library usage policy, controlled ECO,
+placement/routing setup, 또는 NDM-generation/setup 확인이어야 한다.
+```
+
+다음 후보:
+
+```text
+1. 현재 best 67 DRC 기준으로 remaining NOR2X2_HVT/A2 class를 더 좁게 피하는 ECO
+2. OR2X4_HVT/A2 track-center mismatch를 별도 ECO/placement 방식으로 분리
+3. ICC2 create_track / set_track_constraint / create_track_pattern man page 기반의
+   report-only probe 후, tech file 수정 없이 가능한 track setup trial만 수행
+```
+
+증거:
+
+```text
+7_Backend_ICC2/0_Script/99_util/run_preferred_grid_probe.tcl
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/preferred_grid_probe_summary.rpt
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/tracks.m1.rpt
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/tracks.m2.rpt
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/man_force_end_on_preferred_grid.rpt
+/DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+```

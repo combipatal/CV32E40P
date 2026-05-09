@@ -1213,3 +1213,64 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_force_end_grid/06_route/pg_drc.rpt
 /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```
+
+## Preferred Grid / Track Probe
+
+Purpose:
+
+```text
+Check whether the rejected force-end-on-preferred-grid route trial failed because
+basic routing tracks were missing, or because ICC2 does not see the current NDM
+as having preferred-grid technology semantics.
+```
+
+Result:
+
+```text
+The current block has routing_direction set correctly:
+  M1/M3/M5/M7/M9  horizontal
+  M2/M4/M6/M8/MRDL vertical
+
+M1 and M2 tracks exist:
+  start = 0.088um
+  pitch = 0.152um
+  attribute = default
+
+But ICC2 W-2024.09 does not provide the old ICC command:
+  set_preferred_routing_direction
+
+And these are not layer attributes in this block:
+  preferred_direction
+  on_wire_track
+  on_grid
+```
+
+Interpretation:
+
+```text
+This is not a reason to edit the SAED32 tech file.
+
+The tech file is process/library collateral. Changing it would make the result
+hard to defend. The safer project direction is to keep the PDK/tech read-only
+and solve through:
+  library usage policy
+  controlled ECO
+  placement/routing setup
+  NDM-generation/setup investigation
+
+The failed force-end trial is now explained:
+  pitch/routing_direction/tracks exist,
+  but ICC2 preferred-grid semantics required by route.detail.force_end_on_preferred_grids
+  are not satisfied by this setup.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/0_Script/99_util/run_preferred_grid_probe.tcl
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/preferred_grid_probe_summary.rpt
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/tracks.m1.rpt
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/tracks.m2.rpt
+7_Backend_ICC2/4_Report/trials/preferred_grid_probe/99_preferred_grid/man_force_end_on_preferred_grid.rpt
+/DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+```

@@ -70,6 +70,7 @@ set ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER ""
 set ROUTE_COMMON_VIA_ON_GRID_BY_LAYER ""
 set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ""
 set ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER ""
+set ROUTE_COMMON_ROTATE_DEFAULT_VIAS ""
 set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ""
 set ECO_SWAP_FILE ""
 set ECO_SWAP_DONT_TOUCH ""
@@ -169,6 +170,9 @@ if {[info exists ::env(ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER)]} {
 }
 if {[info exists ::env(ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER)]} {
   set ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER $::env(ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER)
+}
+if {[info exists ::env(ROUTE_COMMON_ROTATE_DEFAULT_VIAS)]} {
+  set ROUTE_COMMON_ROTATE_DEFAULT_VIAS $::env(ROUTE_COMMON_ROTATE_DEFAULT_VIAS)
 }
 if {[info exists ::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)]} {
   set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ $::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)
@@ -886,6 +890,12 @@ if {$ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER ne ""} {
   set_app_options \
     -name route.common.connect_within_pins_by_layer_name \
     -value $ROUTE_COMMON_CONNECT_WITHIN_PINS_BY_LAYER
+}
+if {$ROUTE_COMMON_ROTATE_DEFAULT_VIAS ne ""} {
+  # VIA12SQ_C 같은 default via 회전을 제한해 A2 off-grid marker 변화를 봅니다.
+  set_app_options \
+    -name route.common.rotate_default_vias \
+    -value $ROUTE_COMMON_ROTATE_DEFAULT_VIAS
 }
 if {$ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ne ""} {
   # off-track pattern_must_join pin shape에 via-ladder용 center track을 만들지 확인합니다.

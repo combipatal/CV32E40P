@@ -1728,3 +1728,34 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt
   /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```
+
+## Default-Via Rotation Probe
+
+```text
+Date: 2026-05-09
+Decision: reject route.common.rotate_default_vias=false as a route DRC fix
+Reason:
+  applied route.common.rotate_default_vias=false in route_no012_rotate_default_vias_false
+  final check_routes worsened to 310 DRCs:
+    Off-grid: 242
+    Short: 57
+    Diff net spacing: 7
+    Less than minimum width: 2
+    Same net spacing: 2
+  open nets: 0
+  legality: 0 violations
+  PG connectivity: clean
+  PG DRC: no errors
+Conclusion:
+  rotated VIA12 usage alone is not the root cause
+  via/contact generation policy strongly changes the DRC mix
+  keep the script hook for controlled future probes
+  do not use this option in the current best route candidate
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_no012_rotate_default_vias_false.log
+  7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/pg_drc.rpt
+```

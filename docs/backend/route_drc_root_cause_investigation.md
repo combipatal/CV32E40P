@@ -2245,3 +2245,70 @@ scripts/analyze_via12_contact_marker_fit.py
 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/via12_contact_marker_fit.rpt
 /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
 ```
+
+## Default-Via Rotation Probe
+
+목적:
+
+```text
+VIA12SQ_C 같은 default via가 회전되면서 marker geometry를 만들고 있는지 확인한다.
+```
+
+실행:
+
+```text
+ROUTE_COMMON_ROTATE_DEFAULT_VIAS=false
+TRIAL_NAME=route_no012_rotate_default_vias_false
+```
+
+적용 확인:
+
+```text
+route.common.rotate_default_vias : false
+```
+
+결과:
+
+```text
+check_routes:
+  total DRC: 310
+  Off-grid: 242
+  Short: 57
+  Diff net spacing: 7
+  Less than minimum width: 2
+  Same net spacing: 2
+
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+해석:
+
+```text
+이 옵션은 fix가 아니다.
+no012 baseline 110 DRC보다 크게 악화됐다.
+
+하지만 의미는 있다.
+rotated VIA12 사용 자체 하나만이 원인은 아니다.
+via/contact generation policy를 바꾸면 DRC class와 개수가 크게 변한다.
+
+따라서 남은 원인은:
+  A2 access point
+  VIA12 contact-code geometry
+  generated M2/VIA1 patch snapping
+  route/check grid interpretation
+이 네 가지의 상호작용으로 보는 것이 맞다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_rotate_default_vias_false.log
+7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/route_common_app_options.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_rotate_default_vias_false/06_route/pg_drc.rpt
+```

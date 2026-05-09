@@ -177,6 +177,7 @@ OR2X4_HVT/A2-only VIA1 route blockage was also tested after correcting the TSV f
 The saved ICC2 block was restored after rejected blockage trials using the current-best NOR2 resize ECO flow with no route blockage. Official final check_routes is still 67 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. Route DRC clean is still not achieved.
 The current-best NOR2 resize ECO flow was also tested with post-route incremental detail repair. The pre-repair official state was the same 67 DRC, but 200 iterations of route_detail repair worsened the final official result to 114 DRC. Therefore repeated detail repair is rejected for this flow. Current best remains 67 DRC, open nets 0, legality 0, PG connectivity clean, and PG DRC clean.
 The current-best NOR2 resize ECO flow was tested with explicit M1/M2 track constraints plus force_end_on_preferred_grid. The track constraints were accepted, but official check_routes stayed at 67 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. Route DRC clean is still not achieved; the active goal must remain open.
+The current-best NOR2 resize ECO flow was tested with advanced legalizer, pin-color alignment, M1/M2 pin-color layers, and pin-access placement options. Official check_routes worsened to 109 all-Off-grid DRC. It was also tested with M9 max signal routing, which worsened to 125 DRC. Current best remains 67 DRC and not clean.
 ```
 
 ## Fmax Estimate
@@ -189,4 +190,72 @@ Estimated critical path delay: 8.52 ns
 Ideal Fmax: about 117.4 MHz
 8.5 ns result: passed FE closure with notes; estimated critical path delay about 8.06 ns and ideal Fmax about 124.1 MHz
 Next trial: 8.0 ns only as stretch; 8.5 ns is the better portfolio finish point for current time constraints
+```
+
+## 2026-05-10 Backend Route DRC Clean Trial
+
+최종 accepted backend trial:
+
+```text
+route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin
+```
+
+조건:
+
+```text
+frontend handoff:
+  no_or2x1_nor2x012_hvt post-DFT netlist/SDC/scan DEF 유지
+
+backend physical abstract:
+  trim_all_pin NDM
+
+backend ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+  u_core/core_i/U1723 MUX41X2_HVT -> MUX41X1_HVT 1개
+  ECO_SWAP_DONT_TOUCH=true
+```
+
+공식 결과:
+
+```text
+check_routes.rpt:
+  open nets 0
+  TOTAL VIOLATIONS 0
+  Total number of DRCs 0
+
+check_legality.rpt:
+  TOTAL 0 Violations
+
+pg_connectivity.rpt:
+  VDD/VSS floating counts all 0
+
+pg_drc.rpt:
+  report file generated; route log check_pg_drc says No errors found
+```
+
+현재 판정:
+
+```text
+ICC2 route DRC clean achieved for this controlled backend trial.
+Full backend signoff is not complete.
+```
+
+남은 backend 후속:
+
+```text
+1. ECO equivalence/signoff policy 결정
+2. extraction / post-route STA
+3. DEF/GDS 출력
+4. signoff DRC/LVS/IR/EM은 별도 signoff tool evidence 필요
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/01_init_design/eco_swap.rpt
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_drc.rpt
 ```

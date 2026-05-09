@@ -3601,3 +3601,249 @@ goal은 완료 처리하지 않는다.
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_drc.rpt
 ```
+
+## Resize ECO Plus Placement/Route Resource Probes
+
+목적:
+
+```text
+current-best 67 DRC 상태에서 이미 실패했던 placement pin-access 계열 knob와
+M9 routing resource 확장이 다시 효과를 내는지 확인한다.
+```
+
+trial 1:
+
+```text
+route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2
+```
+
+조건:
+
+```text
+ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+  dont_touch 유지
+
+placement:
+  place.legalize.enable_advanced_legalizer=true
+  place.legalize.enable_pin_color_alignment_check=true
+  place.legalize.pin_color_alignment_layers={M1 M2}
+  place.coarse.enable_enhanced_router=true
+  place.coarse.pin_density_aware=false
+  place.legalize.optimize_pin_access_using_cell_spacing=true
+  place.legalize.optimize_pin_access_drc_variants=true
+  place.legalize.optimize_pin_access_access_points=true
+```
+
+공식 결과:
+
+```text
+check_routes.rpt
+
+open nets: 0
+total DRC: 109
+Off-grid: 109
+
+check_legality.rpt: 0 violations
+pg_connectivity.rpt: floating std cells 0, floating hard macros 0
+pg_drc.rpt: no errors
+```
+
+해석:
+
+```text
+advanced legalizer / pin-color / pin-access placement 조합은
+current-best ECO 상태에서도 DRC를 67 -> 109로 악화시켰다.
+따라서 placement pin-access alignment 계열은 이 residual A2 문제의 closure path가 아니다.
+```
+
+trial 2:
+
+```text
+route_no012_nor2x4_to_nor2x2_eco_m9
+```
+
+조건:
+
+```text
+ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+  dont_touch 유지
+
+route:
+  SIGNAL_MAX_ROUTING_LAYER=M9
+  route.detail.generate_extra_off_grid_pin_tracks=true
+  route.detail.drc_convergence_effort_level=high
+  route.detail.optimize_wire_via_effort_level=high
+```
+
+공식 결과:
+
+```text
+check_routes.rpt
+
+open nets: 0
+total DRC: 125
+Diff net spacing: 6
+Needs fat contact: 1
+Off-grid: 113
+Same net spacing: 1
+Short: 4
+
+check_legality.rpt: 0 violations
+pg_connectivity.rpt: floating std cells 0, floating hard macros 0
+pg_drc.rpt: no errors
+```
+
+해석:
+
+```text
+M9 허용은 lower-metal A2 access/check-grid 문제를 풀지 못한다.
+오히려 DRC를 67 -> 125로 악화시킨다.
+남은 문제는 routing resource 부족보다 M1/M2/VIA1 local access generation 쪽이다.
+```
+
+판정:
+
+```text
+두 trial 모두 closure fix로 기각한다.
+current best는 계속 NOR2 resize ECO 공식 67 DRC다.
+DRC clean goal은 아직 미완료다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/pg_drc.rpt
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_m9/route_no012_nor2x4_to_nor2x2_eco_m9.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/pg_drc.rpt
+```
+
+## trim_all_pin NDM and Final One-Cell MUX ECO
+
+목적:
+
+```text
+기존 67 DRC current-best에서 route knob 대신 NDM frame 생성 옵션을 바꿔
+stdcell pin 주변 OBS blockage가 pin access를 막는지 직접 확인한다.
+```
+
+NDM build:
+
+```text
+script:
+  7_Backend_ICC2/0_Script/00_setup/build_saed32_ndm_trim_all_pin.tcl
+
+key option:
+  configure_frame_options -mode keep_obs_and_trim_all_pin
+
+output:
+  7_Backend_ICC2/2_Output/00_setup/ndm_trim_all_pin/saed32rvt_tt.ndm
+  7_Backend_ICC2/2_Output/00_setup/ndm_trim_all_pin/saed32lvt_tt.ndm
+  7_Backend_ICC2/2_Output/00_setup/ndm_trim_all_pin/saed32hvt_tt.ndm
+```
+
+결과 1:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin
+
+ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+
+official check_routes:
+  open nets 0
+  total DRC 1
+  Off-grid 1
+
+other checks:
+  check_legality 0 violations
+  PG connectivity clean
+  PG DRC no errors
+```
+
+남은 1개 marker:
+
+```text
+Error Type: Off-grid
+Layer: M1
+Bbox: {114.4260 280.6530} {114.5690 280.7050}
+Context:
+  instance u_core/core_i/U1723
+  ref_name MUX41X2_HVT
+  pin S0
+```
+
+해석:
+
+```text
+trim_all_pin NDM이 67 -> 1로 크게 개선했다.
+따라서 주요 원인은 일반 route congestion보다 stdcell pin 주변 physical abstract/OBS trim 문제였다.
+
+남은 1개는 MUX41X2_HVT/S0 pin access 약점이다.
+HVT LEF에서 MUX41X2_HVT/S0는 낮은 M1 stripe만 가지고,
+MUX41X1_HVT/S0는 추가 M1 geometry를 가진다.
+그래서 마지막 marker는 cell variant 선택으로 줄일 수 있는 후보였다.
+```
+
+결과 2:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin
+
+ECO:
+  NOR2X4_HVT -> NOR2X2_HVT 43개
+  u_core/core_i/U1723 MUX41X2_HVT -> MUX41X1_HVT 1개
+  ECO_SWAP_DONT_TOUCH=true
+
+official check_routes:
+  open nets 0
+  TOTAL VIOLATIONS 0
+  Total number of DRCs 0
+
+other checks:
+  check_legality 0 violations
+  PG connectivity VDD/VSS floating counts all 0
+  route log check_pg_drc says No errors found
+```
+
+판정:
+
+```text
+ICC2 route DRC clean achieved for this controlled backend trial.
+이 결과는 backend route clean 증거다.
+하지만 full backend signoff는 아니다.
+```
+
+주의:
+
+```text
+이 trial은 backend에서 NDM frame 생성 옵션과 ECO swap을 사용했다.
+따라서 다음 단계에서는 ECO equivalence/signoff policy, extraction, post-route STA,
+DEF/GDS output, signoff DRC/LVS/IR/EM evidence가 필요하다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/00_setup/build_saed32_ndm_trim_all_pin.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/drc_detail/drc.detailed.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/99_marker_context/marker_context.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/01_init_design/eco_swap.rpt
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_drc.rpt
+```

@@ -1418,3 +1418,48 @@ Result: OPEN_REJECTED_AS_FIX
 Notes: M1 and M2 track constraints were accepted and report_track_constraints shows M1 horizontal and M2 vertical constraints on the core area. However final official check_routes remains open nets 0 and 67 route DRCs: Diff net spacing 4, Off-grid 59, Short 4. The route_auto log briefly reported 66 DRC, but final check_routes reports 67. Legality remains 0, PG connectivity is clean, and PG DRC has no errors. Therefore explicit M1/M2 track constraints do not close the current-best residual DRC.
 Evidence: 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core.log, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/track_constraints.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/track_constraints.after_set.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_track_constraint_m1m2_core/06_route/pg_drc.rpt.
 ```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2 ... PLACE_ADVANCED_LEGALIZER=true PLACE_ENABLE_PIN_COLOR_ALIGNMENT_CHECK=true PLACE_PIN_COLOR_ALIGNMENT_LAYERS='{M1 M2}' PLACE_MULTI_CELL_PIN_ACCESS_CHECK=true PLACE_OPTIMIZE_PIN_ACCESS_ACCESS_POINTS=true PLACE_OPTIMIZE_PIN_ACCESS_DRC_VARIANTS=true PLACE_OPTIMIZE_PIN_ACCESS_USING_CELL_SPACING=true ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus advanced legalizer/pin-color M1/M2 placement probe
+Result: OPEN_REJECTED_AS_FIX
+Notes: All 43 NOR2 resize ECO swaps passed and were kept dont_touch. Official check_routes reports open nets 0 and 109 route DRCs, all Off-grid. Legality remains 0, PG connectivity is clean, and PG DRC has no errors. This is worse than the current-best 67 DRC. The separate 3_Log output file was not created because the output_log_file parent directory was not pre-created for this run; the official 4_Report artifacts are the retained evidence.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_advlegalizer_pin_color_m1m2/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_m9 SIGNAL_MAX_ROUTING_LAYER=M9 ... ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_m9/route_no012_nor2x4_to_nor2x2_eco_m9.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO plus M9 max signal routing probe
+Result: OPEN_REJECTED_AS_FIX
+Notes: All 43 NOR2 resize ECO swaps passed and were kept dont_touch. Final route_auto internally reported 123 DRCs, while official check_routes reports open nets 0 and 125 route DRCs: Diff net spacing 6, Needs fat contact 1, Off-grid 113, Same net spacing 1, Short 4. Legality remains 0, PG connectivity is clean, and PG DRC has no errors. M9 worsens the current-best 67 DRC and is rejected.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_m9/route_no012_nor2x4_to_nor2x2_eco_m9.log, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: lm_shell -batch -output_log_file 7_Backend_ICC2/3_Log/00_setup/build_saed32_ndm_trim_all_pin.log -f 7_Backend_ICC2/0_Script/00_setup/build_saed32_ndm_trim_all_pin.tcl
+Stage: ICC2 NDM build with full pin blockage trim
+Result: PASS
+Notes: SAED32 RVT/LVT/HVT NDMs were rebuilt with configure_frame_options -mode keep_obs_and_trim_all_pin. Workspace checks succeeded and all three .ndm outputs were written. This is a backend physical abstract trial only; frontend netlist/SDC are unchanged.
+Evidence: 7_Backend_ICC2/3_Log/00_setup/build_saed32_ndm_trim_all_pin.log and 7_Backend_ICC2/2_Output/00_setup/ndm_trim_all_pin/{saed32rvt_tt.ndm,saed32lvt_tt.ndm,saed32hvt_tt.ndm}.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_trim_all_pin/*.ndm ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 current-best NOR2 resize ECO with trim_all_pin NDM
+Result: OPEN_BUT_NEAR_CLEAN
+Notes: The full pin blockage trim NDM reduced official route DRC from 67 to 1 while keeping open nets 0, legality 0, PG connectivity clean, and PG DRC clean. The single remaining marker is M1 Off-grid at MUX41X2_HVT/S0 on instance u_core/core_i/U1723. Marker context confirms the same MUX41X2_HVT/S0 valid-via-region weakness previously seen in ZRT-044.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/pg_drc.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/drc_detail/drc.detailed.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/99_marker_context/marker_context.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TRIAL_NAME=route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin NDM_RVT/LVT/HVT=7_Backend_ICC2/2_Output/00_setup/ndm_trim_all_pin/*.ndm ECO_SWAP_FILE=configs/backend/a2_edge_nor2x4_to_nor2x2_plus_mux41x2_to_x1_hvt_resize.tsv ECO_SWAP_DONT_TOUCH=true ... icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 DRC-clean route trial with trim_all_pin NDM plus 44-cell ECO
+Result: ROUTE_DRC_CLEAN
+Notes: All 43 NOR2X4_HVT to NOR2X2_HVT swaps and the final u_core/core_i/U1723 MUX41X2_HVT to MUX41X1_HVT swap passed and were kept dont_touch. Official check_routes reports open nets 0, TOTAL VIOLATIONS 0, and Total number of DRCs 0. check_legality reports 0 violations. PG connectivity has all floating counts 0 for VDD/VSS and check_pg_drc in the route log reports No errors found. This closes the ICC2 route DRC goal for this controlled backend trial, but it is not full signoff; extraction, post-route STA, output DEF/GDS, and ECO equivalence policy remain future work.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin.log, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_drc.rpt.
+```

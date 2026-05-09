@@ -144,6 +144,7 @@ Post-ECO remaining DRC classification was run. Of 67 remaining DRC markers, 55 m
 Targeted OR2X4_HVT/A2 downsizing was tested as an add-on to the current NOR2 resize ECO. The combined 52-cell ECO completed with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC worsened to 97. Current best remains the NOR2-only resize ECO at 67 DRC.
 Targeted NOR2X4_HVT/A2 resize-to-X1 was also tested. It completed with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC worsened to 109. X2 remains the best tested targeted NOR2 resize point; smaller drive is not a monotonic fix.
 Post-ECO unmatched marker classification was added. In the 67-DRC best ECO candidate, 55 markers match A2 access points and 12 do not. The 12 unmatched markers are mostly M1 local DRC around SDFFARX1_RVT/SDFFASX1_RVT RSTB/VSS/Q/QN pins, with 4 Short, 4 Diff net spacing, and 4 Off-grid. Treat this as a separate residual class from the dominant HVT OR/NOR A2 VIA1 off-grid issue.
+The NOR2 resize ECO plus M1 connect-within-pin route option was tested and rejected as a fix. It reduced Off-grid from 59 to 15 but increased total DRC from 67 to 109 by introducing 45 Needs-fat-contact and 21 Connection-not-within-pin markers. This confirms the lower-metal pin/via access cause model but shows the option is the wrong closure knob.
 ```
 
 ## Fmax Estimate

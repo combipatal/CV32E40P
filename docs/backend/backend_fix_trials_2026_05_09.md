@@ -987,3 +987,84 @@ scripts/summarize_unmatched_drc_markers.py
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/unmatched_drc_marker_summary.tsv
 ```
+
+## NOR2 Resize ECO + M1 Connect-Within-Pin Trial
+
+Purpose:
+
+```text
+Test whether forcing M1 standard-cell pin connections inside pin shapes reduces
+the remaining A2 off-grid/contact problem in the current 67-DRC best ECO.
+```
+
+Run:
+
+```text
+route_no012_nor2x4_to_nor2x2_connect_m1pin
+
+Base ECO:
+  43 NOR2X4_HVT -> NOR2X2_HVT
+
+Additional route option:
+  route.common.connect_within_pins_by_layer_name = {M1 via_standard_cell_pins}
+```
+
+Result:
+
+```text
+Route DRC: 109
+Open nets: 0
+Placement legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+DRC matrix:
+
+```text
+Connection not within pin   M1       21
+Diff net spacing            M1/M2    17/2
+Less than minimum area      M2        1
+Needs fat contact           M1-M2    45
+Off-grid                    M1/M2/VIA1 1/1/13
+Short                       M1/M2     7/1
+```
+
+Comparison:
+
+```text
+NOR2 resize ECO:
+  total DRC 67
+  Off-grid 59
+  Needs fat contact 0
+  Connection not within pin 0
+
+NOR2 resize ECO + connect-within-pin:
+  total DRC 109
+  Off-grid 15
+  Needs fat contact 45
+  Connection not within pin 21
+```
+
+Interpretation:
+
+```text
+This option confirms the cause model: the remaining problem is connected to
+how the router creates M1/VIA1 access around stdcell pins.
+
+But it is not a closure fix. It trades VIA1 off-grid markers for M1-M2
+fat-contact and connection-not-within-pin markers, increasing total DRC.
+
+Current best remains route_no012_nor2x4_to_nor2x2_eco at 67 DRC.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/drc_detail/drc.matrix.rpt
+```

@@ -3036,3 +3036,120 @@ resize와 pin-swap은 단순히 합쳐서 좋아지는 fix가 아니다.
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_drc.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## Restore And Reclassify Current Best After Rejected Pin-Swap Combination
+
+목적:
+
+```text
+resize+pin-swap trial은 112 DRC로 악화되었고 saved block도 그 상태가 되었다.
+따라서 current-best인 NOR2 resize ECO 단독 상태로 block을 복구하고,
+복구된 block 기준으로 DRC 원인 분류를 다시 확인한다.
+```
+
+복구 run:
+
+```text
+trial:
+  route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap
+
+ECO:
+  configs/backend/a2_edge_nor2x4_to_nor2x2_hvt_resize.tsv
+  ECO_SWAP_DONT_TOUCH=true
+
+제외:
+  ECO_PIN_SWAP_FILE 사용 안 함
+```
+
+복구 결과:
+
+```text
+official check_routes:
+  open nets: 0
+  total DRC: 67
+  Off-grid: 59
+  Diff net spacing: 4
+  Short: 4
+
+detailed matrix:
+  M1: 11
+  M2: 2
+  VIA1: 54
+
+other checks:
+  legality: 0
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+주의:
+
+```text
+route_auto 내부 로그는 66 DRC까지 내려갔다.
+하지만 final check_routes는 67 DRC다.
+공식 판정은 check_routes 기준 67로 기록한다.
+```
+
+Fresh remaining-marker classification:
+
+```text
+markers: 67
+
+coordinate match:
+  matched: 55
+  unmatched: 12
+  matched access status: 55 Routable
+  matched pin: 55 A2
+
+LEF via-window class:
+  45 or_nor_a2_legal_track_edge_snapping
+  10 legal_window_no_default_track_center
+
+By ref/pin/class:
+  43 NOR2X2_HVT/A2 or_nor_a2_legal_track_edge_snapping
+  10 OR2X4_HVT/A2 legal_window_no_default_track_center
+   2 NOR2X4_HVT/A2 or_nor_a2_legal_track_edge_snapping
+
+unmatched:
+  4 Short
+  4 Diff net spacing
+  4 Off-grid
+  mostly SDFFARX1_RVT/SDFFASX1_RVT RSTB/VSS/Q/QN local M1 interactions
+```
+
+해석:
+
+```text
+current best는 정상 복구됐다.
+
+복구 후에도 원인 모델은 변하지 않는다.
+55/67 marker가 Routable A2 access point에 직접 맞는다.
+따라서 dominant 문제는 blocked pin access가 아니라,
+HVT OR/NOR A2의 legal-window edge access와 generated VIA1/M2 shape snapping/check-grid 동작이다.
+
+12/67 unmatched는 별도 residual class다.
+대부분 SDFFARX1_RVT/SDFFASX1_RVT 주변 M1 local DRC로 분리해서 봐야 한다.
+
+SAED32 tech file은 직접 수정하지 않는다.
+다음 작업은 tech rule 수정이 아니라:
+  controlled ECO
+  library usage policy
+  routing/setup probe
+  NDM generation/setup 확인
+중 하나여야 한다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_marker_context/marker_context.summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/drc_to_pin_access_coordinate_match.summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/remaining_drc_via_window_classification.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/unmatched_drc_marker_summary.rpt
+```

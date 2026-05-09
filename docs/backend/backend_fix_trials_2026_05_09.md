@@ -1360,3 +1360,103 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/pg_drc.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_plus_a2_pin_swap/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## Restore After Rejected Resize + Pin-Swap Trial
+
+Purpose:
+
+```text
+The rejected resize+pin-swap trial saved a worse 112-DRC block.
+Restore the saved ICC2 design to the accepted NOR2 resize ECO state.
+```
+
+Run:
+
+```text
+route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap
+
+ECO:
+  43 NOR2X4_HVT -> NOR2X2_HVT
+  dont_touch=true
+
+No pin-swap ECO.
+```
+
+Result:
+
+```text
+official check_routes:
+  open nets: 0
+  total DRC: 67
+  Off-grid: 59
+  Diff net spacing: 4
+  Short: 4
+
+detailed matrix:
+  M1: 11
+  M2: 2
+  VIA1: 54
+
+other checks:
+  legality: 0 violations
+  PG connectivity: clean
+  PG DRC: no errors
+```
+
+Fresh residual classification:
+
+```text
+markers: 67
+matched to report_cell_pin_access within 0.08um: 55
+unmatched: 12
+
+matched status:
+  55 Routable
+
+matched pin:
+  55 A2
+
+LEF via-window class:
+  45 or_nor_a2_legal_track_edge_snapping
+  10 legal_window_no_default_track_center
+
+By ref/pin/class:
+  43 NOR2X2_HVT/A2 or_nor_a2_legal_track_edge_snapping
+  10 OR2X4_HVT/A2 legal_window_no_default_track_center
+   2 NOR2X4_HVT/A2 or_nor_a2_legal_track_edge_snapping
+
+unmatched:
+  4 Short
+  4 Diff net spacing
+  4 Off-grid
+  mostly SDFFARX1_RVT/SDFFASX1_RVT RSTB/VSS/Q/QN local M1 interactions
+```
+
+Interpretation:
+
+```text
+Current best is restored.
+
+The route_auto log reached 66 DRC internally, but final check_routes is 67.
+Use official check_routes as the accepted count.
+
+The dominant residual problem remains HVT OR/NOR A2 lower-metal access/contact/grid behavior.
+The smaller residual class is local M1/flop interaction.
+
+Do not edit the SAED32 tech file.
+Next fixes should use controlled ECO, library usage policy, routing/setup probes, or NDM setup checks.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/drc_to_pin_access_coordinate_match.summary.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/remaining_drc_via_window_classification.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_pin_swap/99_pin_access/unmatched_drc_marker_summary.rpt
+```

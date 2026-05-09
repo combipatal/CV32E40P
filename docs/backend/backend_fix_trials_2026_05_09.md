@@ -1068,3 +1068,62 @@ Evidence:
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/pg_drc.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_connect_m1pin/06_route/drc_detail/drc.matrix.rpt
 ```
+
+## Restore After M1 Connect-Within-Pin Rejection
+
+Purpose:
+
+```text
+Return the saved ICC2 block to the accepted NOR2 resize ECO state after the
+connect-within-pin experiment saved a rejected route result.
+```
+
+Run:
+
+```text
+route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin
+
+Base ECO:
+  43 NOR2X4_HVT -> NOR2X2_HVT
+
+Removed rejected option:
+  route.common.connect_within_pins_by_layer_name
+```
+
+Official result:
+
+```text
+Route DRC: 67
+Open nets: 0
+Placement legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+DRC type split:
+
+```text
+Off-grid:          59
+Diff net spacing:   4
+Short:              4
+```
+
+Important note:
+
+```text
+The detail-route log temporarily reported 66 violations near the end of routing,
+but the official final check_routes report is 67 DRC.
+
+Use 67 as the accepted current-best count.
+Do not report 66 as a closed or accepted result.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin.log
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_restore_after_connect_m1pin/06_route/pg_drc.rpt
+```

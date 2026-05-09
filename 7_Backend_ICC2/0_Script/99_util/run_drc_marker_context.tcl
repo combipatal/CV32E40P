@@ -16,6 +16,14 @@ if {[info exists ::env(TRIAL_NAME)]} {
 set REPORT_DIR $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME/99_marker_context
 set MARKER_FILE $REPORT_DIR/representative_drc_markers.tsv
 
+if {[info exists ::env(REPORT_DIR)]} {
+  set REPORT_DIR $::env(REPORT_DIR)
+}
+
+if {[info exists ::env(MARKER_FILE)]} {
+  set MARKER_FILE $::env(MARKER_FILE)
+}
+
 file mkdir $REPORT_DIR
 
 open_lib $ICC2_LIB_DIR

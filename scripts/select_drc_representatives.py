@@ -8,14 +8,25 @@ ICC2 detailed DRC report에서 대표 marker를 고른다.
 """
 
 import math
+import os
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DRC_REPORT = ROOT / "7_Backend_ICC2/4_Report/06_route/drc_detail/drc.detailed.rpt"
-OUT_DIR = ROOT / "7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context"
+DRC_REPORT = Path(
+    os.environ.get(
+        "DRC_REPORT",
+        ROOT / "7_Backend_ICC2/4_Report/06_route/drc_detail/drc.detailed.rpt",
+    )
+)
+OUT_DIR = Path(
+    os.environ.get(
+        "OUT_DIR",
+        ROOT / "7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context",
+    )
+)
 
 POINT_RE = re.compile(r"\{([-0-9.]+)\s+([-0-9.]+)\}")
 

@@ -599,3 +599,372 @@ Result: BEST_CURRENT_PASS_WITH_OPEN
 Notes: Combined route detail options keep open nets 0, legality 0, and PG DRC clean. check_routes reports 381 DRCs: diff-net spacing 127, min-area 3, needs-fat-contact 91, off-grid 157, same-net spacing 1, short 2. This is the best valid backend trial so far but still not route closure.
 Evidence: docs/backend/backend_fix_trials_2026_05_09.md and 7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/{check_routes,check_legality,route_detail_app_options,pg_drc}.rpt.
 ```
+
+```text
+Date: 2026-05-09
+Command: dc_shell -topographical_mode -f 2_Synthesis/0_Script/run_compile_10ns_topo_no_mux41x_hvt.tcl -output_log_file 2_Synthesis/3_Log/compile_10ns_topo_no_mux41x_hvt.log; fm_shell -overwrite -file 2.5_FM_R2N/0_Script/run_fm_r2n_topo_no_mux41x_hvt.tcl; dc_shell -topographical_mode -f 3_DFT/0_Script/run_insert_dft_10ns_topo_no_mux41x_hvt.tcl -output_log_file 3_DFT/3_Log/insert_dft_10ns_topo_no_mux41x_hvt.log; fm_shell -overwrite -file 5_FM_N2N/0_Script/run_fm_n2n_topo_no_mux41x_hvt.tcl; tmax -shell 4_ATPG/0_Script/run_tmax_stuck_at_topo_no_mux41x_hvt.tcl; pt_shell -f 6_STA/0_Script/run_pt_post_dft_10ns_sdf_no_mux41x_hvt.tcl
+Stage: no_mux41x_hvt front-end validation
+Result: PASS_WITH_NOTE
+Notes: MUX41X1_HVT usage changed from 67 to 0 and MUX41X1_RVT usage became 67. DC/R2N/DFT/N2N/ATPG/PT all completed. R2N and N2N each have 2243 passing compare points and 0 failing. DFT built chain0 length 2130. ATPG reached 98.61% test coverage and 98.51% fault coverage. PT post-DFT SDF annotation has 0 errors and no setup/hold violations. Existing DFT TEST-505, ATPG Z3, and PT max_cap notes remain.
+Evidence: docs/backend/no_mux41x_hvt_experiment_2026_05_09.md, 2_Synthesis/4_Report/topo_no_mux41x_hvt/post_compile.qor.rpt, 2.5_FM_R2N/4_Report/no_mux41x_hvt/r2n_topo_no_mux41x_hvt.failing_points.rpt, 3_DFT/4_Report/topo_no_mux41x_hvt/post_dft.drc.rpt, 5_FM_N2N/4_Report/no_mux41x_hvt/n2n_topo_no_mux41x_hvt.failing_points.rpt, 4_ATPG/4_Report/stuck_at_topo_no_mux41x_hvt/summary.rpt, and 6_STA/4_Report/post_dft_topo_sdf_no_mux41x_hvt/post_dft_no_mux41x_hvt.func_tt_10ns_sdf.global_timing.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_mux41x_hvt CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_mux41x_hvt/cv32e40p_synth_wrap.post_dft_topo_no_mux41x_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_mux41x_hvt/cv32e40p_synth_wrap.post_dft_topo_no_mux41x_hvt.sdc SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_mux41x_hvt/cv32e40p_synth_wrap.post_dft_topo_no_mux41x_hvt.scan.def ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_no_mux41x_hvt/route_combo_no_mux41x_hvt.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 no_mux41x_hvt route combo trial
+Result: REJECTED
+Notes: The trial kept open nets 0, legality 0, and PG DRC clean, but check_routes reports 399 DRCs. This is worse than route_combo_scan_def_m8 at 381 DRCs. no_mux41x_hvt reduces diff-net spacing but worsens needs-fat-contact and off-grid classes, so it is not accepted as a backend fix.
+Evidence: docs/backend/no_mux41x_hvt_experiment_2026_05_09.md and 7_Backend_ICC2/4_Report/trials/route_combo_no_mux41x_hvt/06_route/{check_routes,check_legality,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgcut_vss260 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_CUT_ENABLE=1 PG_M2_HOTSPOT_CUT_BOUNDARY='{{258.0 195.0} {262.0 265.0}}' PG_M2_HOTSPOT_CUT_NETS='VSS' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgcut_vss260/route_combo_pgcut_vss260.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 local M2 VSS PG cut root-cause trial
+Result: BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Cut only the hotspot portion of the x=259.8..260.2um VSS M2 PG stripe from y=195..265um, then recreated the bottom/top stripe segments. The trial kept open nets 0, legality 0, PG connectivity clean, and PG DRC clean. check_routes reports 377 DRCs, improving the previous valid route_combo_scan_def_m8 baseline at 381 DRCs. This proves local M2 PG obstruction contributes to the route DRC, but the small 4-DRC improvement means it is not the only cause.
+Evidence: docs/backend/local_pg_m2_cut_trial_2026_05_09.md, 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/03_power/pg_m2_hotspot_cut.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgcut_allm2_hotspot CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_CUT_ENABLE=1 PG_M2_HOTSPOT_CUT_BOUNDARY='{{215.0 195.0} {265.0 265.0}}' PG_M2_HOTSPOT_CUT_NETS='VDD VSS' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgcut_allm2_hotspot/route_combo_pgcut_allm2_hotspot.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 local hotspot all-M2 PG cut root-cause trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Cut hotspot portions of VSS x=219.8..220.2, VDD x=239.8..240.2, and VSS x=259.8..260.2 M2 PG stripes. The trial kept open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC is 378, which is worse than vss260-only cut at 377. DRC class trade-off is important: diff-net spacing improves to 96, but needs-fat-contact worsens to 113. This confirms M2 PG obstruction and M1-M2 contact legality are coupled.
+Evidence: docs/backend/local_pg_m2_cut_trial_2026_05_09.md, 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/03_power/pg_m2_hotspot_cut.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgcut_vdd240 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_CUT_ENABLE=1 PG_M2_HOTSPOT_CUT_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_CUT_NETS='VDD' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgcut_vdd240/route_combo_pgcut_vdd240.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 local x=240 VDD M2 PG cut root-cause trial
+Result: BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Cut only the hotspot portion of the x=239.8..240.2um VDD M2 PG stripe from y=195..265um, then recreated the bottom/top stripe segments. The trial kept open nets 0, legality 0, PG connectivity clean, and PG DRC clean. check_routes reports 376 DRCs, improving route_combo_scan_def_m8 at 381 and route_combo_pgcut_vss260 at 377. This makes x=240 VDD the best PG-cut diagnosis candidate so far.
+Evidence: docs/backend/local_pg_m2_cut_trial_2026_05_09.md, 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/03_power/pg_m2_hotspot_cut.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgcut_vss220 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_CUT_ENABLE=1 PG_M2_HOTSPOT_CUT_BOUNDARY='{{218.0 195.0} {222.0 265.0}}' PG_M2_HOTSPOT_CUT_NETS='VSS' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgcut_vss220/route_combo_pgcut_vss220.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 local x=220 VSS M2 PG cut root-cause trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Cut only the hotspot portion of the x=219.8..220.2um VSS M2 PG stripe. The trial kept open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but route DRC is 380. This is only a weak improvement over route_combo_scan_def_m8 at 381 and worse than x=240 VDD cut at 376. x=220 VSS cut reduces diff-net spacing but worsens needs-fat-contact and short count.
+Evidence: docs/backend/local_pg_m2_cut_trial_2026_05_09.md, 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/03_power/pg_m2_hotspot_cut.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgcut_vdd240_restore CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_CUT_ENABLE=1 PG_M2_HOTSPOT_CUT_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_CUT_NETS='VDD' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgcut_vdd240_restore/route_combo_pgcut_vdd240_restore.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 saved-block restore to x=240 VDD best candidate
+Result: BEST_CURRENT_OPEN_RESTORED
+Notes: Rebuilt and saved the current ICC2 block using the accepted x=240 VDD local M2 cut after rejecting x=220 VSS as best. check_routes reports 376 DRCs with open nets 0. check_legality reports 0 violations. check_pg_connectivity reports VDD/VSS floating wires, vias, std cells, hard macros, pads, terminals, and blocks all 0. check_pg_drc reports no errors. Route DRC remains open, so this is not backend closure.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_pgcut_vdd240_restore/route_combo_pgcut_vdd240_restore.log and 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240_restore/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgblock_vdd240 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240/route_combo_pgblock_vdd240.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 clean PG blockage trial
+Result: BEST_CURRENT_OPEN
+Notes: Replaced diagnosis-only manual x=240 VDD M2 cut with set_pg_strategy -blockage on VDD/M2 in pg_region hotspot_pg_m2_blockage. pg_strategies.rpt confirms the blockage under core_mesh_strategy. check_routes reports 368 DRCs with open nets 0. check_legality reports 0 violations. route-stage check_pg_connectivity reports VDD/VSS floating wires/vias/std cells/terminals all 0, and check_pg_drc reports no errors. DRC matrix is still lower-metal/access only: M1 92, M1-M2 120, M2 77, VIA1 79. This is the current best valid backend candidate, but route DRC remains open.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240/route_combo_pgblock_vdd240.log, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/03_power/pg_mesh_trial_settings.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/03_power/pg_strategies.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.matrix.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env DRC_DETAIL_DIR=7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240/route_combo_pgblock_vdd240.drc_detail.log -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl; DRC_REPORT=7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.detailed.rpt OUT_DIR=7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail python3 scripts/select_drc_representatives.py
+Stage: ICC2 clean PG blockage DRC detail extraction
+Result: RECORDED
+Notes: Detailed zroute.err matrix confirms 368 route DRCs: Diff net spacing 91, less-than-min-area 5, needs-fat-contact 120, off-grid 152. Top 20um buckets remain around x=220..260 and y=200..260, especially 220-240/220-240 with 30 markers. Representative markers were exported for GUI/debug follow-up.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.by_layer.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.by_type.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.detailed.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/representative_summary.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/representative_drc_markers.tsv.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgblock_vdd240_vss260 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {262.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD VSS' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_vss260/route_combo_pgblock_vdd240_vss260.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 clean PG blockage VDD+VSS expansion trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Expanded the PG strategy blockage to cover x=240 VDD and x=260 VSS M2 stripes in the hotspot. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 376 DRCs. Matrix trade-off: needs-fat-contact improves 120 -> 104 compared with route_combo_pgblock_vdd240, but M1 diff-net spacing worsens 89 -> 101, M2 off-grid worsens 70 -> 79, VIA1 off-grid worsens 79 -> 81, and 2 shorts appear. Therefore route_combo_pgblock_vdd240 remains the best valid candidate at 368 DRC.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_vss260/route_combo_pgblock_vdd240_vss260.log, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/03_power/pg_mesh_trial_settings.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/03_power/pg_strategies.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/06_route/drc_detail/drc.matrix.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_pgblock_vdd240_pincheck CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' PLACE_MULTI_CELL_PIN_ACCESS_CHECK=true ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_pincheck/route_pgblock_vdd240_pincheck.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 VDD/M2 PG blockage plus placement multi-cell pin-access check trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Added only place.legalize.enable_multi_cell_pin_access_check=true on top of the current best VDD/M2 PG blockage flow. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 368 DRCs, identical to route_combo_pgblock_vdd240. The detailed matrix is also identical: M1 92, M1-M2 120, M2 77, VIA1 79. This single legalizer pin-access option does not improve closure.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_pincheck/route_pgblock_vdd240_pincheck.log, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/04_place/place_legalize_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/drc_detail/drc.matrix.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_pgblock_vdd240_offtrackvia CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' PLACE_SUPPORT_OFF_TRACK_VIA_REGION=true ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_offtrackvia/route_pgblock_vdd240_offtrackvia.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 VDD/M2 PG blockage plus off-track via-region placement support trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Added only place.legalize.support_off_track_via_region=true on top of the current best VDD/M2 PG blockage flow. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 368 DRCs. The detailed matrix is identical to the current best: M1 92, M1-M2 120, M2 77, VIA1 79. ICC2 also reports that pin-track alignment is disabled unless the advanced legalizer is enabled, so this single option is not a useful fix in the current flow.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_offtrackvia/route_pgblock_vdd240_offtrackvia.log, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/04_place/place_legalize_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/pg_drc.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/drc_detail/drc.matrix.rpt, and 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/drc_detail/representative_summary.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_grid_option_probe/probe_route_grid_options.log -f 7_Backend_ICC2/0_Script/99_util/probe_route_grid_options.tcl; icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_grid_option_probe/probe_route_grid_option_man.log -f 7_Backend_ICC2/0_Script/99_util/probe_route_grid_option_man.tcl; icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_grid_option_probe/probe_route_grid_option_values.log -f 7_Backend_ICC2/0_Script/99_util/probe_route_grid_option_values.tcl
+Stage: ICC2 route grid/via option syntax probe
+Result: RECORDED
+Notes: report_app_options and man-page probes confirm route.common.via_on_grid_by_layer_name, route.common.wire_on_grid_by_layer_name, and route.common.extra_via_off_grid_cost_multiplier_by_layer_name are real block-scope options. The correct shell environment value form for one pair is single-brace Tcl list text such as '{M2 0.5}', not '{{M2 0.5}}'. The double-brace form causes CMD-013 invalid value errors when passed through an environment variable. The SAED32 tech file also reports TECH-025 because VIA1 has both onGrid and onWireTrack.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/route_common_all.rpt, 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/route_detail_all.rpt, 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/man_via_on_grid_by_layer_name.rpt, 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/man_wire_on_grid_by_layer_name.rpt, 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/man_extra_via_off_grid_cost_multiplier_by_layer_name.rpt, and 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/route_grid_option_value_probe.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_pgblock_vdd240_m2offgridcost05b CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER='{M2 0.5}' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_m2offgridcost05b/route_pgblock_vdd240_m2offgridcost05b.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 VDD/M2 PG blockage plus M2 off-grid via cost trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Added route.common.extra_via_off_grid_cost_multiplier_by_layer_name={M2 0.5}. route_common_app_options.rpt confirms the option was applied. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 368 DRCs. The detailed matrix is identical to route_combo_pgblock_vdd240: M1 92, M1-M2 120, M2 77, VIA1 79. A small off-grid via cost increase on M2 does not move the remaining DRC.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_m2offgridcost05b/route_pgblock_vdd240_m2offgridcost05b.log, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/route_common_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/drc_detail/drc.matrix.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_pgblock_vdd240_via1ongrid_b CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_COMMON_VIA_ON_GRID_BY_LAYER='{VIA1 true}' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_via1ongrid_b/route_pgblock_vdd240_via1ongrid_b.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 VDD/M2 PG blockage plus VIA1 on-grid route option trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Added route.common.via_on_grid_by_layer_name={VIA1 true}. route_common_app_options.rpt confirms the option was applied. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 368 DRCs. DRC type counts remain Diff net spacing 91, Less than minimum area 5, Needs fat contact 120, and Off-grid 152. ZRT-044 for MUX41X2_HVT/S0 also remains. Therefore explicit VIA1 on-grid routing does not move the remaining DRC.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_via1ongrid_b/route_pgblock_vdd240_via1ongrid_b.log, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/route_common_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_pgblock_vdd240_m2wireongrid CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER='{M2 true}' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_m2wireongrid/route_pgblock_vdd240_m2wireongrid.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 VDD/M2 PG blockage plus M2 wire-on-grid route option trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Added route.common.wire_on_grid_by_layer_name={M2 true}. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 378 DRCs. Compared with route_combo_pgblock_vdd240, needs-fat-contact worsens 120 -> 126 and off-grid worsens 152 -> 155 while diff-net spacing improves 91 -> 85. This confirms M2 wire grid policy changes the DRC trade-off but does not close or improve the design.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_m2wireongrid/route_pgblock_vdd240_m2wireongrid.log, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/route_common_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgblock_vdd240_restore2 CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_restore2/route_combo_pgblock_vdd240_restore2.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 saved-block restore to current best VDD/M2 PG blockage candidate
+Result: BEST_CURRENT_OPEN_RESTORED
+Notes: Rebuilt and saved the ICC2 block using the accepted route_combo_pgblock_vdd240 condition after rejecting the M2 wire-on-grid trial. check_routes reports 368 DRCs with open nets 0. check_legality reports 0 violations. check_pg_connectivity reports VDD/VSS floating wires, vias, std cells, hard macros, pads, terminals, and blocks all 0. check_pg_drc reports no errors. Route DRC remains open, so this is not backend closure.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_restore2/route_combo_pgblock_vdd240_restore2.log and 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_restore2/06_route/{check_routes,check_legality,pg_connectivity,pg_drc}.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_pgblock_vdd240_m1wireongrid CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER='{M1 true}' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_m1wireongrid/route_pgblock_vdd240_m1wireongrid.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 VDD/M2 PG blockage plus M1 wire-on-grid route option trial
+Result: PASS_WITH_OPEN_REJECTED_AS_BEST
+Notes: Added route.common.wire_on_grid_by_layer_name={M1 true}. The trial kept open nets 0, legality 0, route-stage PG connectivity clean, and PG DRC clean, but check_routes reports 380 DRCs. Compared with route_combo_pgblock_vdd240, needs-fat-contact improves 120 -> 81, but diff-net spacing worsens 91 -> 130, off-grid worsens 152 -> 158, and total DRC worsens 368 -> 380. This confirms M1 wire grid policy also changes the DRC trade-off but is not a fix.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_pgblock_vdd240_m1wireongrid/route_pgblock_vdd240_m1wireongrid.log, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/route_common_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: python3 scripts/analyze_route_drc_geometry.py --markers 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/all_drc_markers.tsv --out 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.geometry_analysis.rpt
+Stage: ICC2 current-best route DRC geometry residue analysis
+Result: RECORDED
+Notes: Analyzed the current best valid route candidate route_combo_pgblock_vdd240. The candidate remains open at 368 DRCs with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. Geometry analysis shows a deterministic residue pattern: 120/120 M1-M2 needs-fat-contact markers have residue rx=0.064/ry=0.064 against 0.152um pitch; M2 and VIA1 off-grid markers cluster at rx=0.061..0.066/ry=0.064. This points to lower-metal stdcell pin/contact/grid mismatch plus local PG obstruction, not random global congestion.
+Evidence: scripts/analyze_route_drc_geometry.py and 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.geometry_analysis.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_pgblock_vdd240_context MARKER_FILE=7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/representative_drc_markers.tsv REPORT_DIR=7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/99_marker_context icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_context/route_combo_pgblock_vdd240_context.log -f 7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl
+Stage: ICC2 current-best representative marker cell/pin context probe
+Result: RECORDED
+Notes: Reused the saved current-best route block and mapped 35 representative DRC markers to nearby pins, cells, and shapes. Nearby ref-cell counts are OR2X1_HVT 46, NOR2X0_HVT 23, NOR2X4_HVT 6, SDFFARX1_RVT 5, AO22X1_HVT 5, FADDX2_HVT 3, and NAND2X0_HVT 2. M1 spacing and needs-fat-contact representatives are dominated by OR2X1_HVT. M2/VIA1 off-grid representatives are dominated by NOR2X0_HVT/NOR2X4_HVT. This makes OR2X1_HVT and NOR2X*_HVT the next targeted root-cause candidates; SDFFARX1_RVT remains a contributor but not the main representative pattern.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_context/route_combo_pgblock_vdd240_context.log and 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/99_marker_context/marker_context.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: dc_shell -topographical_mode -f 2_Synthesis/0_Script/run_compile_10ns_topo_no_or2x1_hvt.tcl -output_log_file 2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_hvt.log
+Stage: DC topo synthesis OR2X1_HVT dont_use probe
+Result: PASS
+Notes: OR2X1_HVT was removed from the compiled reference list while mixed RVT/LVT/HVT remains enabled. DC timing is met at 10ns with worst setup slack about 1.87ns. Area is 45242.97 cell area. Existing max cap/transition constraint violations remain physical-cleanup items.
+Evidence: 2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_hvt.log, 2_Synthesis/4_Report/topo_no_or2x1_hvt/post_compile.references.rpt, 2_Synthesis/4_Report/topo_no_or2x1_hvt/post_compile.timing.rpt, and 2_Synthesis/4_Report/topo_no_or2x1_hvt/post_compile.area.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: fm_shell -file 2.5_FM_R2N/0_Script/run_fm_r2n_topo_no_or2x1_hvt.tcl
+Stage: Formality R2N OR2X1_HVT dont_use probe
+Result: PASS
+Notes: RTL reference vs no_or2x1_hvt pre-DFT topo implementation verification succeeded. 2243 compare points passed and 0 failed.
+Evidence: 2.5_FM_R2N/4_Report/no_or2x1_hvt/r2n_topo_no_or2x1_hvt.failing_points.rpt, 2.5_FM_R2N/4_Report/no_or2x1_hvt/r2n_topo_no_or2x1_hvt.passing_points.post_verify.rpt, and 2.5_FM_R2N/2_Output/r2n_topo_no_or2x1_hvt_fm_session.fss.
+```
+
+```text
+Date: 2026-05-09
+Command: dc_shell -topographical_mode -f 3_DFT/0_Script/run_insert_dft_10ns_topo_no_or2x1_hvt.tcl -output_log_file 3_DFT/3_Log/insert_dft_10ns_topo_no_or2x1_hvt.log
+Stage: DC/DFT Compiler OR2X1_HVT dont_use probe
+Result: PASS
+Notes: Post-DFT DDC/VG/SDC/SDF/SPF/scan DEF were generated for the no_or2x1_hvt handoff. This keeps the single muxed scan-chain flow.
+Evidence: 3_DFT/3_Log/insert_dft_10ns_topo_no_or2x1_hvt.log, 3_DFT/2_Output/post_dft_topo_no_or2x1_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_hvt.vg, 3_DFT/2_Output/post_dft_topo_no_or2x1_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_hvt.scan.def, and 3_DFT/4_Report/topo_no_or2x1_hvt/post_dft.drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: fm_shell -file 5_FM_N2N/0_Script/run_fm_n2n_topo_no_or2x1_hvt.tcl
+Stage: Formality N2N OR2X1_HVT dont_use probe
+Result: PASS
+Notes: no_or2x1_hvt pre-DFT vs post-DFT functional verification succeeded. 2243 compare points passed and 0 failed. Expected scan/clock-gate non-compare handling remains consistent with the main flow.
+Evidence: 5_FM_N2N/4_Report/no_or2x1_hvt/n2n_topo_no_or2x1_hvt.failing_points.rpt, 5_FM_N2N/4_Report/no_or2x1_hvt/n2n_topo_no_or2x1_hvt.passing_points.post_verify.rpt, and 5_FM_N2N/2_Output/n2n_topo_no_or2x1_hvt_fm_session.fss.
+```
+
+```text
+Date: 2026-05-09
+Command: pt_shell -f 6_STA/0_Script/run_pt_post_dft_10ns_sdf_no_or2x1_hvt.tcl -output_log_file 6_STA/3_Log/pt_post_dft_10ns_sdf_no_or2x1_hvt.log
+Stage: PrimeTime post-DFT SDF STA OR2X1_HVT dont_use probe
+Result: PASS_WITH_PHYSICAL_DRC_OPEN
+Notes: SDF read has 0 errors. Setup and hold are met at 10ns. Worst setup slack observed is about 1.82ns and worst hold slack about 0.05ns. Max cap/transition violations remain physical-cleanup items.
+Evidence: 6_STA/3_Log/pt_post_dft_10ns_sdf_no_or2x1_hvt.log and 6_STA/4_Report/post_dft_topo_sdf_no_or2x1_hvt/.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_hvt POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_hvt.sdc CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_hvt.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_hvt/route_combo_no_or2x1_hvt.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route trial using OR2X1_HVT dont_use handoff
+Result: BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Route completes with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. check_routes reports 203 DRCs, all Off-grid. This improves the current-best route DRC from 368 to 203, and removes the previous spacing/fat-contact classes from the final check_routes summary. ZRT-044 for MUX41X2_HVT/S0 remains, so OR2X1_HVT is confirmed as one major DRC contributor but not the sole root cause.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_hvt/route_combo_no_or2x1_hvt.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: DC topo -> FM R2N -> DFT -> FM N2N -> PT SDF STA for no_or2x1_nor2x02_hvt
+Stage: Front-end validation for OR2X1_HVT + NOR2X0_HVT + NOR2X2_HVT dont_use probe
+Result: PASS
+Notes: Mixed-VT remains enabled. The three target HVT cells are absent from the synthesized reference list. R2N Formality passed with 2243 passing and 0 failing compare points. DFT generated post-DFT DDC/VG/SDC/SDF/SPF/scan DEF with 1 scan chain and 2130 scan cells. N2N Formality passed with 2243 passing and 0 failing compare points. PrimeTime post-DFT SDF read had 0 errors and global timing reports no setup or hold violations. DFT DRC keeps the existing TEST-505 constant-1 clock-gate note.
+Evidence: 2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_nor2x02_hvt.log, 2_Synthesis/4_Report/topo_no_or2x1_nor2x02_hvt/post_compile.references.rpt, 2.5_FM_R2N/4_Report/no_or2x1_nor2x02_hvt/r2n_topo_no_or2x1_nor2x02_hvt.passing_points.post_verify.rpt, 3_DFT/4_Report/topo_no_or2x1_nor2x02_hvt/post_dft.drc.rpt, 5_FM_N2N/4_Report/no_or2x1_nor2x02_hvt/n2n_topo_no_or2x1_nor2x02_hvt.passing_points.post_verify.rpt, and 6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x02_hvt/post_dft_no_or2x1_nor2x02_hvt.func_tt_10ns_sdf.global_timing.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x02_hvt POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x02_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x02_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x02_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x02_hvt.sdc CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x02_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x02_hvt.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route trial using OR2X1_HVT + NOR2X0_HVT + NOR2X2_HVT dont_use handoff
+Result: BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Route completes with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. check_routes reports 188 DRCs: Off-grid 186 and Diff net spacing 2. This improves no_or2x1_hvt route DRC from 203 to 188, but the improvement is small. Detailed matrix is M1 8, M2 88, M7 1, VIA1 91. ZRT-044 for MUX41X2_HVT/S0 remains. Representative marker context now points mostly to NOR2X1_HVT, then OR2X4_HVT/FADDX*_HVT/NOR2X4_HVT.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/99_marker_context/marker_context.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: DC topo -> FM R2N -> DFT -> FM N2N -> PT SDF STA for no_or2x1_nor2x012_hvt
+Stage: Front-end validation for OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT dont_use probe
+Result: PASS
+Notes: Mixed-VT remains enabled. The target OR2X1/NOR2X0/NOR2X1/NOR2X2_HVT cells are absent from the synthesized reference list. DC timing is met at 10ns with worst visible slack about 1.69ns and pre-DFT cell area 45309.30. R2N Formality passed with 2243 passing and 0 failing compare points. DFT generated post-DFT DDC/VG/SDC/SDF/SPF/scan DEF with 1 scan chain and 2130 scan cells. N2N Formality passed with 2243 passing and 0 failing compare points. PrimeTime post-DFT SDF read had 0 errors and global timing reports no setup or hold violations.
+Evidence: 2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_nor2x012_hvt.log, 2_Synthesis/4_Report/topo_no_or2x1_nor2x012_hvt/post_compile.references.rpt, 2.5_FM_R2N/4_Report/no_or2x1_nor2x012_hvt/r2n_topo_no_or2x1_nor2x012_hvt.passing_points.post_verify.rpt, 3_DFT/4_Report/topo_no_or2x1_nor2x012_hvt/post_dft.drc.rpt, 5_FM_N2N/4_Report/no_or2x1_nor2x012_hvt/n2n_topo_no_or2x1_nor2x012_hvt.passing_points.post_verify.rpt, and 6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x012_hvt/post_dft_no_or2x1_nor2x012_hvt.func_tt_10ns_sdf.global_timing.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x012_hvt POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.sdc CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt/route_combo_no_or2x1_nor2x012_hvt.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route trial using OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT dont_use handoff
+Result: BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Route completes with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Detailed matrix is M1 5, M2 53, VIA1 52. This improves no_or2x1_nor2x02_hvt route DRC from 188 to 110, confirming NOR2X1_HVT as a major remaining off-grid contributor. ZRT-044 for MUX41X2_HVT/S0 remains. Representative marker context after this trial is dominated by NOR2X4_HVT 72 and SDFFARX1_RVT 31.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt/route_combo_no_or2x1_nor2x012_hvt.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/99_marker_context/marker_context.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: DC topo -> FM R2N -> DFT -> FM N2N -> PT SDF STA for no_or2x1_nor2x0124_hvt
+Stage: Front-end validation for OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT + NOR2X4_HVT dont_use probe
+Result: PASS
+Notes: Mixed-VT remains enabled. The target OR2X1/NOR2X0/NOR2X1/NOR2X2/NOR2X4_HVT cells are absent from the synthesized reference list. DC timing is met at 10ns with worst visible slack about 1.82ns, pre-DFT cell area 45487.20, and 14302 cells. R2N Formality passed with 2243 passing and 0 failing compare points. DFT generated post-DFT DDC/VG/SDC/SDF/SPF/scan DEF with 1 scan chain and 2130 scan cells. N2N Formality passed with 2243 passing and 0 failing compare points. PrimeTime post-DFT SDF read had 0 errors and global timing reports no setup or hold violations.
+Evidence: 2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_nor2x0124_hvt.log, 2_Synthesis/4_Report/topo_no_or2x1_nor2x0124_hvt/post_compile.references.rpt, 2.5_FM_R2N/4_Report/no_or2x1_nor2x0124_hvt/r2n_topo_no_or2x1_nor2x0124_hvt.passing_points.post_verify.rpt, 3_DFT/4_Report/topo_no_or2x1_nor2x0124_hvt/post_dft.drc.rpt, 5_FM_N2N/4_Report/no_or2x1_nor2x0124_hvt/n2n_topo_no_or2x1_nor2x0124_hvt.passing_points.post_verify.rpt, and 6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x0124_hvt/post_dft_no_or2x1_nor2x0124_hvt.func_tt_10ns_sdf.global_timing.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x0124_hvt POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x0124_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x0124_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x0124_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x0124_hvt.sdc CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x0124_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x0124_hvt.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route trial using OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT + NOR2X4_HVT dont_use handoff
+Result: REJECTED
+Notes: Route completes with open nets 0, legality 0, PG connectivity clean, and PG DRC clean, but check_routes reports 481 DRCs. This is much worse than the no_or2x1_nor2x012_hvt route at 110 DRC. Detailed matrix is M1 3, M2 232, M7 1, VIA1 245; Off-grid alone is 477. Synthesis cell count increased 13880 -> 14302 and NOR2X4_HVT removal caused broader restructuring, including many more small/replacement cells. Therefore NOR2X4_HVT is context/correlation, not a valid broad dont_use fix.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x012_hvt_restore POST_DFT_NETLIST=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg POST_DFT_SDC=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.sdc CORE_UTILIZATION=0.60 SIGNAL_MAX_ROUTING_LAYER=M8 SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.scan.def PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore/route_combo_no_or2x1_nor2x012_hvt_restore.log -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route restore using OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT dont_use handoff
+Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Route completes with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. This restores the current best MVT repair baseline after the rejected NOR2X4_HVT broad dont_use trial.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore/route_combo_no_or2x1_nor2x012_hvt_restore.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: ICC2 DRC detail + full marker context + report_cell_pin_access coordinate match for route_combo_no_or2x1_nor2x012_hvt_restore
+Stage: ICC2 remaining DRC root-cause diagnosis
+Result: ROOT_CAUSE_NARROWED
+Notes: Full DRC detail confirms 110 DRCs: Off-grid 104, Diff net spacing 5, Short 1. Full marker context maps nearby ref cells to NOR2X4_HVT 85, OR2X4_HVT 16, SDFFARX1_RVT 7, and NOR2X0_HVT 2. Coordinate matching shows 103 of 110 markers align within 0.08um to report_cell_pin_access points, all on A2 routable access. The matched markers are NOR2X4_HVT/A2 85, OR2X4_HVT/A2 16, and NOR2X0_HVT/A2 2. This indicates a route/check grid or via/contact generation mismatch around HVT OR/NOR A2 access, not simple blocked pin access.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore/route_combo_no_or2x1_nor2x012_hvt_restore_drc_detail.log, 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore/route_combo_no_or2x1_nor2x012_hvt_restore_marker_context_all.log, 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore/route_combo_no_or2x1_nor2x012_hvt_restore_pin_access.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/drc.matrix.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/report_cell_pin_access.targets.details.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no012_no_extra_offgrid_tracks ... ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=false ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route option trial on no_or2x1_nor2x012_hvt handoff
+Result: REJECTED
+Notes: Disabling route.detail.generate_extra_off_grid_pin_tracks does not fix the HVT OR/NOR A2 off-grid issue. route_auto ended at 114 DRC and final check_routes reports 113 DRCs: Off-grid 107, Diff net spacing 4, Short 2. This is worse than the current best 110-DRC baseline. Open nets remain 0, legality remains 0, PG connectivity remains clean, and PG DRC has no errors.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no012_no_extra_offgrid_tracks/route_combo_no012_no_extra_offgrid_tracks.log, 7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x012_hvt_restore2 ... ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route restore after rejected no-extra-offgrid-tracks trial
+Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Saved ICC2 block was restored to the current best no_or2x1_nor2x012_hvt physical baseline. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore2/route_combo_no_or2x1_nor2x012_hvt_restore2.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore2/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore2/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore2/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore2/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no012_a2_lvt_swap ... ECO_SWAP_FILE=configs/backend/a2_offgrid_hvt_to_lvt_swap.tsv ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 targeted ECO swap trial for HVT OR/NOR A2 off-grid markers
+Result: WEAK_IMPROVEMENT_REJECTED_AS_ROOT_FIX
+Notes: The 52 matched A2-marker instances were all size_cell PASS at init. Final check_routes reports 109 DRCs: Off-grid 108 and Same net spacing 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors. Final-ref audit shows optimizer did not keep any requested LVT swap: 41 NOR2X4_RVT, 8 OR2X4_RVT, 2 NOR2X0_HVT, and 1 NOR2X4_HVT. Therefore the 110 -> 109 change is not valid evidence that LVT geometry fixes the A2 issue.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/pg_drc.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/drc_detail/drc.matrix.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/99_eco_swap_final_ref/eco_swap_final_ref.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no012_a2_lvt_swap_dt ... ECO_SWAP_FILE=configs/backend/a2_offgrid_hvt_to_lvt_swap.tsv ECO_SWAP_DONT_TOUCH=true ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 targeted ECO swap trial with requested LVT refs preserved
+Result: REJECTED
+Notes: The same 52 matched instances were swapped to LVT and marked dont_touch. Final-ref audit confirms all 52 kept the requested LVT refs: 43 NOR2X4_LVT, 8 OR2X4_LVT, and 1 NOR2X0_LVT. check_routes reports 110 DRCs: Off-grid 109 and Same net spacing 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors. This disproves "the remaining A2 DRC is fixed by forcing those matched HVT cells to LVT". The root cause remains route/check grid or via/contact generation around OR/NOR A2 access, not simply HVT-vs-LVT cell choice.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/pg_connectivity.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/pg_drc.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/99_eco_swap_final_ref/eco_swap_final_ref.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x012_hvt_restore3 ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route restore after rejected A2 LVT ECO trials
+Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Saved ICC2 block was restored to the no_or2x1_nor2x012_hvt baseline. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/route_combo_no_or2x1_nor2x012_hvt_restore3.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no012_vialadder_center_track ... ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ=true ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route access policy probe for pattern-must-join off-grid pin shapes
+Result: REJECTED_AS_FIX_BUT_USEFUL_CAUSE_EVIDENCE
+Notes: The option route.auto_via_ladder.generate_center_track_on_off_grid_pattern_must_join_pin_shapes was enabled. During detail route the DRC count temporarily moved as low as 109 and Off-grid as low as 101, but final check_routes is again 110 DRC: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors. This does not close DRC, but it reinforces that via ladder / pattern-must-join / pin access grid behavior is connected to the remaining A2 off-grid class.
+Evidence: 7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/route_auto_via_ladder_app_options.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_drc.rpt.
+```
+
+```text
+Date: 2026-05-09
+Command: env TRIAL_NAME=route_combo_no_or2x1_nor2x012_hvt_restore4 ... icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
+Stage: ICC2 route restore after rejected via-ladder center-track probe
+Result: RESTORED_BEST_CURRENT_OPEN_CAUSE_EVIDENCE
+Notes: Saved ICC2 block was restored to the no_or2x1_nor2x012_hvt baseline after rejecting the via-ladder center-track probe. check_routes reports 110 DRCs: Off-grid 104, Diff net spacing 5, and Short 1. Open nets are 0, legality is 0, PG connectivity is clean, and PG DRC has no errors.
+Evidence: 7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/route_combo_no_or2x1_nor2x012_hvt_restore4.log, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore4/06_route/pg_drc.rpt.
+```

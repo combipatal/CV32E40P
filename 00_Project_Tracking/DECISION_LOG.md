@@ -652,3 +652,703 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/check_legality.rpt
   7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/pg_drc.rpt
 ```
+
+## no_mux41x_hvt Decision
+
+```text
+Date: 2026-05-09
+Decision: reject MUX41X*_HVT dont_use as a backend DRC fix
+Reason:
+  the front-end experiment is functionally valid
+  DC replaced 67 MUX41X1_HVT cells with 67 MUX41X1_RVT cells
+  R2N and N2N both pass with 2243 passing and 0 failing compare points
+  DFT, ATPG, and PT SDF STA remain usable
+  backend route_combo_no_mux41x_hvt has 399 route DRCs
+  current best route_combo_scan_def_m8 has 381 route DRCs
+Conclusion:
+  MUX41X*_HVT pin access remains a confirmed library weakness
+  but avoiding MUX41X*_HVT alone does not fix this backend route problem
+  keep route_combo_scan_def_m8 as the current best backend candidate
+Next action:
+  continue root-cause work on PG M2 mesh + stdcell pin access + M2/VIA1 contact policy
+Evidence:
+  docs/backend/no_mux41x_hvt_experiment_2026_05_09.md
+  2_Synthesis/4_Report/topo_no_mux41x_hvt/post_compile.references.rpt
+  5_FM_N2N/4_Report/no_mux41x_hvt/n2n_topo_no_mux41x_hvt.failing_points.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_mux41x_hvt/06_route/check_routes.rpt
+```
+
+## Local PG M2 Cut Decision
+
+```text
+Date: 2026-05-09
+Decision: treat x=259.8..260.2um VSS M2 PG stripe as a confirmed hotspot contributor, not a standalone fix
+Reason:
+  route_combo_pgcut_vss260 locally removed only the VSS M2 stripe segment inside {{258.0 195.0} {262.0 265.0}}
+  the script recreated the stripe below and above the cut window
+  PG connectivity remains clean for VDD and VSS
+  check_pg_drc reports no errors
+  route open nets remain 0
+  placement legality remains 0
+  route DRC improves from route_combo_scan_def_m8 381 to route_combo_pgcut_vss260 377
+Conclusion:
+  local M2 PG obstruction is a real contributor to the hotspot route DRC
+  the 4-DRC improvement is too small to call PG M2 the sole root cause
+  manual PG shape cutting is diagnosis evidence, not the preferred final implementation method
+Next action:
+  convert the learning from manual PG cut into proper PG planning options
+  test cleaner PG strategy choices around the hotspot: regional M2 keepout/spacing, M2 stripe pitch/offset/width, or higher-metal-only PG in the local window
+Evidence:
+  docs/backend/local_pg_m2_cut_trial_2026_05_09.md
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/03_power/pg_m2_hotspot_cut.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/06_route/pg_drc.rpt
+```
+
+## All-M2 Hotspot PG Cut Decision
+
+```text
+Date: 2026-05-09
+Decision: reject all-M2 hotspot PG cut as current best, but keep it as root-cause evidence
+Reason:
+  route_combo_pgcut_allm2_hotspot cuts VSS x=219.8..220.2, VDD x=239.8..240.2, and VSS x=259.8..260.2 inside {{215.0 195.0} {265.0 265.0}}
+  route open nets remain 0
+  placement legality remains 0
+  PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC is 378, worse than route_combo_pgcut_vss260 at 377
+  diff-net spacing improves strongly, 129/127 -> 96
+  needs-fat-contact worsens, 79/91 -> 113
+Conclusion:
+  M2 PG obstruction is real but cannot be fixed by removing all local M2 PG access.
+  Reducing local M2 PG obstruction changes signal routing and trades spacing failures for M1-M2 contact failures.
+  The next useful experiment is individual stripe isolation, especially x=220 VSS and x=240 VDD.
+Evidence:
+  docs/backend/local_pg_m2_cut_trial_2026_05_09.md
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/03_power/pg_m2_hotspot_cut.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/pg_drc.rpt
+```
+
+## x=240 VDD PG Cut Decision
+
+```text
+Date: 2026-05-09
+Decision: accept x=240 VDD M2 cut as the current best diagnosis candidate, but not as final PG signoff style
+Reason:
+  route_combo_pgcut_vdd240 cuts only VDD x=239.8..240.2 inside {{238.0 195.0} {242.0 265.0}}
+  route open nets remain 0
+  placement legality remains 0
+  PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC is 376
+  this improves route_combo_scan_def_m8 381 -> 376
+  this improves route_combo_pgcut_vss260 377 -> 376
+Conclusion:
+  x=240 VDD M2 stripe is a stronger local obstruction contributor than x=260 VSS alone.
+  The fix direction should convert this manual cut into a proper regional PG strategy.
+  Route DRC is still open, so do not move to post-route signoff yet.
+Next action:
+  isolate x=220 VSS M2 stripe effect
+  then decide whether the clean PG strategy should remove/avoid x=240 only or both x=220/x=240 in the hotspot window
+Evidence:
+  docs/backend/local_pg_m2_cut_trial_2026_05_09.md
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/03_power/pg_m2_hotspot_cut.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/pg_drc.rpt
+```
+
+## x=220 VSS PG Cut Decision
+
+```text
+Date: 2026-05-09
+Decision: reject x=220 VSS M2 cut as current best
+Reason:
+  route_combo_pgcut_vss220 cuts only VSS x=219.8..220.2 inside {{218.0 195.0} {222.0 265.0}}
+  route open nets remain 0
+  placement legality remains 0
+  PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC is 380
+  this is worse than route_combo_pgcut_vdd240 at 376
+Conclusion:
+  x=220 VSS M2 stripe is not the preferred local removal target.
+  It reduces diff-net spacing but worsens M1-M2 needs-fat-contact and short count.
+  Keep x=220 VSS present in the next clean PG strategy.
+Evidence:
+  docs/backend/local_pg_m2_cut_trial_2026_05_09.md
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/03_power/pg_m2_hotspot_cut.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/pg_drc.rpt
+```
+
+## x=240 VDD Restore Decision
+
+```text
+Date: 2026-05-09
+Decision: keep the saved ICC2 block at route_combo_pgcut_vdd240_restore for the next backend investigation step
+Reason:
+  x=220 VSS cut was rejected as best
+  route_combo_pgcut_vdd240_restore reproduces the x=240 VDD result
+  route open nets remain 0
+  placement legality remains 0
+  PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC is 376
+Conclusion:
+  continue from the x=240 VDD diagnosis candidate
+  do not claim backend closure because route DRC remains open
+  next work should replace the manual cut with a cleaner regional PG strategy or equivalent tool-supported PG construction
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_combo_pgcut_vdd240_restore/route_combo_pgcut_vdd240_restore.log
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240_restore/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240_restore/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240_restore/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240_restore/06_route/pg_drc.rpt
+```
+
+## Clean x=240 VDD PG Blockage Decision
+
+```text
+Date: 2026-05-09
+Decision: accept route_combo_pgblock_vdd240 as the current best valid backend candidate
+Reason:
+  manual x=240 VDD cut was replaced by set_pg_strategy -blockage
+  pg_strategies.rpt confirms blockage under core_mesh_strategy
+  blockage target is VDD on M2 in pg_region hotspot_pg_m2_blockage
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC improves from route_combo_pgcut_vdd240 376 to route_combo_pgblock_vdd240 368
+Conclusion:
+  the cleaner PG strategy is better than the manual cut and should become the current backend baseline
+  route DRC is still open, so do not move to post-route signoff yet
+  remaining DRC is still lower-metal/access dominated: M1, M1-M2, M2, VIA1
+Next action:
+  analyze remaining hotspot markers in route_combo_pgblock_vdd240
+  focus on M1-M2 needs-fat-contact and M2/VIA1 off-grid around x=220..260/y=200..260
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/03_power/pg_mesh_trial_settings.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/03_power/pg_strategies.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.matrix.rpt
+```
+
+## Pin-Access Check Option Decision
+
+```text
+Date: 2026-05-09
+Decision: reject route_pgblock_vdd240_pincheck as a new best candidate
+Reason:
+  trial adds only place.legalize.enable_multi_cell_pin_access_check=true
+  VDD/M2 PG strategy blockage is unchanged from current best
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC remains 368
+  detailed DRC matrix is identical to route_combo_pgblock_vdd240
+Conclusion:
+  the single multi-cell pin-access check option does not improve route closure
+  current best remains route_combo_pgblock_vdd240
+  next work should target route grid/via/contact policy or more specific cell/pin access treatment
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/04_place/place_legalize_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/drc_detail/drc.matrix.rpt
+```
+
+## Off-Track Via Region Option Decision
+
+```text
+Date: 2026-05-09
+Decision: reject route_pgblock_vdd240_offtrackvia as a new best candidate
+Reason:
+  trial adds only place.legalize.support_off_track_via_region=true
+  VDD/M2 PG strategy blockage is unchanged from current best
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC remains 368
+  detailed DRC matrix is identical to route_combo_pgblock_vdd240
+Conclusion:
+  the single off-track via-region placement option does not improve route closure
+  current best remains route_combo_pgblock_vdd240
+  next work should target route grid/via/contact policy or specific lower-metal access geometry
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/04_place/place_legalize_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/drc_detail/drc.matrix.rpt
+```
+
+## Route Grid Option Value Decision
+
+```text
+Date: 2026-05-09
+Decision: use single-brace Tcl list text for route grid/via list-pair env values
+Reason:
+  ICC2 man pages show list-pair values for route.common via/grid options
+  shell env value '{{M2 0.5}}' becomes one brace level too deep for set_app_options
+  ICC2 rejects that form with CMD-013 invalid value
+  value probe confirms '{M2 0.5}' is accepted and reports back as {{M2 0.5}}
+Conclusion:
+  future env values should use forms like '{M2 0.5}' or '{VIA1 true}'
+  do not use '{{M2 0.5}}' in shell commands
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/man_extra_via_off_grid_cost_multiplier_by_layer_name.rpt
+  7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/route_grid_option_value_probe.rpt
+```
+
+## M2 Off-Grid Via Cost Decision
+
+```text
+Date: 2026-05-09
+Decision: reject route_pgblock_vdd240_m2offgridcost05b as a new best candidate
+Reason:
+  trial adds route.common.extra_via_off_grid_cost_multiplier_by_layer_name={M2 0.5}
+  route_common_app_options.rpt confirms the option was applied
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC remains 368
+  detailed DRC matrix is identical to route_combo_pgblock_vdd240
+Conclusion:
+  small M2 off-grid via cost increase does not improve route closure
+  current best remains route_combo_pgblock_vdd240
+  next work should test explicit on-grid routing or targeted access geometry, one variable at a time
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/drc_detail/drc.matrix.rpt
+```
+
+## VIA1 On-Grid Route Option Decision
+
+```text
+Date: 2026-05-09
+Decision: reject route_pgblock_vdd240_via1ongrid_b as a new best candidate
+Reason:
+  trial adds route.common.via_on_grid_by_layer_name={VIA1 true}
+  route_common_app_options.rpt confirms the option was applied
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC remains 368
+  DRC type counts remain Diff net spacing 91, Less than minimum area 5, Needs fat contact 120, Off-grid 152
+  ZRT-044 for MUX41X2_HVT/S0 remains
+Conclusion:
+  explicit VIA1 on-grid routing does not improve route closure
+  current best remains route_combo_pgblock_vdd240
+  next work should test signal wire grid policy or targeted lower-metal access geometry, one variable at a time
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/pg_drc.rpt
+```
+
+## M2 Wire-On-Grid Route Option Decision
+
+```text
+Date: 2026-05-09
+Decision: reject route_pgblock_vdd240_m2wireongrid as a new best candidate
+Reason:
+  trial adds route.common.wire_on_grid_by_layer_name={M2 true}
+  route_common_app_options.rpt confirms the option was applied
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC worsens from 368 to 378
+  diff-net spacing improves 91 -> 85
+  needs-fat-contact worsens 120 -> 126
+  off-grid worsens 152 -> 155
+Conclusion:
+  M2 wire grid policy affects the DRC mix, but it does not improve closure
+  current best remains route_combo_pgblock_vdd240
+  next work should inspect exact remaining lower-metal access geometry or test M1 wire grid separately
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/pg_drc.rpt
+```
+
+## M1 Wire-On-Grid Route Option Decision
+
+```text
+Date: 2026-05-09
+Decision: reject route_pgblock_vdd240_m1wireongrid as a new best candidate
+Reason:
+  trial adds route.common.wire_on_grid_by_layer_name={M1 true}
+  route_common_app_options.rpt confirms the option was applied
+  route open nets remain 0
+  placement legality remains 0
+  route-stage PG connectivity remains clean
+  check_pg_drc reports no errors
+  total route DRC worsens from 368 to 380
+  needs-fat-contact improves 120 -> 81
+  diff-net spacing worsens 91 -> 130
+  off-grid worsens 152 -> 158
+Conclusion:
+  M1 wire grid policy affects the DRC mix, but it does not improve closure
+  current best remains route_combo_pgblock_vdd240
+  exact lower-metal access/contact geometry should be inspected before more broad route-policy trials
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/route_common_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/pg_drc.rpt
+```
+
+## Current-Best Route DRC Root-Cause Direction
+
+```text
+Date: 2026-05-09
+Decision: stop broad route-option/cell-ban trials and return to root-cause evidence on current-best 368 DRC route
+Reason:
+  current best route_combo_pgblock_vdd240 is valid as an open backend candidate:
+    open nets 0
+    legality 0
+    PG connectivity clean
+    PG DRC clean
+    route DRC 368
+  geometry residue analysis shows deterministic clustering:
+    M1-M2 needs-fat-contact 120/120 at rx=0.064 ry=0.064 against 0.152um pitch
+    M2 off-grid mostly at rx=0.061..0.066 ry=0.064
+    VIA1 off-grid mostly at rx=0.061..0.066 ry=0.064
+  PG blockage improves route DRC, so PG obstruction is real
+  but 246 of 368 markers are more than 5um from the assumed hotspot M2 PG stripe centers
+Conclusion:
+  remaining DRC is not random congestion and not fixed by one broad route option
+  strongest current root-cause model is:
+    SAED32 stdcell M1 pin/contact geometry
+    plus generated NDM routing grid / VIA1 legality mismatch
+    plus local M2 PG obstruction in the hotspot
+  next probe should map current-best DRC markers to nearby cells and pins before choosing a fix
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_drc.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.geometry_analysis.rpt
+```
+
+## Current-Best Marker Context Decision
+
+```text
+Date: 2026-05-09
+Decision: make OR2X1_HVT and NOR2X*_HVT the next targeted root-cause candidates
+Reason:
+  ICC2 marker context was extracted on 35 representative markers from route_combo_pgblock_vdd240
+  nearby pin ref-cell counts are:
+    OR2X1_HVT 46
+    NOR2X0_HVT 23
+    NOR2X4_HVT 6
+    SDFFARX1_RVT 5
+    AO22X1_HVT 5
+    FADDX2_HVT 3
+    NAND2X0_HVT 2
+  M1 diff-spacing representatives are OR2X1_HVT dominated
+  M1-M2 needs-fat-contact representatives are OR2X1_HVT dominated
+  M2/VIA1 off-grid representatives are NOR2X0_HVT/NOR2X4_HVT dominated
+Conclusion:
+  do not broadly ban random cells
+  SDFFARX1_RVT remains a hotspot contributor, but it is not the main representative pattern
+  next fix trial, if any, should be targeted:
+    OR2X1_HVT sizing/dont_use trial for fat-contact/M1 spacing
+    NOR2X0_HVT/NOR2X4_HVT sizing/dont_use trial for M2/VIA1 off-grid
+    or NDM/tech/pin-access setup inspection for those ref-cell pins
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_context/route_combo_pgblock_vdd240_context.log
+  7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/99_marker_context/marker_context.rpt
+```
+
+## OR2X1_HVT Avoidance Decision
+
+```text
+Date: 2026-05-09
+Decision: keep mixed-VT flow, but treat OR2X1_HVT as a confirmed avoid/replace candidate for the next MVT fix direction
+Reason:
+  OR2X1_HVT dont_use passed the front-end checks:
+    DC topo synthesis passed
+    R2N Formality passed
+    DFT insertion passed
+    N2N Formality passed
+    PT post-DFT SDF STA passed at 10ns
+  Backend route trial with the same current-best physical conditions improved:
+    route DRC 368 -> 203
+    open nets stayed 0
+    legality stayed 0
+    PG connectivity stayed clean
+    PG DRC stayed clean
+  final check_routes for no_or2x1_hvt has only:
+    Off-grid 203
+  ZRT-044 for MUX41X2_HVT/S0 still remains
+Conclusion:
+  OR2X1_HVT was a major contributor to M1 spacing and M1-M2 needs-fat-contact classes
+  but OR2X1_HVT was not the only root cause
+  remaining root-cause target is now the off-grid class, likely tied to other HVT pin-access/grid-sensitive cells such as MUX41X2_HVT and NOR2X*_HVT plus generated NDM/VIA1 behavior
+  do not switch to RVT-only yet
+  continue MVT repair with targeted HVT avoid/replace or NDM/pin-access investigation
+Evidence:
+  2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_hvt.log
+  2.5_FM_R2N/4_Report/no_or2x1_hvt/r2n_topo_no_or2x1_hvt.passing_points.post_verify.rpt
+  3_DFT/3_Log/insert_dft_10ns_topo_no_or2x1_hvt.log
+  5_FM_N2N/4_Report/no_or2x1_hvt/n2n_topo_no_or2x1_hvt.passing_points.post_verify.rpt
+  6_STA/3_Log/pt_post_dft_10ns_sdf_no_or2x1_hvt.log
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/check_routes.rpt
+```
+
+## NOR2X0_HVT/NOR2X2_HVT Follow-Up Probe Decision
+
+```text
+Date: 2026-05-09
+Decision: do not stop at NOR2X0_HVT/NOR2X2_HVT avoidance; continue MVT repair toward remaining NOR2X1_HVT/MUX41X2_HVT pin-access/off-grid causes
+Reason:
+  no_or2x1_hvt remaining route DRC was all Off-grid 203
+  representative markers from no_or2x1_hvt pointed to NOR2X0_HVT/NOR2X2_HVT
+  targeted dont_use of OR2X1_HVT + NOR2X0_HVT + NOR2X2_HVT passed front-end validation:
+    R2N 2243 pass / 0 fail
+    N2N 2243 pass / 0 fail
+    PT post-DFT SDF setup/hold clean
+  backend route DRC improved only 203 -> 188
+  remaining DRC is still dominated by lower-metal off-grid:
+    Off-grid 186
+    Diff net spacing 2
+    M2 88
+    VIA1 91
+  marker context after this probe is dominated by NOR2X1_HVT:
+    NOR2X1_HVT 47
+    OR2X4_HVT 13
+    FADDX2_HVT 12
+    NOR2X4_HVT 8
+    FADDX1_HVT 8
+  ZRT-044 for MUX41X2_HVT/S0 still remains
+Conclusion:
+  NOR2X0_HVT/NOR2X2_HVT were contributors, not the remaining main root cause
+  the root cause is now narrowed to lower-metal M2/VIA1 off-grid behavior around remaining HVT cells, especially NOR2X1_HVT, plus the persistent MUX41X2_HVT/S0 valid-via-region issue
+  MVT should still be kept; fix by targeted cell avoidance or library/pin-access setup, not RVT-only
+Evidence:
+  2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_nor2x02_hvt.log
+  2.5_FM_R2N/4_Report/no_or2x1_nor2x02_hvt/r2n_topo_no_or2x1_nor2x02_hvt.passing_points.post_verify.rpt
+  5_FM_N2N/4_Report/no_or2x1_nor2x02_hvt/n2n_topo_no_or2x1_nor2x02_hvt.passing_points.post_verify.rpt
+  6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x02_hvt/post_dft_no_or2x1_nor2x02_hvt.func_tt_10ns_sdf.global_timing.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/99_marker_context/marker_context.rpt
+```
+
+## NOR2X1_HVT Follow-Up Probe Decision
+
+```text
+Date: 2026-05-09
+Decision: treat NOR2X1_HVT as a confirmed major off-grid contributor; continue with NOR2X4_HVT as the next targeted MVT probe
+Reason:
+  no_or2x1_nor2x02_hvt route had 188 DRCs, dominated by Off-grid 186
+  representative marker context was dominated by NOR2X1_HVT
+  targeted dont_use of OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT passed front-end validation:
+    DC topo timing met at 10ns
+    R2N 2243 pass / 0 fail
+    DFT inserted 1 scan chain / 2130 scan cells
+    N2N 2243 pass / 0 fail
+    PT post-DFT SDF setup/hold clean
+  backend route DRC improved:
+    188 -> 110
+    open nets 0
+    legality 0
+    PG connectivity clean
+    PG DRC clean
+  remaining DRC matrix:
+    M1 5
+    M2 53
+    VIA1 52
+  remaining marker context:
+    NOR2X4_HVT 72
+    SDFFARX1_RVT 31
+    OR2X4_HVT 7
+  ZRT-044 for MUX41X2_HVT/S0 still remains
+Conclusion:
+  NOR2X1_HVT is confirmed as a large lower-metal off-grid contributor
+  route DRC is not closed yet
+  next narrow MVT repair trial should add NOR2X4_HVT avoidance
+  SDFFARX1_RVT is now the main RVT sequential contributor but should be treated carefully because changing scan flops has broader DFT impact
+Evidence:
+  2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_nor2x012_hvt.log
+  2.5_FM_R2N/4_Report/no_or2x1_nor2x012_hvt/r2n_topo_no_or2x1_nor2x012_hvt.passing_points.post_verify.rpt
+  5_FM_N2N/4_Report/no_or2x1_nor2x012_hvt/n2n_topo_no_or2x1_nor2x012_hvt.passing_points.post_verify.rpt
+  6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x012_hvt/post_dft_no_or2x1_nor2x012_hvt.func_tt_10ns_sdf.global_timing.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/99_marker_context/marker_context.rpt
+```
+
+## NOR2X4_HVT Broad Avoidance Rejection
+
+```text
+Date: 2026-05-09
+Decision: reject broad NOR2X4_HVT dont_use as a backend fix
+Reason:
+  no_or2x1_nor2x012_hvt marker context pointed to NOR2X4_HVT near many remaining markers
+  the hypothesis was tested by adding NOR2X4_HVT to the existing avoid list:
+    OR2X1_HVT
+    NOR2X0_HVT
+    NOR2X1_HVT
+    NOR2X2_HVT
+    NOR2X4_HVT
+  front-end validation passed:
+    DC topo timing met at 10ns
+    R2N 2243 pass / 0 fail
+    DFT inserted 1 scan chain / 2130 scan cells
+    N2N 2243 pass / 0 fail
+    PT post-DFT SDF setup/hold clean
+  backend route worsened badly:
+    110 -> 481 route DRC
+    Off-grid 104 -> 477
+    M2 53 -> 232
+    VIA1 52 -> 245
+  open nets stayed 0
+  legality stayed 0
+  PG connectivity stayed clean
+  PG DRC stayed clean
+  synthesis cell count increased:
+    13880 -> 14302
+Conclusion:
+  NOR2X4_HVT appears near remaining markers, but broad removal is not a valid fix
+  removing NOR2X4_HVT causes wider logic restructuring and creates much more M2/VIA1 off-grid routing
+  keep current best cause-evidence baseline as no_or2x1_nor2x012_hvt at 110 DRC
+  next investigation should not add more broad dont_use by marker context alone
+  next target should be pin/access-level diagnosis around the 110-DRC design, especially SDFFARX1_RVT and persistent MUX41X2_HVT/S0 valid-via-region
+Evidence:
+  2_Synthesis/4_Report/topo_no_or2x1_nor2x0124_hvt/post_compile.references.rpt
+  2.5_FM_R2N/4_Report/no_or2x1_nor2x0124_hvt/r2n_topo_no_or2x1_nor2x0124_hvt.passing_points.post_verify.rpt
+  5_FM_N2N/4_Report/no_or2x1_nor2x0124_hvt/n2n_topo_no_or2x1_nor2x0124_hvt.passing_points.post_verify.rpt
+  6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x0124_hvt/post_dft_no_or2x1_nor2x0124_hvt.func_tt_10ns_sdf.global_timing.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/drc_detail/drc.matrix.rpt
+```
+
+## Remaining Off-Grid Root Cause Direction
+
+```text
+Date: 2026-05-09
+Decision: treat remaining 110-DRC baseline as HVT OR/NOR A2 access/grid mismatch, not broad cell-family removal
+Reason:
+  restored no_or2x1_nor2x012_hvt route has 110 DRC:
+    Off-grid 104
+    Diff net spacing 5
+    Short 1
+  full marker context shows repeated nearby ref cells:
+    NOR2X4_HVT 85
+    OR2X4_HVT 16
+    SDFFARX1_RVT 7
+    NOR2X0_HVT 2
+  coordinate matching shows 103 / 110 markers align with report_cell_pin_access coordinates within 0.08um
+  all 103 matched points are A2 routable access points:
+    NOR2X4_HVT/A2: 43 VIA1 off-grid + 42 M2 off-grid
+    OR2X4_HVT/A2: 8 VIA1 off-grid + 8 M2 off-grid
+    NOR2X0_HVT/A2: 1 VIA1 off-grid + 1 M2 off-grid
+  report_cell_pin_access calls these points Routable, but check_routes reports the same locations as Off-grid
+Conclusion:
+  remaining primary issue is route/check grid or contact/via generation mismatch around HVT OR/NOR A2 access
+  NOR2X4_HVT broad dont_use remains rejected because it worsens route DRC to 481
+  next fixes should be targeted:
+    route/access option trial
+    selected instance swap/resize around A2 off-grid markers
+    pin-check-lib / NDM rule validation
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/drc.matrix.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/report_cell_pin_access.targets.details.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+```
+
+## Targeted A2 LVT ECO Rejection
+
+```text
+Date: 2026-05-09
+Decision: reject targeted HVT OR/NOR A2 LVT swap as the current root fix
+Reason:
+  52 instances were selected only when DRC marker coordinates matched HVT OR/NOR A2 access coordinates:
+    43 NOR2X4_HVT -> NOR2X4_LVT
+    8 OR2X4_HVT -> OR2X4_LVT
+    1 NOR2X0_HVT -> NOR2X0_LVT
+  first ECO swap trial applied all 52 swaps at init, but final optimization changed every requested LVT ref away:
+    41 NOR2X4_RVT
+    8 OR2X4_RVT
+    2 NOR2X0_HVT
+    1 NOR2X4_HVT
+  that trial reported only weak numeric movement:
+    110 -> 109 route DRC
+  second ECO swap trial added dont_touch to preserve requested LVT refs:
+    43 NOR2X4_LVT
+    8 OR2X4_LVT
+    1 NOR2X0_LVT
+  preserved-LVT trial still reports 110 route DRC:
+    Off-grid 109
+    Same net spacing 1
+Conclusion:
+  remaining A2 DRC is not solved by simply forcing matched HVT OR/NOR instances to LVT
+  the cause remains route/check grid or via/contact generation around OR/NOR A2 access
+  keep MVT flow
+  do not broad-ban NOR2X4_HVT
+  next probe should inspect NDM/LEF pin access/grid/via definitions or routing access options, not another blind VT swap
+Evidence:
+  configs/backend/a2_offgrid_hvt_to_lvt_swap.tsv
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/01_init_design/eco_swap.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/99_eco_swap_final_ref/eco_swap_final_ref.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/99_eco_swap_final_ref/eco_swap_final_ref.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/check_routes.rpt
+```
+
+## Via-Ladder Center-Track Probe Rejection
+
+```text
+Date: 2026-05-09
+Decision: reject route.auto_via_ladder.generate_center_track_on_off_grid_pattern_must_join_pin_shapes=true as a fix
+Reason:
+  option was selected because route/check logs repeatedly report via ladder activation for pattern-must-join connection
+  final check_routes remains 110 DRC:
+    Off-grid 104
+    Diff net spacing 5
+    Short 1
+  open nets remain 0
+  legality remains 0
+  PG connectivity and PG DRC remain clean
+Conclusion:
+  this option is not sufficient to fix the remaining route DRC
+  because intermediate routing iterations moved Off-grid as low as 101, the route access / via-ladder / pattern-must-join mechanism is still likely related
+  continue MVT flow
+  current best root-cause model remains OR/NOR A2 pin access versus route/check grid or VIA1/contact generation mismatch
+Evidence:
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/route_auto_via_ladder_app_options.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_drc.rpt
+```

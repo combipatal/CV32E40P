@@ -12,11 +12,15 @@ reproduce -> marker 분해 -> 가설 작성 -> 가설별 probe -> fix trial
 
 ## 재현 loop
 
-기준 상태는 `scan_def_m8_restore`이다.
+기준 상태는 이제 `route_combo_pgblock_vdd240`이다.
+
+이전 기준 `scan_def_m8_restore`는 398 DRC였고, 원인 탐색용으로 유효했다.
+하지만 x=240 VDD/M2 hotspot PG strategy blockage가 PG clean 상태로 DRC를 368까지 낮췄으므로,
+이제 남은 DRC의 근본 원인은 368 DRC 기준으로 본다.
 
 ```text
 open nets: 0
-route DRC: 398
+route DRC: 368
 legality: 0 violations
 PG connectivity: floating 0
 PG DRC: clean
@@ -25,30 +29,42 @@ PG DRC: clean
 증거:
 
 ```text
-7_Backend_ICC2/4_Report/trials/scan_def_m8_restore/06_route/check_routes.rpt
-7_Backend_ICC2/4_Report/06_route/drc_detail/drc.matrix.rpt
-7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/all_drc_markers.tsv
-7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/marker_context.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.geometry_analysis.rpt
 ```
 
 이 loop는 빠르게 다시 확인할 수 있다.
 
 ```text
-icc2_shell -batch -f 7_Backend_ICC2/0_Script/06_route/run_route_drc_detail.tcl
+env TRIAL_NAME=route_combo_pgblock_vdd240 \
+  CORE_UTILIZATION=0.60 \
+  SIGNAL_MAX_ROUTING_LAYER=M8 \
+  SCAN_DEF_FILE=3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.scan.def \
+  PG_M2_HOTSPOT_BLOCKAGE_ENABLE=1 \
+  PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY='{{238.0 195.0} {242.0 265.0}}' \
+  PG_M2_HOTSPOT_BLOCKAGE_NETS='VDD' \
+  PG_M2_HOTSPOT_BLOCKAGE_LAYERS='M2' \
+  ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS=true \
+  ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL=high \
+  ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL=high \
+  icc2_shell -batch -f 7_Backend_ICC2/0_Script/99_util/run_trial_60util_to_route.tcl
 ```
 
 ## 전체 DRC 분포
 
-Fresh detail extraction 기준:
+현재 best detail extraction 기준:
 
 ```text
-total DRC: 398
+total DRC: 368
 
-Diff net spacing       M1 116, M2 4
-Needs fat contact      M1-M2 99
-Off-grid               M1 10, M2 78, VIA1 82
-Less than minimum area M2 8
-Short                  M1 1
+Needs fat contact      M1-M2 120
+Diff net spacing       M1 89, M2 2
+Off-grid               VIA1 79, M2 70, M1 3
+Less than minimum area M2 5
 ```
 
 판단:
@@ -56,6 +72,7 @@ Short                  M1 1
 ```text
 문제는 top-level open/PG/legality가 아니다.
 문제는 M1/M2/VIA1 lower-metal route access 쪽이다.
+PG blockage로 일부 줄었지만 남은 368개는 여전히 lower-metal/contact/grid 문제다.
 ```
 
 ## Hotspot 분포
@@ -66,21 +83,83 @@ Short                  M1 1
 {{215.0 195.0} {265.0 265.0}}
 ```
 
-이 영역 안에 DRC marker 123개가 있다.
+이 영역 안에 DRC marker 120개가 있다.
 
 ```text
 Off-grid VIA1          48
-Off-grid M2            46
-Diff net spacing M1    18
-Needs fat contact      10
+Off-grid M2            42
+Needs fat contact      16
+Diff net spacing M1    12
 Off-grid M1             1
+Less than min area M2   1
 ```
 
 판단:
 
 ```text
-hotspot의 주 증상은 M2/VIA1 off-grid다.
-전체 DRC에서는 fat-contact도 크지만, hotspot 내부만 보면 off-grid가 우세하다.
+hotspot의 주 증상은 여전히 M2/VIA1 off-grid다.
+하지만 current best에서는 M1-M2 needs-fat-contact도 hotspot 안에 남아 있다.
+```
+
+## Current-Best Geometry Residue Probe
+
+남은 DRC marker 좌표를 0.152um pitch 기준으로 residue 분석했다.
+
+증거:
+
+```text
+scripts/analyze_route_drc_geometry.py
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/all_drc_markers.tsv
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.geometry_analysis.rpt
+```
+
+핵심 결과:
+
+```text
+Needs fat contact M1-M2:
+  rx=0.064 ry=0.064 : 120/120
+
+Off-grid VIA1:
+  rx=0.061 ry=0.064 : 65
+  rx=0.066 ry=0.064 : 13
+  rx=0.062 ry=0.064 : 1
+
+Off-grid M2:
+  rx=0.061 ry=0.064 : 59
+  rx=0.066 ry=0.064 : 10
+  rx=0.062 ry=0.064 : 1
+
+Less than min area M2:
+  rx=0.064 ry=0.064 : 5/5
+
+Diff net spacing M1:
+  rx=0.064 dominates, ry near 0.000 or 0.025
+```
+
+판단:
+
+```text
+남은 DRC는 랜덤 congestion 문제가 아니다.
+M1-M2 needs-fat-contact 120개가 전부 같은 residue에 걸린다.
+M2/VIA1 off-grid도 거의 같은 residue cluster에 몰린다.
+따라서 root cause는 routing option 하나보다
+SAED32 stdcell M1 pin/contact geometry, generated NDM routing grid, VIA1/contact legality,
+그리고 local PG obstruction이 맞물린 lower-metal access mismatch로 보는 것이 맞다.
+```
+
+PG 거리 분석:
+
+```text
+전체 368 marker 중 M2 PG stripe 5um 밖: 246
+hotspot M2 PG stripe 5um 안 marker: 59
+```
+
+판단:
+
+```text
+PG는 분명히 공범이다.
+하지만 전체 DRC 대부분은 PG stripe 근처만으로 설명되지 않는다.
+PG만 지워서는 closure가 안 되는 이유다.
 ```
 
 ## 대표 marker 관찰
@@ -342,14 +421,201 @@ scan DEF 부재는 현재 hotspot DRC의 주원인이 아니다.
 
 ## 현재 결론
 
-아직 root cause는 확정하지 않았다.
+완전한 closure root cause는 아직 1개로 확정하지 않았다.
+하지만 broad trial 단계보다 원인은 훨씬 구체화됐다.
 
 현재 가장 강한 판단은:
 
 ```text
 hotspot DRC는 단순 배치 밀도 문제가 아니다.
-핵심 증상은 ALU/div hotspot 주변의 stdcell pin access와 M2/VIA1 off-grid다.
-PG M2 mesh는 일부 marker에서 강한 공범 후보지만, 단독 원인으로 확정되지는 않았다.
+남은 368 DRC는 deterministic lower-metal access 문제다.
+M1-M2 needs-fat-contact는 전부 같은 grid residue에 걸린다.
+M2/VIA1 off-grid도 거의 같은 residue cluster에 몰린다.
+PG M2 mesh는 route DRC에 영향을 주는 공범이지만, 단독 원인은 아니다.
+가장 강한 root-cause model:
+  SAED32 stdcell M1 pin/contact geometry
+  + generated NDM routing grid / VIA1 legality mismatch
+  + local M2 PG obstruction
+```
+
+다음 원인 probe:
+
+```text
+route_combo_pgblock_vdd240의 남은 368 DRC marker를 current block 기준으로 다시 cell/pin context에 매핑한다.
+목표는 어떤 ref cell/pin이 needs-fat-contact 120개와 M2/VIA1 off-grid residue cluster를 만드는지 확인하는 것이다.
+이 확인 전에는 broad dont_use, broad PG blockage, broad route option trial을 늘리지 않는다.
+```
+
+## Targeted HVT Avoidance 결과
+
+### OR2X1_HVT
+
+결과:
+
+```text
+route DRC: 368 -> 203
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+판단:
+
+```text
+OR2X1_HVT는 M1 spacing / M1-M2 needs-fat-contact의 큰 원인이 맞다.
+하지만 남은 DRC는 모두 Off-grid라서 root cause가 끝난 것은 아니다.
+```
+
+### NOR2X0_HVT + NOR2X2_HVT
+
+결과:
+
+```text
+route DRC: 203 -> 188
+Off-grid: 186
+M2: 88
+VIA1: 91
+```
+
+판단:
+
+```text
+NOR2X0_HVT/NOR2X2_HVT는 contributor지만 효과는 작다.
+남은 marker context는 NOR2X1_HVT 쪽으로 이동했다.
+```
+
+### NOR2X1_HVT
+
+결과:
+
+```text
+route DRC: 188 -> 110
+Off-grid: 104
+Diff net spacing: 5
+Short: 1
+
+matrix:
+  M1: 5
+  M2: 53
+  VIA1: 52
+```
+
+판단:
+
+```text
+NOR2X1_HVT는 major lower-metal off-grid contributor로 확정한다.
+MVT 자체는 여전히 유지 가능하다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/99_marker_context/marker_context.rpt
+```
+
+### NOR2X4_HVT broad dont_use
+
+결과:
+
+```text
+front-end: pass
+route DRC: 110 -> 481
+Off-grid: 477
+M2: 232
+VIA1: 245
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+판단:
+
+```text
+NOR2X4_HVT는 marker context에 많이 보였지만 broad dont_use fix는 아니다.
+NOR2X4_HVT 제거는 합성 구조를 크게 바꿔서 small/replacement cell과 routing demand를 늘린다.
+cell count도 13880 -> 14302로 증가했다.
+따라서 "marker 주변 ref cell = 무조건 dont_use" 접근은 여기서 중단한다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/drc_detail/drc.matrix.rpt
+2_Synthesis/4_Report/topo_no_or2x1_nor2x0124_hvt/post_compile.references.rpt
+```
+
+현재 best cause-evidence 상태:
+
+```text
+trial: route_combo_no_or2x1_nor2x012_hvt
+route DRC: 110
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: clean
+```
+
+다음 원인 조사 방향:
+
+```text
+1. 110-DRC design을 기준으로 본다.
+2. broad dont_use를 더 늘리지 않는다.
+3. SDFFARX1_RVT와 MUX41X2_HVT/S0의 pin-access/valid-via-region 문제를 직접 본다.
+4. 필요하면 "셀 전체 금지"가 아니라 pin/access-aware placement, scan flop option, 또는 NDM/LEF pin access 설정 쪽을 먼저 검토한다.
+```
+
+## Current-Best Marker Context Probe
+
+current-best 368 DRC에서 대표 marker 35개를 다시 ICC2 current block에 매핑했다.
+
+증거:
+
+```text
+7_Backend_ICC2/0_Script/99_util/run_drc_marker_context.tcl
+7_Backend_ICC2/3_Log/trials/route_combo_pgblock_vdd240_context/route_combo_pgblock_vdd240_context.log
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/representative_summary.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/99_marker_context/marker_context.rpt
+```
+
+대표 marker의 nearby pin ref 분포:
+
+```text
+OR2X1_HVT      46
+NOR2X0_HVT     23
+NOR2X4_HVT      6
+SDFFARX1_RVT    5
+AO22X1_HVT      5
+FADDX2_HVT      3
+NAND2X0_HVT     2
+```
+
+관찰:
+
+```text
+M1 diff spacing 대표 3개는 모두 OR2X1_HVT 근처다.
+Needs-fat-contact 대표들은 대부분 OR2X1_HVT 근처다.
+M2/VIA1 off-grid 대표들은 NOR2X0_HVT/NOR2X4_HVT 근처가 반복된다.
+일부 off-grid 대표는 x=240 VDD M8 PG stripe 또는 x=260 VSS M2/M8 PG stripe 근처다.
+하지만 많은 대표 marker는 signal M2/M3/M4 route와 stdcell pin만으로도 설명된다.
+```
+
+업데이트된 판단:
+
+```text
+OR2X1_HVT는 current-best 남은 needs-fat-contact/M1 spacing의 가장 강한 ref-cell 후보이다.
+NOR2X0_HVT/NOR2X4_HVT는 M2/VIA1 off-grid의 가장 강한 ref-cell 후보이다.
+SDFFARX1_RVT는 hotspot contributor지만 대표 marker 기준 전체 주범은 아니다.
+다음 fix 후보는 broad dont_use가 아니라 ref-cell별 targeted trial이어야 한다.
+우선순위:
+  1. OR2X1_HVT 관련 M1-M2 fat-contact/M1 spacing 원인 확인
+  2. NOR2X0_HVT/NOR2X4_HVT 관련 M2/VIA1 off-grid 원인 확인
+  3. 필요 시 해당 ref cell만 dont_use 또는 sizing 대체 trial
+  4. 동시에 NDM/tech pin-access setup에서 이 ref cell pin access가 왜 같은 residue에 걸리는지 확인
 ```
 
 ## PG M2 Distance Probe
@@ -601,4 +867,467 @@ MUX41X2_HVT/S0 valid via region 경고는 stdcell pin access / LEF-built NDM acc
   stdcell valid via region / pin access data issue
   M2/VIA1 route policy sensitivity
   PG M2 mesh obstruction as a contributing factor
+```
+
+## OR2X1_HVT Targeted MVT Probe
+
+조건:
+
+```text
+trial: route_combo_no_or2x1_hvt
+flow: MVT 유지, OR2X1_HVT만 dont_use
+front-end: DC topo -> R2N -> DFT -> N2N -> PT post-DFT SDF
+backend: current-best route_combo_pgblock_vdd240 조건 재사용
+```
+
+증거:
+
+```text
+2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_hvt.log
+2_Synthesis/4_Report/topo_no_or2x1_hvt/post_compile.references.rpt
+2.5_FM_R2N/4_Report/no_or2x1_hvt/r2n_topo_no_or2x1_hvt.passing_points.post_verify.rpt
+3_DFT/3_Log/insert_dft_10ns_topo_no_or2x1_hvt.log
+5_FM_N2N/4_Report/no_or2x1_hvt/n2n_topo_no_or2x1_hvt.passing_points.post_verify.rpt
+6_STA/3_Log/pt_post_dft_10ns_sdf_no_or2x1_hvt.log
+7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_hvt/route_combo_no_or2x1_hvt.log
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/pg_drc.rpt
+```
+
+결과:
+
+```text
+OR2X1_HVT reference: removed from post_compile.references.rpt
+R2N: PASS, 2243 pass / 0 fail
+DFT: post-DFT netlist, SDC, SDF, SPF, scan DEF generated
+N2N: PASS, 2243 pass / 0 fail
+PT SDF STA: setup/hold met at 10ns
+ICC2 route open nets: 0
+ICC2 legality: 0 violations
+ICC2 PG connectivity: clean
+ICC2 PG DRC: clean
+ICC2 route DRC: 368 -> 203
+final DRC type: Off-grid 203 only
+```
+
+판단:
+
+```text
+OR2X1_HVT는 M1 spacing / M1-M2 needs-fat-contact 계열의 큰 원인이다.
+하지만 단독 root cause는 아니다.
+
+이유:
+  route DRC가 크게 줄었지만 0은 아니다.
+  남은 DRC가 전부 Off-grid로 재정렬됐다.
+  로그에서 ZRT-044 MUX41X2_HVT/S0 no valid via regions가 계속 반복된다.
+  NOR2X*_HVT도 이전 marker context에서 M2/VIA1 off-grid 대표 셀로 잡혔다.
+
+현재 원인 모델:
+  MVT 자체를 버릴 문제는 아니다.
+  특정 HVT cell pin/contact geometry가 ICC2 routing grid/VIA1 access와 맞지 않는다.
+  OR2X1_HVT는 spacing/fat-contact 축의 주요 셀이다.
+  남은 축은 MUX41X2_HVT, NOR2X*_HVT, generated NDM/VIA1 off-grid behavior다.
+```
+
+## OR2X1 + NOR2X0/NOR2X2 Targeted Probe
+
+조건:
+
+```text
+trial: route_combo_no_or2x1_nor2x02_hvt
+flow: MVT 유지, OR2X1_HVT + NOR2X0_HVT + NOR2X2_HVT dont_use
+front-end: DC topo -> R2N -> DFT -> N2N -> PT post-DFT SDF
+backend: route_combo_no_or2x1_hvt와 같은 current-best physical 조건 재사용
+```
+
+증거:
+
+```text
+2_Synthesis/3_Log/compile_10ns_topo_no_or2x1_nor2x02_hvt.log
+2_Synthesis/4_Report/topo_no_or2x1_nor2x02_hvt/post_compile.references.rpt
+2.5_FM_R2N/4_Report/no_or2x1_nor2x02_hvt/r2n_topo_no_or2x1_nor2x02_hvt.passing_points.post_verify.rpt
+3_DFT/4_Report/topo_no_or2x1_nor2x02_hvt/post_dft.drc.rpt
+5_FM_N2N/4_Report/no_or2x1_nor2x02_hvt/n2n_topo_no_or2x1_nor2x02_hvt.passing_points.post_verify.rpt
+6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x02_hvt/post_dft_no_or2x1_nor2x02_hvt.func_tt_10ns_sdf.global_timing.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/99_marker_context/marker_context.rpt
+```
+
+결과:
+
+```text
+R2N: PASS, 2243 pass / 0 fail
+DFT: post-DFT netlist, SDC, SDF, SPF, scan DEF generated
+N2N: PASS, 2243 pass / 0 fail
+PT SDF STA: setup/hold met at 10ns
+ICC2 route open nets: 0
+ICC2 legality: 0 violations
+ICC2 PG connectivity: clean
+ICC2 PG DRC: clean
+ICC2 route DRC: 203 -> 188
+final DRC matrix:
+  M1 8
+  M2 88
+  M7 1
+  VIA1 91
+final DRC type:
+  Off-grid 186
+  Diff net spacing 2
+```
+
+판단:
+
+```text
+NOR2X0_HVT/NOR2X2_HVT 제거는 효과가 작다.
+남은 DRC는 거의 전부 M2/VIA1 Off-grid다.
+대표 marker 주변 ref-cell은 NOR2X1_HVT가 가장 많다.
+MUX41X2_HVT/S0 no valid via region 경고도 그대로 남는다.
+
+현재 더 좁아진 원인 모델:
+  OR2X1_HVT는 spacing/fat-contact 큰 원인으로 확인됐다.
+  NOR2X0/NOR2X2는 일부 off-grid contributor였지만 주범은 아니다.
+  남은 핵심은 NOR2X1_HVT 중심의 HVT lower-metal pin access/grid 문제다.
+  MUX41X2_HVT/S0 valid via region 문제는 별도 persistent root-cause 축이다.
+```
+
+## Remaining 110 DRC Pin-Access Coordinate Diagnosis
+
+조건:
+
+```text
+trial: route_combo_no_or2x1_nor2x012_hvt_restore
+baseline: OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT dont_use
+route result: 110 DRC, open nets 0, legality 0, PG clean
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/06_route/drc_detail/all_drc_markers.tsv
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/report_cell_pin_access.targets.details.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+```
+
+DRC matrix:
+
+```text
+Diff net spacing | M1 3 | M2 2 | total 5
+Off-grid         | M1 1 | M2 51 | VIA1 52 | total 104
+Short            | M1 1 | total 1
+Total DRC        | 110
+```
+
+전체 110개 marker 주변 ref cell 집계:
+
+```text
+NOR2X4_HVT   85 markers
+OR2X4_HVT    16 markers
+SDFFARX1_RVT  7 markers
+NOR2X0_HVT    2 markers
+```
+
+핵심 좌표 매칭:
+
+```text
+103 / 110 markers match a report_cell_pin_access coordinate within 0.08um.
+All 103 matched points are A2 routable access points.
+
+NOR2X4_HVT/A2 routable access:
+  Off-grid VIA1: 43
+  Off-grid M2  : 42
+
+OR2X4_HVT/A2 routable access:
+  Off-grid VIA1: 8
+  Off-grid M2  : 8
+
+NOR2X0_HVT/A2 routable access:
+  Off-grid VIA1: 1
+  Off-grid M2  : 1
+```
+
+판단:
+
+```text
+남은 104개 Off-grid 중 103개는 HVT OR/NOR 계열의 A2 access point와 직접 좌표가 맞는다.
+report_cell_pin_access는 이 A2 point를 Routable로 보고하지만, check_routes는 같은 좌표를 M2/VIA1 Off-grid로 잡는다.
+따라서 남은 주 원인은 단순 blocked pin이 아니다.
+원인은 HVT OR/NOR A2 access point와 route/check grid 또는 via/contact generation 사이의 mismatch다.
+
+NOR2X4_HVT broad dont_use는 이미 481 DRC로 악화됐으므로 폐기한다.
+다음 fix는 broad dont_use가 아니라:
+  A2 access/grid를 피하는 routing option
+  HVT OR/NOR A2 사용 instance만 targeted swap/resize
+  pin access check library / NDM generation rule 확인
+  세 방향 중 하나로 좁혀야 한다.
+```
+
+## Extra Off-Grid Pin Track Disable Trial
+
+조건:
+
+```text
+trial: route_combo_no012_no_extra_offgrid_tracks
+baseline netlist: no_or2x1_nor2x012_hvt
+changed option:
+  route.detail.generate_extra_off_grid_pin_tracks=false
+unchanged:
+  core utilization 0.60
+  max signal layer M8
+  scan DEF import
+  VDD/M2 hotspot PG blockage
+  high DRC convergence effort
+  high wire/via optimization effort
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/trials/route_combo_no012_no_extra_offgrid_tracks/route_combo_no012_no_extra_offgrid_tracks.log
+7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_no_extra_offgrid_tracks/06_route/pg_drc.rpt
+```
+
+결과:
+
+```text
+route_auto final DRC: 114
+check_routes final DRC: 113
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+
+check_routes DRC:
+  Off-grid: 107
+  Diff net spacing: 4
+  Short: 2
+```
+
+판단:
+
+```text
+generate_extra_off_grid_pin_tracks=false는 폐기한다.
+기준 110 DRC보다 나쁘고, A2 off-grid 계열을 없애지 못한다.
+이 옵션은 off-grid access를 우회하지 못하고 short/spacing residue만 조금 바꾼다.
+```
+
+## Targeted A2 HVT -> LVT ECO Trial
+
+### 목적
+
+남은 110 DRC 중 103개가 HVT OR/NOR A2 access 좌표와 직접 맞았으므로,
+해당 instance만 HVT에서 LVT로 바꿔서 cell pin geometry 차이가 원인인지 확인했다.
+
+swap list:
+
+```text
+configs/backend/a2_offgrid_hvt_to_lvt_swap.tsv
+
+52 instances:
+  NOR2X4_HVT -> NOR2X4_LVT: 43
+  OR2X4_HVT  -> OR2X4_LVT : 8
+  NOR2X0_HVT -> NOR2X0_LVT: 1
+```
+
+### Trial 1: swap only
+
+조건:
+
+```text
+trial: route_combo_no012_a2_lvt_swap
+ECO_SWAP_FILE=configs/backend/a2_offgrid_hvt_to_lvt_swap.tsv
+ECO_SWAP_DONT_TOUCH unset
+```
+
+결과:
+
+```text
+init ECO swap: 52 PASS
+check_routes DRC: 109
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+
+DRC:
+  Off-grid: 108
+  Same net spacing: 1
+```
+
+하지만 final-ref audit 결과:
+
+```text
+requested LVT kept: 0
+
+final refs:
+  NOR2X4_RVT: 41
+  OR2X4_RVT : 8
+  NOR2X0_HVT: 2
+  NOR2X4_HVT: 1
+```
+
+판단:
+
+```text
+optimizer가 요청한 LVT swap을 모두 다시 바꿨다.
+따라서 110 -> 109는 LVT geometry 효과라고 볼 수 없다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/06_route/drc_detail/drc.matrix.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap/99_eco_swap_final_ref/eco_swap_final_ref.rpt
+```
+
+### Trial 2: swap + dont_touch
+
+조건:
+
+```text
+trial: route_combo_no012_a2_lvt_swap_dt
+ECO_SWAP_FILE=configs/backend/a2_offgrid_hvt_to_lvt_swap.tsv
+ECO_SWAP_DONT_TOUCH=true
+```
+
+결과:
+
+```text
+init ECO swap: 52 PASS
+dont_touch: 52 applied
+final requested LVT refs kept: 52
+
+final refs:
+  NOR2X4_LVT: 43
+  OR2X4_LVT : 8
+  NOR2X0_LVT: 1
+
+check_routes DRC: 110
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+
+DRC:
+  Off-grid: 109
+  Same net spacing: 1
+```
+
+판단:
+
+```text
+matched A2 instance를 LVT로 강제해도 DRC가 줄지 않는다.
+따라서 남은 A2 DRC의 직접 원인은 "HVT cell을 LVT로 바꾸면 해결"이 아니다.
+
+더 강한 원인 모델:
+  OR/NOR A2 pin access point가 route engine에는 usable하게 보이지만
+  check_routes grid/via/contact rule에는 off-grid로 걸린다.
+
+다음 방향:
+  NDM/LEF pin access grid 확인
+  VIA1/contact generation rule 확인
+  report_cell_pin_access와 check_routes grid 기준 차이 확인
+  route access option을 A2 access point 선택 관점에서 확인
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/01_init_design/eco_swap.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/06_route/pg_drc.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_lvt_swap_dt/99_eco_swap_final_ref/eco_swap_final_ref.rpt
+```
+
+### Restore
+
+rejected ECO trial 후 saved ICC2 block은 다시 원래 no012 baseline으로 복구했다.
+
+```text
+trial: route_combo_no_or2x1_nor2x012_hvt_restore3
+check_routes DRC: 110
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore3/06_route/pg_drc.rpt
+```
+
+## Via-Ladder Center-Track Option Probe
+
+remaining A2 off-grid class가 `pattern_must_join`/via ladder와 관련 있는지 확인했다.
+
+조건:
+
+```text
+trial: route_combo_no012_vialadder_center_track
+route.auto_via_ladder.generate_center_track_on_off_grid_pattern_must_join_pin_shapes=true
+```
+
+결과:
+
+```text
+check_routes DRC: 110
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+
+DRC:
+  Off-grid: 104
+  Diff net spacing: 5
+  Short: 1
+```
+
+판단:
+
+```text
+최종 DRC는 no012 baseline과 동일하다.
+따라서 이 option은 fix가 아니다.
+
+하지만 detail route 중간 iteration에서 Off-grid가 101까지 내려갔다.
+즉 via-ladder / pattern-must-join / pin-access grid 동작은 remaining A2 off-grid class와 관련 있다.
+
+다음 원인 추적은 broad VT swap이 아니라
+NDM/LEF pin-access grid, VIA1/contact definition, route/check grid 기준 차이에 집중한다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/route_auto_via_ladder_app_options.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no012_vialadder_center_track/06_route/pg_drc.rpt
+```
+
+복구:
+
+```text
+trial: route_combo_no_or2x1_nor2x012_hvt_restore4
+check_routes DRC: 110
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
 ```

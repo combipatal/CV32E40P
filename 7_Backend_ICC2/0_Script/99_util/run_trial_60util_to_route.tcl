@@ -54,6 +54,13 @@ set HOTSPOT_BLOCKAGE_ENABLE ""
 set HOTSPOT_BLOCKAGE_BOUNDARY {{215.0 195.0} {265.0 265.0}}
 set HOTSPOT_BLOCKAGE_PERCENT 40
 set PG_M2_MESH_OFFSET 20.0
+set PG_M2_HOTSPOT_BLOCKAGE_ENABLE ""
+set PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY {{238.0 195.0} {242.0 265.0}}
+set PG_M2_HOTSPOT_BLOCKAGE_NETS {VDD}
+set PG_M2_HOTSPOT_BLOCKAGE_LAYERS {M2}
+set PG_M2_HOTSPOT_CUT_ENABLE ""
+set PG_M2_HOTSPOT_CUT_BOUNDARY {{258.0 195.0} {262.0 265.0}}
+set PG_M2_HOTSPOT_CUT_NETS {VSS}
 set ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS ""
 set ROUTE_DETAIL_FORCE_END_ON_PREFERRED_GRID ""
 set ROUTE_DETAIL_DRC_CONVERGENCE_EFFORT_LEVEL ""
@@ -61,6 +68,9 @@ set ROUTE_DETAIL_OPTIMIZE_WIRE_VIA_EFFORT_LEVEL ""
 set ROUTE_COMMON_EXTRA_VIA_OFF_GRID_COST_BY_LAYER ""
 set ROUTE_COMMON_VIA_ON_GRID_BY_LAYER ""
 set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ""
+set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ""
+set ECO_SWAP_FILE ""
+set ECO_SWAP_DONT_TOUCH ""
 if {[info exists ::env(PLACE_PIN_DENSITY_AWARE)]} {
   set PLACE_PIN_DENSITY_AWARE $::env(PLACE_PIN_DENSITY_AWARE)
 }
@@ -109,6 +119,27 @@ if {[info exists ::env(HOTSPOT_BLOCKAGE_PERCENT)]} {
 if {[info exists ::env(PG_M2_MESH_OFFSET)]} {
   set PG_M2_MESH_OFFSET $::env(PG_M2_MESH_OFFSET)
 }
+if {[info exists ::env(PG_M2_HOTSPOT_BLOCKAGE_ENABLE)]} {
+  set PG_M2_HOTSPOT_BLOCKAGE_ENABLE $::env(PG_M2_HOTSPOT_BLOCKAGE_ENABLE)
+}
+if {[info exists ::env(PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY)]} {
+  set PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY $::env(PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY)
+}
+if {[info exists ::env(PG_M2_HOTSPOT_BLOCKAGE_NETS)]} {
+  set PG_M2_HOTSPOT_BLOCKAGE_NETS $::env(PG_M2_HOTSPOT_BLOCKAGE_NETS)
+}
+if {[info exists ::env(PG_M2_HOTSPOT_BLOCKAGE_LAYERS)]} {
+  set PG_M2_HOTSPOT_BLOCKAGE_LAYERS $::env(PG_M2_HOTSPOT_BLOCKAGE_LAYERS)
+}
+if {[info exists ::env(PG_M2_HOTSPOT_CUT_ENABLE)]} {
+  set PG_M2_HOTSPOT_CUT_ENABLE $::env(PG_M2_HOTSPOT_CUT_ENABLE)
+}
+if {[info exists ::env(PG_M2_HOTSPOT_CUT_BOUNDARY)]} {
+  set PG_M2_HOTSPOT_CUT_BOUNDARY $::env(PG_M2_HOTSPOT_CUT_BOUNDARY)
+}
+if {[info exists ::env(PG_M2_HOTSPOT_CUT_NETS)]} {
+  set PG_M2_HOTSPOT_CUT_NETS $::env(PG_M2_HOTSPOT_CUT_NETS)
+}
 if {[info exists ::env(ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS)]} {
   set ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS $::env(ROUTE_DETAIL_GENERATE_EXTRA_OFF_GRID_PIN_TRACKS)
 }
@@ -129,6 +160,15 @@ if {[info exists ::env(ROUTE_COMMON_VIA_ON_GRID_BY_LAYER)]} {
 }
 if {[info exists ::env(ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER)]} {
   set ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER $::env(ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER)
+}
+if {[info exists ::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)]} {
+  set ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ $::env(ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ)
+}
+if {[info exists ::env(ECO_SWAP_FILE)]} {
+  set ECO_SWAP_FILE $::env(ECO_SWAP_FILE)
+}
+if {[info exists ::env(ECO_SWAP_DONT_TOUCH)]} {
+  set ECO_SWAP_DONT_TOUCH $::env(ECO_SWAP_DONT_TOUCH)
 }
 
 set TRIAL_ROOT $PROJECT_ROOT/7_Backend_ICC2/4_Report/trials/$TRIAL_NAME
@@ -175,6 +215,61 @@ current_design $TOP_NAME
 link_block
 
 read_sdc $POST_DFT_SDC
+
+if {$ECO_SWAP_FILE ne ""} {
+  # 문제 marker와 좌표가 맞는 instance만 다른 equivalent lib cell로 바꿉니다.
+  # TSV 형식: cell old_ref new_ref reason
+  set ECO_SWAP_REPORT [open $TRIAL_INIT_DIR/eco_swap.rpt w]
+  puts $ECO_SWAP_REPORT "eco_swap_file=$ECO_SWAP_FILE"
+  puts $ECO_SWAP_REPORT "format: cell old_ref new_ref reason"
+
+  set ECO_SWAP_FP [open $ECO_SWAP_FILE r]
+  set ECO_SWAP_LINE_NO 0
+  while {[gets $ECO_SWAP_FP ECO_SWAP_LINE] >= 0} {
+    incr ECO_SWAP_LINE_NO
+    if {$ECO_SWAP_LINE_NO == 1} {
+      continue
+    }
+    if {$ECO_SWAP_LINE eq ""} {
+      continue
+    }
+
+    set ECO_SWAP_FIELDS [split $ECO_SWAP_LINE "\t"]
+    set ECO_CELL_NAME [lindex $ECO_SWAP_FIELDS 0]
+    set ECO_OLD_REF [lindex $ECO_SWAP_FIELDS 1]
+    set ECO_NEW_REF [lindex $ECO_SWAP_FIELDS 2]
+    set ECO_REASON [lindex $ECO_SWAP_FIELDS 3]
+
+    set ECO_CELL [get_cells -quiet $ECO_CELL_NAME]
+    if {[sizeof_collection $ECO_CELL] == 0} {
+      puts $ECO_SWAP_REPORT "MISS cell=$ECO_CELL_NAME old=$ECO_OLD_REF new=$ECO_NEW_REF reason=$ECO_REASON"
+      continue
+    }
+
+    set ECO_LIB_CELL [get_lib_cells -quiet */$ECO_NEW_REF]
+    if {[sizeof_collection $ECO_LIB_CELL] == 0} {
+      puts $ECO_SWAP_REPORT "MISS_LIB cell=$ECO_CELL_NAME old=$ECO_OLD_REF new=$ECO_NEW_REF reason=$ECO_REASON"
+      continue
+    }
+
+    set ECO_STATUS [catch {
+      size_cell $ECO_CELL -lib_cell $ECO_LIB_CELL
+    } ECO_MSG]
+
+    if {$ECO_STATUS == 0} {
+      puts $ECO_SWAP_REPORT "PASS cell=$ECO_CELL_NAME old=$ECO_OLD_REF new=$ECO_NEW_REF reason=$ECO_REASON"
+      if {$ECO_SWAP_DONT_TOUCH eq "true"} {
+        # 후속 optimization이 ECO swap cell을 다시 RVT/HVT로 바꾸지 못하게 고정합니다.
+        set_dont_touch $ECO_CELL true
+        puts $ECO_SWAP_REPORT "DONT_TOUCH cell=$ECO_CELL_NAME value=true"
+      }
+    } else {
+      puts $ECO_SWAP_REPORT "FAIL cell=$ECO_CELL_NAME old=$ECO_OLD_REF new=$ECO_NEW_REF reason=$ECO_REASON msg=$ECO_MSG"
+    }
+  }
+  close $ECO_SWAP_FP
+  close $ECO_SWAP_REPORT
+}
 
 if {$SCAN_DEF_FILE ne ""} {
   puts "Reading scan DEF: $SCAN_DEF_FILE"
@@ -293,10 +388,48 @@ set PG_MESH_LAYERS [subst {
 create_pg_mesh_pattern core_mesh_pattern \
   -layers $PG_MESH_LAYERS
 
-set_pg_strategy core_mesh_strategy \
-  -core \
-  -pattern {{name: core_mesh_pattern}{nets: {VDD VSS}}} \
-  -extension {{stop: innermost_ring}}
+# manual cut보다 먼저 tool-supported PG blockage를 시험합니다.
+# 목표는 hotspot 안의 특정 net/layer M2 strap을 compile_pg 단계에서 만들지 않는 것입니다.
+set PG_MESH_BLOCKAGE_OPTION ""
+if {$PG_M2_HOTSPOT_BLOCKAGE_ENABLE ne ""} {
+  if {[llength $PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY] == 1} {
+    set PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY [lindex $PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY 0]
+  }
+  set BLOCK_LL [lindex $PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY 0]
+  set BLOCK_UR [lindex $PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY 1]
+  set BLOCK_X1 [lindex $BLOCK_LL 0]
+  set BLOCK_Y1 [lindex $BLOCK_LL 1]
+  set BLOCK_X2 [lindex $BLOCK_UR 0]
+  set BLOCK_Y2 [lindex $BLOCK_UR 1]
+  set PG_M2_HOTSPOT_BLOCKAGE_POLYGON [list \
+    [list $BLOCK_X1 $BLOCK_Y1] \
+    [list $BLOCK_X1 $BLOCK_Y2] \
+    [list $BLOCK_X2 $BLOCK_Y2] \
+    [list $BLOCK_X2 $BLOCK_Y1] \
+  ]
+
+  create_pg_region hotspot_pg_m2_blockage \
+    -polygon $PG_M2_HOTSPOT_BLOCKAGE_POLYGON
+
+  set PG_MESH_BLOCKAGE_OPTION [list \
+    [list nets: $PG_M2_HOTSPOT_BLOCKAGE_NETS] \
+    [list layers: $PG_M2_HOTSPOT_BLOCKAGE_LAYERS] \
+    [list pg_regions: hotspot_pg_m2_blockage] \
+  ]
+}
+
+if {$PG_MESH_BLOCKAGE_OPTION ne ""} {
+  set_pg_strategy core_mesh_strategy \
+    -core \
+    -pattern {{name: core_mesh_pattern}{nets: {VDD VSS}}} \
+    -extension {{stop: innermost_ring}} \
+    -blockage $PG_MESH_BLOCKAGE_OPTION
+} else {
+  set_pg_strategy core_mesh_strategy \
+    -core \
+    -pattern {{name: core_mesh_pattern}{nets: {VDD VSS}}} \
+    -extension {{stop: innermost_ring}}
+}
 
 set_pg_strategy_via_rule pg_via_all \
   -via_rule {{intersection: all}{via_master: default}} \
@@ -306,10 +439,114 @@ compile_pg \
   -strategies {stdcell_rail_strategy core_ring_strategy core_mesh_strategy} \
   -via_rule pg_via_all
 
+################################################################################
+# Hotspot M2 PG stripe cut trial
+# x=260um VSS M2 stripe가 SDFFARX1_RVT hotspot pin access와 겹치는지 봅니다.
+# env로 켠 trial에서만 지정 boundary와 만나는 M2 PG stripe를 위/아래 segment로 나눕니다.
+################################################################################
+
+if {$PG_M2_HOTSPOT_CUT_ENABLE ne ""} {
+  if {[llength $PG_M2_HOTSPOT_CUT_BOUNDARY] == 1} {
+    set PG_M2_HOTSPOT_CUT_BOUNDARY [lindex $PG_M2_HOTSPOT_CUT_BOUNDARY 0]
+  }
+  set CUT_LL [lindex $PG_M2_HOTSPOT_CUT_BOUNDARY 0]
+  set CUT_UR [lindex $PG_M2_HOTSPOT_CUT_BOUNDARY 1]
+  set CUT_Y1 [lindex $CUT_LL 1]
+  set CUT_Y2 [lindex $CUT_UR 1]
+
+  set CUT_REPORT [open $TRIAL_POWER_DIR/pg_m2_hotspot_cut.rpt w]
+  puts $CUT_REPORT "enable: $PG_M2_HOTSPOT_CUT_ENABLE"
+  puts $CUT_REPORT "boundary: $PG_M2_HOTSPOT_CUT_BOUNDARY"
+  puts $CUT_REPORT "nets: $PG_M2_HOTSPOT_CUT_NETS"
+
+  set CUT_VIA_COUNT 0
+  set CANDIDATE_VIAS [get_vias -quiet -intersect $PG_M2_HOTSPOT_CUT_BOUNDARY]
+  foreach_in_collection via $CANDIDATE_VIAS {
+    set via_net_obj [get_attribute -quiet $via net]
+    set via_net_name ""
+    if {[sizeof_collection $via_net_obj] > 0} {
+      set via_net_name [get_object_name $via_net_obj]
+    }
+    if {[lsearch -exact $PG_M2_HOTSPOT_CUT_NETS $via_net_name] >= 0} {
+      puts $CUT_REPORT "remove_via: [get_object_name $via] net=$via_net_name bbox=[get_attribute -quiet $via bbox]"
+      remove_objects -force $via
+      incr CUT_VIA_COUNT
+    }
+  }
+
+  set CUT_SHAPE_COUNT 0
+  set CUT_RECREATE_COUNT 0
+  set CANDIDATE_SHAPES [get_shapes -quiet -intersect $PG_M2_HOTSPOT_CUT_BOUNDARY]
+  foreach_in_collection shape $CANDIDATE_SHAPES {
+    set layer [get_attribute -quiet $shape layer_name]
+    set net_obj [get_attribute -quiet $shape net]
+    set net_name ""
+    if {[sizeof_collection $net_obj] > 0} {
+      set net_name [get_object_name $net_obj]
+    }
+    if {$layer ne "M2"} {
+      continue
+    }
+    if {[lsearch -exact $PG_M2_HOTSPOT_CUT_NETS $net_name] < 0} {
+      continue
+    }
+
+    set bbox [get_attribute -quiet $shape bbox]
+    set ll [lindex $bbox 0]
+    set ur [lindex $bbox 1]
+    set x1 [lindex $ll 0]
+    set y1 [lindex $ll 1]
+    set x2 [lindex $ur 0]
+    set y2 [lindex $ur 1]
+
+    puts $CUT_REPORT "cut_shape: [get_object_name $shape] net=$net_name layer=$layer bbox=$bbox"
+    remove_objects -force $shape
+    incr CUT_SHAPE_COUNT
+
+    if {$y1 < $CUT_Y1} {
+      create_shape \
+        -shape_type rect \
+        -layer M2 \
+        -shape_use stripe \
+        -net $net_obj \
+        -boundary [list [list $x1 $y1] [list $x2 $CUT_Y1]]
+      puts $CUT_REPORT "create_bottom_segment: net=$net_name bbox={{$x1 $y1} {$x2 $CUT_Y1}}"
+      incr CUT_RECREATE_COUNT
+    }
+
+    if {$CUT_Y2 < $y2} {
+      create_shape \
+        -shape_type rect \
+        -layer M2 \
+        -shape_use stripe \
+        -net $net_obj \
+        -boundary [list [list $x1 $CUT_Y2] [list $x2 $y2]]
+      puts $CUT_REPORT "create_top_segment: net=$net_name bbox={{$x1 $CUT_Y2} {$x2 $y2}}"
+      incr CUT_RECREATE_COUNT
+    }
+  }
+
+  puts $CUT_REPORT "removed_vias: $CUT_VIA_COUNT"
+  puts $CUT_REPORT "removed_shapes: $CUT_SHAPE_COUNT"
+  puts $CUT_REPORT "created_segments: $CUT_RECREATE_COUNT"
+  close $CUT_REPORT
+}
+
 set PG_MESH_SETTING_REPORT [open $TRIAL_POWER_DIR/pg_mesh_trial_settings.rpt w]
 puts $PG_MESH_SETTING_REPORT "M2_mesh_offset: $PG_M2_MESH_OFFSET"
 puts $PG_MESH_SETTING_REPORT "M8_mesh_offset: 20.0"
 puts $PG_MESH_SETTING_REPORT "M7_mesh_offset: 28.0"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_blockage_enable: $PG_M2_HOTSPOT_BLOCKAGE_ENABLE"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_blockage_boundary: $PG_M2_HOTSPOT_BLOCKAGE_BOUNDARY"
+if {[info exists PG_M2_HOTSPOT_BLOCKAGE_POLYGON]} {
+  puts $PG_MESH_SETTING_REPORT "M2_hotspot_blockage_polygon: $PG_M2_HOTSPOT_BLOCKAGE_POLYGON"
+}
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_blockage_nets: $PG_M2_HOTSPOT_BLOCKAGE_NETS"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_blockage_layers: $PG_M2_HOTSPOT_BLOCKAGE_LAYERS"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_blockage_option: $PG_MESH_BLOCKAGE_OPTION"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_cut_enable: $PG_M2_HOTSPOT_CUT_ENABLE"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_cut_boundary: $PG_M2_HOTSPOT_CUT_BOUNDARY"
+puts $PG_MESH_SETTING_REPORT "M2_hotspot_cut_nets: $PG_M2_HOTSPOT_CUT_NETS"
 close $PG_MESH_SETTING_REPORT
 
 ################################################################################
@@ -569,9 +806,16 @@ if {$ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER ne ""} {
     -name route.common.wire_on_grid_by_layer_name \
     -value $ROUTE_COMMON_WIRE_ON_GRID_BY_LAYER
 }
+if {$ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ ne ""} {
+  # off-track pattern_must_join pin shape에 via-ladder용 center track을 만들지 확인합니다.
+  set_app_options \
+    -name route.auto_via_ladder.generate_center_track_on_off_grid_pattern_must_join_pin_shapes \
+    -value $ROUTE_AUTO_VIA_LADDER_CENTER_TRACK_OFF_GRID_PMJ
+}
 
 report_app_options route.common.* > $TRIAL_ROUTE_DIR/route_common_app_options.rpt
 report_app_options route.detail.* > $TRIAL_ROUTE_DIR/route_detail_app_options.rpt
+report_app_options route.auto_via_ladder.* > $TRIAL_ROUTE_DIR/route_auto_via_ladder_app_options.rpt
 
 check_routability > $TRIAL_ROUTE_DIR/check_routability.rpt
 

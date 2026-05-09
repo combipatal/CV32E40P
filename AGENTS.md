@@ -258,6 +258,40 @@ scan chains: 1
 ATPG: TetraMAX stuck-at
 ```
 
+## EDA Tool Execution
+
+Run licensed EDA tools outside the sandbox.
+
+This applies to:
+
+```text
+dc_shell
+fm_shell
+dft-related dc_shell runs
+tmax
+pt_shell
+icc2_shell
+lmutil
+```
+
+Reason:
+
+```text
+license checkout, tool startup, host environment, and generated work libraries
+can fail or behave differently inside the sandbox.
+```
+
+Use sandbox only for lightweight file inspection and text processing:
+
+```text
+rg
+sed
+ls
+git status
+report parsing scripts
+documentation edits
+```
+
 ## Debug Order
 
 Debug in stage order. Do not skip ahead and debug later tools before earlier evidence is clean.

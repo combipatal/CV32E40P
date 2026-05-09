@@ -41,6 +41,12 @@ ICC2 hotspot partial blockage probe | ICC2 | PASS_WITH_OPEN | 7_Backend_ICC2/4_R
 ICC2 route DRC root-cause investigation | docs/script | RECORDED | docs/backend/route_drc_root_cause_investigation.md | active goal shifted to root-cause identification; hotspot has 123 DRC markers, dominated by M2/VIA1 off-grid; leading hypotheses are pin access/off-grid, M2 PG interaction, LEF-built NDM quality, and route off-grid/via policy
 ICC2 hotspot DRC-to-PG distance probe | ICC2/script | RECORDED | 7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_drc_pg_distance_summary.rpt | hotspot has 3 M2 PG stripes; 78/123 hotspot markers are within 5um of M2 PG, but 45/123 are farther than 5um
 ICC2 PG M2 offset probe | ICC2 | INVALID_FOR_CLOSURE_BUT_INFORMATIVE | 7_Backend_ICC2/4_Report/trials/pgm2off30_scan_def_m8/06_route/check_routes.rpt | M2 PG offset 30um changes signal DRC 398 -> 377 but creates PG DRC 97 after route; PG position affects route DRC but this offset is not a valid fix
+no_mux41x_hvt front-end experiment | DC/FM/DFT/TMAX/PT | PASS_WITH_NOTE | docs/backend/no_mux41x_hvt_experiment_2026_05_09.md | MUX41X1_HVT 67 -> 0 and MUX41X1_RVT 0 -> 67; R2N/N2N pass; ATPG and PT remain usable
+ICC2 no_mux41x_hvt route combo trial | ICC2 | REJECTED | 7_Backend_ICC2/4_Report/trials/route_combo_no_mux41x_hvt/06_route/check_routes.rpt | route DRC 399, open nets 0, legality 0, PG clean; worse than route_combo_scan_def_m8 at 381, so not accepted
+ICC2 local PG M2 cut trial | ICC2 | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/06_route/check_routes.rpt | hotspot VSS M2 cut keeps open nets 0, legality 0, PG connectivity/DRC clean, and route DRC improves 381 -> 377; cause evidence, not final PG style
+ICC2 all-M2 hotspot PG cut trial | ICC2 | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/check_routes.rpt | hotspot x=220 VSS/x=240 VDD/x=260 VSS cuts keep open nets 0, legality 0, PG clean, but route DRC is 378; spacing improves while fat-contact worsens
+ICC2 x=240 VDD PG cut trial | ICC2 | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/check_routes.rpt | hotspot x=240 VDD cut keeps open nets 0, legality 0, PG clean, and improves route DRC to 376
+ICC2 x=220 VSS PG cut trial | ICC2 | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/check_routes.rpt | hotspot x=220 VSS cut keeps open nets 0, legality 0, PG clean, but route DRC is 380; worse than x=240 VDD cut
 ```
 
 ### Backend Init
@@ -96,6 +102,28 @@ Route via/DRC effort high probe | OPEN | 7_Backend_ICC2/4_Report/trials/route_vi
 PG M2 offset 24/26/28 sweep | REJECTED | 7_Backend_ICC2/4_Report/trials/pgm2off24_scan_def_m8/06_route/check_routes.rpt | signal route DRCs are 377/384/383 and open nets 0, but PG DRC creates 102/82/83 M1 insufficient-spacing errors; offset-only fix rejected
 Hotspot 40% partial blockage fix trial | OPEN | 7_Backend_ICC2/4_Report/trials/hotspot_blk40_scan_def_m8/06_route/check_routes.rpt | route DRC 391, open nets 0, legality 0, PG clean; local spreading alone is weak
 Route combo fix trial | BEST_CURRENT_OPEN | 7_Backend_ICC2/4_Report/trials/route_combo_scan_def_m8/06_route/check_routes.rpt | route DRC 381, open nets 0, legality 0, PG clean; accepted as current backend baseline candidate, but route DRC remains open
+no_mux41x_hvt route combo trial | REJECTED | 7_Backend_ICC2/4_Report/trials/route_combo_no_mux41x_hvt/06_route/check_routes.rpt | route DRC 399, open nets 0, legality 0, PG clean; MUX41X*_HVT avoidance alone worsens current best route result
+Local VSS M2 PG cut trial | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss260/06_route/check_routes.rpt | route DRC 377, open nets 0, legality 0, PG connectivity clean, PG DRC clean; proves local PG M2 obstruction contributes to hotspot DRC
+All-M2 hotspot PG cut trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_allm2_hotspot/06_route/check_routes.rpt | route DRC 378, open nets 0, legality 0, PG clean; diff spacing improves to 96 but needs-fat-contact worsens to 113
+x=240 VDD PG cut trial | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240/06_route/check_routes.rpt | route DRC 376, open nets 0, legality 0, PG clean; current best valid backend candidate
+x=220 VSS PG cut trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vss220/06_route/check_routes.rpt | route DRC 380, open nets 0, legality 0, PG clean; not accepted as best
+x=240 VDD PG cut restore | BEST_CURRENT_OPEN_RESTORED | 7_Backend_ICC2/4_Report/trials/route_combo_pgcut_vdd240_restore/06_route/check_routes.rpt | saved ICC2 block restored to best candidate; route DRC 376, open nets 0, legality 0, PG connectivity clean, PG DRC clean
+Clean x=240 VDD PG blockage trial | BEST_CURRENT_OPEN | 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/check_routes.rpt | set_pg_strategy -blockage for VDD/M2 in hotspot; route DRC 368, open nets 0, legality 0, route-stage PG connectivity clean, PG DRC clean
+Clean x=240 VDD + x=260 VSS PG blockage trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_vss260/06_route/drc_detail/drc.matrix.rpt | route DRC 376, open nets 0, legality 0, PG clean; needs-fat-contact improves to 104 but spacing/off-grid/shorts worsen, so best remains VDD-only blockage at 368
+VDD PG blockage + multi-cell pin-access check trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_pincheck/06_route/drc_detail/drc.matrix.rpt | route DRC 368, open nets 0, legality 0, PG clean; same matrix as current best, so the single placement pin-access check option does not improve closure
+VDD PG blockage + off-track via-region placement support trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_offtrackvia/06_route/drc_detail/drc.matrix.rpt | route DRC 368, open nets 0, legality 0, PG clean; same matrix as current best, so the single off-track via-region legalizer option does not improve closure
+Route grid/via option syntax probe | RECORDED | 7_Backend_ICC2/4_Report/trials/route_grid_option_probe/99_options/route_grid_option_value_probe.rpt | single-brace Tcl list text such as '{M2 0.5}' is the correct env value form; double-brace env text causes invalid option values
+VDD PG blockage + M2 off-grid via cost 0.5 trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2offgridcost05b/06_route/drc_detail/drc.matrix.rpt | option applied, route DRC 368, open nets 0, legality 0, PG clean; matrix unchanged, so small M2 off-grid via cost does not improve closure
+VDD PG blockage + VIA1 on-grid route option trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_via1ongrid_b/06_route/check_routes.rpt | option applied, route DRC 368, open nets 0, legality 0, PG clean; DRC type counts unchanged and ZRT-044 remains, so VIA1 on-grid forcing does not improve closure
+VDD PG blockage + M2 wire-on-grid route option trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m2wireongrid/06_route/check_routes.rpt | option applied, route DRC worsens to 378, open nets 0, legality 0, PG clean; grid policy changes DRC mix but not closure
+Current best saved-block restore | BEST_CURRENT_OPEN_RESTORED | 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240_restore2/06_route/check_routes.rpt | saved ICC2 block restored to VDD/M2 PG blockage best condition; route DRC 368, open nets 0, legality 0, PG clean
+VDD PG blockage + M1 wire-on-grid route option trial | PASS_WITH_OPEN_REJECTED_AS_BEST | 7_Backend_ICC2/4_Report/trials/route_pgblock_vdd240_m1wireongrid/06_route/check_routes.rpt | option applied, route DRC worsens to 380, open nets 0, legality 0, PG clean; fat-contact improves but spacing/off-grid worsen
+Current-best DRC geometry residue analysis | RECORDED | 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/06_route/drc_detail/drc.geometry_analysis.rpt | 120/120 M1-M2 needs-fat-contact markers share residue rx=0.064/ry=0.064; M2/VIA1 off-grid markers cluster around the same y residue, supporting lower-metal pin/contact/grid mismatch plus PG obstruction
+Current-best marker context probe | RECORDED | 7_Backend_ICC2/4_Report/trials/route_combo_pgblock_vdd240/99_marker_context/marker_context.rpt | 35 representative markers map mostly to OR2X1_HVT, NOR2X0_HVT, and NOR2X4_HVT pins; OR2X1_HVT dominates M1 spacing/fat-contact representatives, while NOR2X*_HVT dominates M2/VIA1 off-grid representatives
+OR2X1_HVT dont_use route combo trial | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_hvt/06_route/check_routes.rpt | route DRC improves 368 -> 203 with open nets 0, legality 0, PG connectivity clean, PG DRC clean; final DRC is Off-grid 203 only; OR2X1_HVT confirmed as major spacing/fat-contact contributor, but remaining off-grid root cause persists
+OR2X1_HVT + NOR2X0_HVT + NOR2X2_HVT dont_use route combo trial | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x02_hvt/06_route/drc_detail/drc.matrix.rpt | route DRC improves 203 -> 188 with open nets 0, legality 0, PG connectivity clean, PG DRC clean; final DRC is Off-grid 186 and Diff net spacing 2; remaining representative markers are dominated by NOR2X1_HVT and persistent MUX41X2_HVT/S0 valid-via-region warning
+OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT dont_use route combo trial | BEST_CURRENT_OPEN_CAUSE_EVIDENCE | 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt/06_route/drc_detail/drc.matrix.rpt | route DRC improves 188 -> 110 with open nets 0, legality 0, PG connectivity clean, PG DRC clean; final matrix is M1 5, M2 53, VIA1 52; NOR2X1_HVT confirmed as major lower-metal off-grid contributor
+OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT + NOR2X4_HVT dont_use route combo trial | REJECTED | 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x0124_hvt/06_route/drc_detail/drc.matrix.rpt | FE passed, but route DRC worsens 110 -> 481 with open nets 0, legality 0, PG clean; Off-grid 477, M2 232, VIA1 245; broad NOR2X4_HVT removal causes restructuring and is not a valid fix
 ```
 
 ### Timing
@@ -110,6 +138,11 @@ ICC2 first-pass route | 10 ns | 2.00 ns listed worst setup path | not summarized
 ICC2 60% util route trial | 10 ns | 2.10 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
 ICC2 60% util + M8 route-layer trial | 10 ns | 2.11 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
 ICC2 detail route repair 1iter | 10 ns | 2.11 ns listed worst setup path | not summarized | not summarized | not summarized | route DRC not clean; listed worst hold slack 0.02 ns
+no_mux41x_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | 49420.84 DC post-DFT cell area | see topo_no_mux41x_hvt post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; route DRC trial rejected
+no_or2x1_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | see topo_no_or2x1_hvt reports | see topo_no_or2x1_hvt post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; route DRC improves to 203 but remains open
+no_or2x1_nor2x02_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | see topo_no_or2x1_nor2x02_hvt reports | see topo_no_or2x1_nor2x02_hvt post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; route DRC improves to 188 but remains open
+no_or2x1_nor2x012_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | see topo_no_or2x1_nor2x012_hvt reports | see topo_no_or2x1_nor2x012_hvt post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; route DRC improves to 110 but remains open
+no_or2x1_nor2x0124_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | 45487.20 pre-DFT cell area | see topo_no_or2x1_nor2x0124_hvt reports | PT post-DFT SDF STA setup/hold clean; backend route trial rejected because DRC worsens to 481
 ```
 
 ### Fmax Estimate
@@ -125,6 +158,16 @@ Post-DFT topo/SDF STA | 10.00 ns | 1.48 ns | 8.52 ns | 117.4 MHz | 8.5 ns first,
 Stage | Tool | Result | Passing | Failing | Notes
 R2N topo | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Functional mode constants applied; reverse clock-gating enabled; undriven scan_out marked don't-verify
 N2N post-DFT topo | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Functional mode constants applied; scan_out don't-verify; 74 clock-gate LAT not compared
+R2N no_mux41x_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | MUX41X*_HVT avoidance synthesis remains equivalent to RTL
+N2N no_mux41x_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_mux41x_hvt pre-DFT vs post-DFT remains equivalent in functional mode
+R2N no_or2x1_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HVT avoidance synthesis remains equivalent to RTL
+N2N no_or2x1_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_hvt pre-DFT vs post-DFT remains equivalent in functional mode
+R2N no_or2x1_nor2x02_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HVT + NOR2X0_HVT + NOR2X2_HVT avoidance synthesis remains equivalent to RTL
+N2N no_or2x1_nor2x02_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x02_hvt pre-DFT vs post-DFT remains equivalent in functional mode
+R2N no_or2x1_nor2x012_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT avoidance synthesis remains equivalent to RTL
+N2N no_or2x1_nor2x012_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x012_hvt pre-DFT vs post-DFT remains equivalent in functional mode
+R2N no_or2x1_nor2x0124_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_HVT + NOR2X0_HVT + NOR2X1_HVT + NOR2X2_HVT + NOR2X4_HVT avoidance synthesis remains equivalent to RTL
+N2N no_or2x1_nor2x0124_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x0124_hvt pre-DFT vs post-DFT remains equivalent in functional mode
 ```
 
 ### DFT/ATPG
@@ -137,4 +180,6 @@ DFT DRC | PASS_WITH_NOTE | 1 TEST-505 constant-1 clock-gate note; 2130 valid sca
 Fault model | stuck-at | first-pass scope
 Fault coverage | 98.55% | 82949 collapsed faults, DT 81697, PT 99, UD 74, AU 14, ND 1065
 Test coverage | 98.64% | 448 internal basic_scan patterns; ATPG stopped after meeting 98% target
+no_mux41x_hvt fault coverage | 98.51% | 82941 collapsed faults, DT 81662, PT 94, UD 77, AU 14, ND 1094
+no_mux41x_hvt test coverage | 98.61% | 448 internal basic_scan patterns; ATPG stopped after meeting 98% target
 ```

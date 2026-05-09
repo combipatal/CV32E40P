@@ -13,14 +13,30 @@ hotspot DRC marker와 PG shape 사이 거리를 계산한다.
 
 import csv
 import math
+import os
 from collections import Counter
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MARKERS = ROOT / "7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/all_drc_markers.tsv"
-PG_SHAPES = ROOT / "7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_pg_shapes.tsv"
-OUT_DIR = ROOT / "7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance"
+MARKERS = Path(
+    os.environ.get(
+        "MARKERS",
+        ROOT / "7_Backend_ICC2/4_Report/trials/drc_marker_context/99_marker_context/all_drc_markers.tsv",
+    )
+)
+PG_SHAPES = Path(
+    os.environ.get(
+        "PG_SHAPES",
+        ROOT / "7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance/hotspot_pg_shapes.tsv",
+    )
+)
+OUT_DIR = Path(
+    os.environ.get(
+        "OUT_DIR",
+        ROOT / "7_Backend_ICC2/4_Report/trials/root_cause_probe/99_pg_distance",
+    )
+)
 
 HOTSPOT = (215.0, 195.0, 265.0, 265.0)
 

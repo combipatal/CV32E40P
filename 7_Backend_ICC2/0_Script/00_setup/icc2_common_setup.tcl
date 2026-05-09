@@ -36,6 +36,15 @@ set TLUPLUS_MAP $SAED32_ROOT/tech/star_rcxt/saed32nm_tf_itf_tluplus.map
 set POST_DFT_NETLIST $PROJECT_ROOT/3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.vg
 set POST_DFT_SDC     $PROJECT_ROOT/3_DFT/2_Output/post_dft_topo/cv32e40p_synth_wrap.post_dft_topo.sdc
 
+# 실험 netlist를 쓸 때 env로 handoff 파일만 바꿀 수 있게 합니다.
+# 예: POST_DFT_NETLIST=...no_mux41x_hvt.vg POST_DFT_SDC=...no_mux41x_hvt.sdc
+if {[info exists ::env(POST_DFT_NETLIST)]} {
+  set POST_DFT_NETLIST $::env(POST_DFT_NETLIST)
+}
+if {[info exists ::env(POST_DFT_SDC)]} {
+  set POST_DFT_SDC $::env(POST_DFT_SDC)
+}
+
 # Backend 작업 directory입니다.
 set SETUP_LOG_DIR $PROJECT_ROOT/7_Backend_ICC2/3_Log/00_setup
 set ICC2_LIB_DIR $PROJECT_ROOT/7_Backend_ICC2/2_Output/01_init_design/cv32e40p_icc2_lib

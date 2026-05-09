@@ -1788,3 +1788,35 @@ Evidence:
   6_STA/0_Script/run_pt_post_dft_10ns_sdf_no_or2x1_nor2x012_or2x4_hvt.tcl
   6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x012_or2x4_hvt/post_dft_no_or2x1_nor2x012_or2x4_hvt.func_tt_10ns_sdf.global_timing.rpt
 ```
+
+## Narrow OR2X4_HVT Add-On Rejection
+
+```text
+Date: 2026-05-09
+Decision: reject OR2X4_HVT-only add-on dont_use as a backend route DRC fix
+Reason:
+  route_combo_no_or2x1_nor2x012_or2x4_hvt completed with:
+    open nets: 0
+    legality: 0 violations
+    PG connectivity: clean
+    PG DRC: no errors
+    route DRC: 111
+  DRC mix:
+    Off-grid: 104
+    Diff net spacing: 5
+    Same net spacing: 1
+    Short: 1
+  comparison:
+    no_or2x1_nor2x012_hvt baseline: 110 DRC
+    A1/A2 pin-swap candidate: 103 DRC
+Conclusion:
+  OR2X4_HVT-only add-on avoidance does not improve closure
+  do not broaden cell bans based only on marker correlation
+  next useful direction remains NDM/tech/via/pin-access setup inspection or a more controlled structural mapping change
+Evidence:
+  7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt.log
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/check_routes.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/check_legality.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_connectivity.rpt
+  7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_drc.rpt
+```

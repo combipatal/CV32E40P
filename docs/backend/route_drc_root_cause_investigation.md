@@ -2347,11 +2347,39 @@ PT post-DFT SDF global timing: no setup violations, no hold violations
 주의:
 
 ```text
-아직 backend route 결과가 없다.
-closure 후보가 아니라 backend route 입력 후보이다.
+backend route 결과상 closure 후보가 아니다.
 다음 비교 기준:
   no012 baseline: 110 DRC
   A1/A2 pin-swap: 103 DRC
+```
+
+Backend route 결과:
+
+```text
+trial: route_combo_no_or2x1_nor2x012_or2x4_hvt
+
+open nets: 0
+legality: 0
+PG connectivity: clean
+PG DRC: no errors
+
+check_routes:
+  total DRC: 111
+  Off-grid: 104
+  Diff net spacing: 5
+  Same net spacing: 1
+  Short: 1
+```
+
+해석:
+
+```text
+OR2X4_HVT-only add-on dont_use는 fix가 아니다.
+no012 baseline 110보다 1개 나쁘고,
+A1/A2 pin-swap 103보다도 나쁘다.
+
+따라서 marker context에 보이는 cell을 하나씩 broad/dont_use로 지우는 방식은 수익이 낮다.
+다음은 NDM/tech/via/pin-access setup 확인이나 더 통제된 구조 mapping 변경이 맞다.
 ```
 
 증거:
@@ -2361,4 +2389,9 @@ closure 후보가 아니라 backend route 입력 후보이다.
 2.5_FM_R2N/4_Report/no_or2x1_nor2x012_or2x4_hvt/r2n_topo_no_or2x1_nor2x012_or2x4_hvt.passing_points.post_verify.rpt
 5_FM_N2N/4_Report/no_or2x1_nor2x012_or2x4_hvt/n2n_topo_no_or2x1_nor2x012_or2x4_hvt.passing_points.post_verify.rpt
 6_STA/4_Report/post_dft_topo_sdf_no_or2x1_nor2x012_or2x4_hvt/post_dft_no_or2x1_nor2x012_or2x4_hvt.func_tt_10ns_sdf.global_timing.rpt
+7_Backend_ICC2/3_Log/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt.log
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/check_legality.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_connectivity.rpt
+7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_or2x4_hvt/06_route/pg_drc.rpt
 ```

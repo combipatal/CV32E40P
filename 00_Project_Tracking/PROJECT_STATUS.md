@@ -136,8 +136,8 @@ The no012 explicit M1/M2 pin-track alignment probe was tested and rejected as a 
 A2 marker-shape geometry was analyzed. Matched A2 access points are on-track in X, but check_routes markers have deterministic shifts from the access point and repeated M2/VIA1 bbox dimensions. This strengthens the cause model: generated M2/VIA1 shape snapping or route/check grid behavior from A2, not blocked pin access or missing placement pin-track alignment.
 VIA12 contact-code fit was analyzed. Observed A2 M2 marker bboxes exactly match VIA12/VIA12SQ_C metal dimensions plus one 0.152um routing pitch. This makes the remaining off-grid marker geometry contact-code-derived rather than random congestion residue.
 Default-via rotation was tested with route.common.rotate_default_vias=false and rejected. It worsened route DRC to 310 while keeping open nets 0, legality 0, PG connectivity clean, and PG DRC clean. This means rotated VIA12 usage alone is not the root cause, although via/contact generation policy clearly changes the failure mode.
-Narrow OR2X4_HVT add-on avoidance was prepared as the next structural/cell-mapping trial. FE validation passed through DC topo, R2N, DFT, N2N, and PT post-DFT SDF global timing. Backend route has not yet been run for this handoff.
-Next backend action should route the no_or2x1_nor2x012_or2x4_hvt post-DFT handoff with the current-best ICC2 physical options, then compare against no012 110 DRC and A1/A2 pin-swap 103 DRC. If this does not improve, move to NDM/tech/via setup inspection rather than broad cell bans.
+Narrow OR2X4_HVT add-on avoidance was tested through FE and backend. FE passed, but ICC2 route reports 111 DRC with open nets 0, legality 0, PG connectivity clean, and PG DRC clean. This is worse than the no012 110-DRC baseline and the A1/A2 pin-swap 103-DRC candidate, so OR2X4_HVT-only add-on avoidance is rejected as a fix.
+Next backend action should move to NDM/tech/via/pin-access setup inspection or a more controlled structural mapping change rather than broad cell bans.
 ```
 
 ## Fmax Estimate

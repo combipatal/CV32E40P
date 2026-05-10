@@ -2112,3 +2112,28 @@ Evidence:
   7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m8_repair200/06_route/check_routes.rpt
   7_Backend_ICC2/4_Report/trials/libdir_modify_8p5ns_scan_def_m9_repair200/06_route/check_routes.rpt
 ```
+
+## Use Targeted VT ECO For SS Setup, Then Separate Hold ECO
+
+```text
+Date: 2026-05-10
+Decision: accept targeted FADDX HVT-to-RVT ECO as the SS setup fix direction, but do not call MCMM STA closed yet
+Reason:
+  ECO6 TT STA was clean, but SS setup and FF hold were open under propagated-clock checks
+  worst SS setup paths were dominated by ALU/id-stage full-adder carry logic using HVT cells
+  changing only the critical FADDX cells is smaller and more explainable than broad RVT/LVT remap
+Result:
+  ECO7 changed 32 FADDX cells from HVT to RVT
+  ICC2 route/legality/electrical checks stayed clean
+  PrimeTime SS propagated-clock setup became clean
+  FF -40C propagated-clock hold remains open
+Next action:
+  fix hold with a hold-specific ECO on repeated short reg-to-reg paths
+Evidence:
+  docs/backend/mcmm_timing_closure_eco7_2026_05_10.md
+  configs/backend/ss_setup_fadd_hvt_to_rvt_trial.tsv
+  7_Backend_ICC2/0_Script/07_extract_sta/run_ss_setup_eco7_fadd_rvt_trial.tcl
+  7_Backend_ICC2/2_Output/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/ss_setup_eco_manifest.txt
+  6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ss0p95v125c_propclk/ss_setup_eco7.func_ss0p95v125c_10ns_spef_propclk.cmax.global_timing.rpt
+  6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/ss_setup_eco7.func_ff1p16vn40c_10ns_spef_propclk.cmin.global_timing.rpt
+```

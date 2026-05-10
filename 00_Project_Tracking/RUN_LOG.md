@@ -1625,3 +1625,21 @@ Result: OPEN
 Notes: The post-route script now supports PROPAGATE_CLOCK=1. With propagated clock, reports show real clock network delay instead of ideal 0.00. SS setup improves slightly but remains violated: cmax WNS -0.65 ns/TNS -67.21 ns/426 endpoints and cmin WNS -0.42 ns/TNS -14.97 ns/121 endpoints. FF -40C setup remains clean, but hold worsens: cmax WNS -0.05 ns/TNS -1.99 ns/225 endpoints and cmin WNS -0.05 ns/TNS -2.39 ns/268 endpoints. This proves the remaining issue is real multi-corner closure, not only an ideal-clock reporting artifact.
 Evidence: 6_STA/3_Log/pt_maxtran_eco6_10ns_spef_ss0p95v125c_propclk.log, 6_STA/3_Log/pt_maxtran_eco6_10ns_spef_ff1p16vn40c_propclk.log, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef_ss0p95v125c_propclk/maxtran_eco6.func_ss0p95v125c_10ns_spef_propclk.cmax.global_timing.rpt, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef_ss0p95v125c_propclk/maxtran_eco6.func_ss0p95v125c_10ns_spef_propclk.cmin.global_timing.rpt, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef_ff1p16vn40c_propclk/maxtran_eco6.func_ff1p16vn40c_10ns_spef_propclk.cmax.global_timing.rpt, and 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef_ff1p16vn40c_propclk/maxtran_eco6.func_ff1p16vn40c_10ns_spef_propclk.cmin.global_timing.rpt.
 ```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/ss_setup_eco7_fadd_rvt_trial.log -f 7_Backend_ICC2/0_Script/07_extract_sta/run_ss_setup_eco7_fadd_rvt_trial.tcl
+Stage: ICC2 SS setup ECO7 FADDX HVT-to-RVT trial
+Result: PASS
+Notes: Copied maxtran ECO6 block and changed 32 critical FADDX cells from HVT to RVT. All swaps succeeded. route_eco completed with 0 open nets and 0 route violations. Final check_routes reports 0 errors, check_legality reports 0 violations, and ICC2 constraints report max_transition/max_capacitance clean. Netlist, SDC, SDF, DEF, and cmax/cmin SPEF were exported.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/ss_setup_eco7_fadd_rvt_trial.log, 7_Backend_ICC2/2_Output/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/ss_setup_eco_manifest.txt, 7_Backend_ICC2/4_Report/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/check_routes.after_ss_setup_eco.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/check_legality.after_ss_setup_eco.rpt, and 7_Backend_ICC2/4_Report/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/constraints.after_ss_setup_eco.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TAG=ss_setup_eco7_fadd_rvt_trial CORNER=ss0p95v125c PROPAGATE_CLOCK=1 ... pt_shell -output_log_file 6_STA/3_Log/pt_ss_setup_eco7_10ns_spef_ss0p95v125c_propclk.log -f 6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl; env TAG=ss_setup_eco7_fadd_rvt_trial CORNER=ff1p16vn40c PROPAGATE_CLOCK=1 ... pt_shell -output_log_file 6_STA/3_Log/pt_ss_setup_eco7_10ns_spef_ff1p16vn40c_propclk.log -f 6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl
+Stage: PrimeTime ECO7 propagated-clock multi-corner STA
+Result: SETUP_FIXED_HOLD_OPEN
+Notes: ECO7 fixes SS setup. SS cmax and cmin global_timing report no setup or hold violations; worst listed SS setup slack is +0.10 ns in cmax and +0.25 ns in cmin. FF -40C setup remains clean, but hold remains open: cmax WNS -0.05 ns/TNS -1.99 ns/225 endpoints and cmin WNS -0.05 ns/TNS -2.39 ns/268 endpoints. The next fix should be a hold-specific ECO, not another setup-speed ECO.
+Evidence: 6_STA/3_Log/pt_ss_setup_eco7_10ns_spef_ss0p95v125c_propclk.log, 6_STA/3_Log/pt_ss_setup_eco7_10ns_spef_ff1p16vn40c_propclk.log, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ss0p95v125c_propclk/ss_setup_eco7.func_ss0p95v125c_10ns_spef_propclk.cmax.global_timing.rpt, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ss0p95v125c_propclk/ss_setup_eco7.func_ss0p95v125c_10ns_spef_propclk.cmin.global_timing.rpt, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/ss_setup_eco7.func_ff1p16vn40c_10ns_spef_propclk.cmax.global_timing.rpt, and 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/ss_setup_eco7.func_ff1p16vn40c_10ns_spef_propclk.cmin.global_timing.rpt.
+```

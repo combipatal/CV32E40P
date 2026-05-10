@@ -480,6 +480,30 @@ FF worst hold paths are short reg-to-reg paths around cs_registers, alu_div, and
 Best next fix class is real MCMM closure: SS setup scenario + FF hold scenario in ICC2/PT, then setup optimization and hold buffer insertion/ECO.
 ```
 
+2026-05-10 ECO7 update:
+
+```text
+ECO7 changed 32 critical FADDX cells from HVT to RVT.
+ICC2 stayed physically clean: route DRC 0, legality 0, internal max_transition/max_capacitance 0.
+SS propagated-clock STA is now setup/hold clean:
+  cmax no setup/hold violations, worst listed setup slack +0.10 ns
+  cmin no setup/hold violations, worst listed setup slack +0.25 ns
+FF -40C propagated-clock STA remains hold-open:
+  cmax hold WNS -0.05 ns / TNS -1.99 ns / 225 endpoints
+  cmin hold WNS -0.05 ns / TNS -2.39 ns / 268 endpoints
+Conclusion: setup side is fixed; remaining backend timing closure target is hold ECO.
+```
+
+Next hold-fix direction:
+
+```text
+1. Extract FF -40C hold violators from ECO7 reports.
+2. Group repeated short reg-to-reg paths.
+3. Insert/resize only delay cells on data paths, then route_eco.
+4. Re-run SS setup and FF hold with propagated clock.
+5. Check route DRC, legality, PT constraints, and Formality if the ECO is accepted.
+```
+
 증거:
 
 ```text

@@ -149,6 +149,7 @@ Max-cap ECO3 open_site | PARTIAL | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap
 Max-cap ECO4 occupied_site | NOT_FINAL | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco4_occupied_site/max_cap_eco_manifest.txt | ICC2 internal max_cap 13 -> 0 and PT max_cap 0, but route DRC has 3 M1 Shorts; repaired by ECO5
 Max-cap ECO5 route repair | PASS_WITH_TRANSITION_NOTE | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt | ICC2 route DRC 0, legality 0, internal max_cap 0; PT SPEF max_cap 0 in cmax/cmin; one tiny cmax max_transition report remains with rounded slack 0.00
 Maxtran ECO6 U246 RVT swap | PASS | 7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/maxtran_eco_manifest.txt | U246 changed from AND4X4_HVT to AND4X4_RVT because no AND4X8_HVT exists; ICC2 route DRC 0, legality 0, internal max_transition/max_cap 0
+SS setup ECO7 FADDX RVT trial | SETUP_FIXED_HOLD_OPEN | 7_Backend_ICC2/2_Output/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/ss_setup_eco_manifest.txt | 32 critical FADDX HVT cells changed to RVT; ICC2 route DRC 0, legality 0, internal max_transition/max_cap 0; SS propagated-clock setup clean; FF -40C hold still open
 ```
 
 ### Timing
@@ -187,6 +188,10 @@ Maxtran ECO6 SPEF STA SS cmax propagated-clock probe | 10 ns | -0.65 ns | -67.21
 Maxtran ECO6 SPEF STA SS cmin propagated-clock probe | 10 ns | -0.42 ns | -14.97 ns | not summarized | not summarized | propagated clock confirmed; setup still violated on 121 endpoints
 Maxtran ECO6 SPEF STA FF-40 cmax propagated-clock probe | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -1.99 ns | not summarized | not summarized | propagated clock confirmed; hold violated on 225 endpoints
 Maxtran ECO6 SPEF STA FF-40 cmin propagated-clock probe | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -2.39 ns | not summarized | not summarized | propagated clock confirmed; hold violated on 268 endpoints
+SS setup ECO7 SPEF STA SS cmax propagated-clock | 10 ns | no setup violation, worst listed +0.10 ns | no hold violation | not summarized | not summarized | 32 FADDX HVT-to-RVT swaps fix SS cmax setup
+SS setup ECO7 SPEF STA SS cmin propagated-clock | 10 ns | no setup violation, worst listed +0.25 ns | no hold violation | not summarized | not summarized | SS cmin setup also clean after ECO7
+SS setup ECO7 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -1.99 ns | not summarized | not summarized | FF hold remains open; same magnitude as ECO6
+SS setup ECO7 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -2.39 ns | not summarized | not summarized | remaining target is hold-specific ECO
 ```
 
 ### Fmax Estimate

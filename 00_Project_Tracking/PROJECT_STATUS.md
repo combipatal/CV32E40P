@@ -645,3 +645,47 @@ Best next fix candidates:
 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.constraints.rpt
 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.constraints.rpt
 ```
+
+## 2026-05-10 MCMM Post-Route STA ECO Status
+
+최신 physical/timing base:
+
+```text
+hold_eco15_maxcap_occupied_from_eco14
+```
+
+완료된 것:
+
+```text
+1. ECO14: mhpmcounter setup path의 U1856/U1857을 HVT에서 RVT로 변경
+2. ECO15: ICC2 max_cap ECO occupied_site 실행
+3. ICC2 physical check: route DRC 0, open nets 0, legality 0
+4. PrimeTime SPEF propagated-clock STA: TT/SS/FF -40C cmax/cmin setup/hold clean
+```
+
+남은 것:
+
+```text
+FF -40C cmax PrimeTime max_cap 8개
+worst: u_core/core_i/id_stage_i/U498/Y required 32.00, actual 32.17, slack -0.17
+```
+
+판정:
+
+```text
+setup/hold timing은 clean.
+electrical constraint까지 포함한 STA closure는 아직 open.
+다음 flow는 residual FF cmax max_cap ECO16 후보 탐색.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco14_setup_recovery_u1856_u1857_rvt/setup_recovery_eco_manifest.txt
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco15_maxcap_occupied_from_eco14/max_cap_eco_manifest.txt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco15_maxcap_occupied_from_eco14/check_routes.after_max_cap_eco.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco15_maxcap_occupied_from_eco14/check_legality.after_max_cap_eco.rpt
+6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_tt1p05v25c_propclk/
+6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_ss0p95v125c_propclk/
+6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_ff1p16vn40c_propclk/
+```

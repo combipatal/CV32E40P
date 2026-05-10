@@ -556,6 +556,40 @@ Current fix direction:
    ECO10 filtered DELLN1 endpoint insertion, excluding mhpmcounter high-bit counter endpoints that created SS setup violations.
 ```
 
+2026-05-10 ECO10 update:
+
+```text
+ECO10 started from ECO7 and excluded endpoints matching mhpmcounter_q_reg.
+Inserted DELLN1X2_HVT cells: 218
+Excluded mhpmcounter endpoints: 50
+Physical result: route DRC 0, open nets 0, legality 0.
+
+SS propagated-clock STA:
+  cmax no setup/hold violations
+  cmin no setup/hold violations
+
+FF -40C propagated-clock STA:
+  cmax setup clean, hold WNS -0.02 / TNS -0.27 / 28 endpoints
+  cmin setup clean, hold WNS -0.02 / TNS -0.48 / 51 endpoints
+
+Conclusion:
+  Filtering protected SS setup.
+  Remaining hold failures are concentrated on the excluded mhpmcounter endpoints.
+  Next fix should target mhpmcounter with paired setup recovery, not blanket delay insertion.
+```
+
+Next practical action:
+
+```text
+Probe mhpmcounter hold/setup tradeoff:
+  1. list remaining FF -40C mhpmcounter hold endpoints,
+  2. identify the SS setup-critical counter-chain cells around those endpoints,
+  3. try a paired ECO:
+     DELLN1 on selected mhpmcounter hold endpoints
+     plus HVT->RVT swaps on selected NAND2X0/INVX1/HADDX cells in that chain,
+  4. rerun FF hold and SS setup.
+```
+
 증거:
 
 ```text

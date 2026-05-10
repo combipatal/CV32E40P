@@ -296,6 +296,74 @@ If hold remains only on mhpmcounter:
   Then route_eco and re-run SS/FF PT.
 ```
 
+## ECO10 Filtered Hold Trial
+
+ECO10 reused the manual DELLN script but excluded `mhpmcounter_q_reg`.
+
+Command intent:
+
+```text
+Start from ECO7.
+Insert DELLN1X2_HVT on non-mhpmcounter hold endpoints.
+Skip setup-critical mhpmcounter endpoints.
+```
+
+ICC2 physical result:
+
+```text
+Unique endpoints in ECO7 cmin hold report: 268
+Inserted DELLN1X2_HVT cells: 218
+Excluded mhpmcounter endpoints: 50
+route DRC: 0
+open nets: 0
+legality violations: 0
+```
+
+PrimeTime result:
+
+```text
+SS cmax propagated clock: no setup violations, no hold violations
+SS cmin propagated clock: no setup violations, no hold violations
+
+FF -40C cmax propagated clock:
+  setup clean
+  hold WNS -0.02 ns / TNS -0.27 ns / 28 endpoints
+
+FF -40C cmin propagated clock:
+  setup clean
+  hold WNS -0.02 ns / TNS -0.48 ns / 51 endpoints
+```
+
+Diagnosis refined:
+
+```text
+ECO10 proves the non-mhpmcounter hold paths can be fixed without breaking SS setup.
+The remaining hold failures are the mhpmcounter endpoints excluded from ECO10.
+ECO9 proved that adding DELLN1 directly to those endpoints breaks SS setup.
+
+Therefore the next problem is narrow:
+  mhpmcounter hold needs extra min delay,
+  but mhpmcounter setup counter-chain needs recovery at SS.
+```
+
+Recommended ECO11 direction:
+
+```text
+Start from ECO10.
+Target only remaining mhpmcounter hold endpoints.
+Use paired setup/hold ECO:
+  add minimal hold delay on selected mhpmcounter endpoints,
+  swap selected cells on the same counter setup chain from HVT to RVT.
+
+Cells seen on worst ECO9 SS setup path:
+  many NAND2X0_HVT / INVX1_HVT stages
+  endpoint HADDX1_HVT / AO22X1_HVT before the D pin
+
+First probe:
+  compare how many HVT->RVT swaps are needed to recover about 0.3 to 0.5 ns
+  before inserting DELLN on the same endpoint group.
+```
+
 Evidence:
 
 ```text
@@ -310,4 +378,12 @@ Evidence:
 6_STA/3_Log/pt_hold_eco9_10ns_spef_ss0p95v125c_propclk.log
 6_STA/4_Report/hold_eco9_manual_delln1_all_spef_ff1p16vn40c_propclk/
 6_STA/4_Report/hold_eco9_manual_delln1_all_spef_ss0p95v125c_propclk/
+7_Backend_ICC2/3_Log/07_extract_sta/hold_eco10_delln1_no_mhpmcounter.log
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco10_delln1_no_mhpmcounter/hold_manual_eco_manifest.txt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco10_delln1_no_mhpmcounter/check_routes.after_hold_manual.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco10_delln1_no_mhpmcounter/check_legality.after_hold_manual.rpt
+6_STA/3_Log/pt_hold_eco10_10ns_spef_ff1p16vn40c_propclk.log
+6_STA/3_Log/pt_hold_eco10_10ns_spef_ss0p95v125c_propclk.log
+6_STA/4_Report/hold_eco10_delln1_no_mhpmcounter_spef_ff1p16vn40c_propclk/
+6_STA/4_Report/hold_eco10_delln1_no_mhpmcounter_spef_ss0p95v125c_propclk/
 ```

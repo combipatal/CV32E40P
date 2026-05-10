@@ -132,10 +132,32 @@ Evidence:
 
 Use `hold_eco17_flop_q_load_split` as the current STA-clean backend candidate.
 
-Next flow:
+Final ECO N2N Formality:
 
 ```text
-1. Run final ECO N2N Formality against the accepted post-DFT reference.
-2. Package final report tables.
-3. Keep backend caveat clear: this is educational-route closure, not full foundry signoff.
+tool: Formality W-2024.09-SP5
+reference: post_dft_topo_no_or2x1_nor2x012_hvt
+implementation: hold_eco17_flop_q_load_split
+result: PASS
+passing compare points: 2243
+failing compare points: 0
+unmatched compare points: 0
+not compared: 74 clock-gate LAT, 1 scan_out don't-verify
+```
+
+Evidence:
+
+```text
+5_FM_N2N/0_Script/run_fm_n2n_hold_eco17_flop_q_load_split.tcl
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.verify.rpt
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.failing_points.rpt
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.unmatched_points.post_verify.rpt
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.passing_points.post_verify.rpt
+```
+
+Remaining caveat:
+
+```text
+This is educational backend closure evidence.
+Do not call it full foundry signoff without DRC/LVS with signoff decks, IR/EM, antenna, noise, and final signoff STA methodology.
 ```

@@ -250,6 +250,7 @@ N2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no
 N2N post-route ECO DRC clean | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 exported post-route ECO netlist; scan_out don't-verify; 74 clock-gate LAT not compared
 N2N maxcap ECO5 route repair | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 maxcap_eco5_route_repair netlist; unmatched 0; scan_out don't-verify; 74 clock-gate LAT not compared
 N2N maxtran ECO6 U246 RVT swap | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 maxtran_eco6_u246_rvt_swap netlist; unmatched 0; scan_out don't-verify; 74 clock-gate LAT not compared
+N2N final ECO17 flop-Q load split | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 ECO17 STA-clean netlist; unmatched 0; scan_out don't-verify; 74 clock-gate LAT not compared
 ```
 
 ### MCMM Post-Route ECO14/ECO15 Snapshot

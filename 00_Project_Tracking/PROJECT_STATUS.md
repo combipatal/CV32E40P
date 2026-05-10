@@ -670,14 +670,16 @@ hold_eco17_flop_q_load_split
 
 ```text
 STA timing/electrical constraint 기준으로는 현재 open 없음.
-signoff-like 주장 전에는 final ECO netlist에 대한 Formality N2N 재확인이 필요.
+final ECO17 netlist Formality N2N도 PASS.
+signoff-like 주장에는 아직 full signoff 범위가 부족함.
 ```
 
 판정:
 
 ```text
 ECO17은 현재 STA-clean candidate.
-다음 flow는 final ECO N2N Formality와 결과 패키징.
+final ECO17은 functional equivalence까지 확인된 backend candidate.
+다음 flow는 결과 패키징 또는 추가 signoff성 check 선택.
 ```
 
 증거:
@@ -690,4 +692,7 @@ ECO17은 현재 STA-clean candidate.
 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_tt1p05v25c_propclk/
 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ss0p95v125c_propclk/
 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ff1p16vn40c_propclk/
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.verify.rpt
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.failing_points.rpt
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.unmatched_points.post_verify.rpt
 ```

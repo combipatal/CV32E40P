@@ -261,6 +261,11 @@ ECO15 max_cap occupied_site | SETUP_HOLD_CLEAN_FF_CMAX_MAXCAP_OPEN | 7_Backend_I
 ECO15 TT SPEF STA | PASS | 6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_tt1p05v25c_propclk | cmax/cmin global_timing reports no setup or hold violations; constraint reports have no listed violators
 ECO15 SS SPEF STA | PASS | 6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_ss0p95v125c_propclk | cmax/cmin global_timing reports no setup or hold violations; constraint reports have no listed violators
 ECO15 FF -40C SPEF STA | PASS_WITH_MAXCAP_OPEN | 6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_ff1p16vn40c_propclk | cmax/cmin global_timing reports no setup or hold violations; cmax constraints report 8 max_cap violations, worst u_core/core_i/id_stage_i/U498/Y slack -0.17
+ECO16b residual max_cap size ECO | PARTIAL_FLIPFLOP_Q_MAXCAP_OPEN | 7_Backend_ICC2/2_Output/07_extract_sta/hold_eco16b_residual_maxcap_size7_legalize/residual_maxcap_size_eco_manifest.txt | resized 7 non-flop residual drivers and legalized before route_eco; physical clean and ICC2 max_cap clean; PT FF -40C cmax reduced to one tiny flop Q max_cap violation
+ECO17 flop-Q load split | STA_CONSTRAINT_CLEAN | 7_Backend_ICC2/2_Output/07_extract_sta/hold_eco17_flop_q_load_split/residual_maxcap_output_buffer_eco_manifest.txt | inserted one NBUFFX2_HVT after register_file_i/mem_reg[9][14]/Q; route DRC 0/open nets 0/legality 0; ICC2 max_cap 0
+ECO17 TT SPEF STA | PASS | 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_tt1p05v25c_propclk | cmax/cmin global_timing reports no setup or hold violations; report_constraint -all_violators files contain no violator rows
+ECO17 SS SPEF STA | PASS | 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ss0p95v125c_propclk | cmax/cmin global_timing reports no setup or hold violations; report_constraint -all_violators files contain no violator rows
+ECO17 FF -40C SPEF STA | PASS | 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ff1p16vn40c_propclk | cmax/cmin global_timing reports no setup or hold violations; report_constraint -all_violators files contain no violator rows
 ```
 
 ### DFT/ATPG

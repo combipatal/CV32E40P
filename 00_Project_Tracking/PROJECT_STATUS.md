@@ -651,7 +651,7 @@ Best next fix candidates:
 최신 physical/timing base:
 
 ```text
-hold_eco15_maxcap_occupied_from_eco14
+hold_eco17_flop_q_load_split
 ```
 
 완료된 것:
@@ -659,33 +659,35 @@ hold_eco15_maxcap_occupied_from_eco14
 ```text
 1. ECO14: mhpmcounter setup path의 U1856/U1857을 HVT에서 RVT로 변경
 2. ECO15: ICC2 max_cap ECO occupied_site 실행
-3. ICC2 physical check: route DRC 0, open nets 0, legality 0
-4. PrimeTime SPEF propagated-clock STA: TT/SS/FF -40C cmax/cmin setup/hold clean
+3. ECO16b: 7개 non-flop residual max_cap driver size-up 후 legalize/route_eco
+4. ECO17: 마지막 flop Q max_cap net에 NBUFFX2_HVT load split buffer 1개 삽입
+5. ICC2 physical check: route DRC 0, open nets 0, legality 0
+6. PrimeTime SPEF propagated-clock STA: TT/SS/FF -40C cmax/cmin setup/hold clean
+7. PrimeTime report_constraint -all_violators: TT/SS/FF -40C cmax/cmin 모두 violator 없음
 ```
 
 남은 것:
 
 ```text
-FF -40C cmax PrimeTime max_cap 8개
-worst: u_core/core_i/id_stage_i/U498/Y required 32.00, actual 32.17, slack -0.17
+STA timing/electrical constraint 기준으로는 현재 open 없음.
+signoff-like 주장 전에는 final ECO netlist에 대한 Formality N2N 재확인이 필요.
 ```
 
 판정:
 
 ```text
-setup/hold timing은 clean.
-electrical constraint까지 포함한 STA closure는 아직 open.
-다음 flow는 residual FF cmax max_cap ECO16 후보 탐색.
+ECO17은 현재 STA-clean candidate.
+다음 flow는 final ECO N2N Formality와 결과 패키징.
 ```
 
 증거:
 
 ```text
-7_Backend_ICC2/2_Output/07_extract_sta/hold_eco14_setup_recovery_u1856_u1857_rvt/setup_recovery_eco_manifest.txt
-7_Backend_ICC2/2_Output/07_extract_sta/hold_eco15_maxcap_occupied_from_eco14/max_cap_eco_manifest.txt
-7_Backend_ICC2/4_Report/07_extract_sta/hold_eco15_maxcap_occupied_from_eco14/check_routes.after_max_cap_eco.rpt
-7_Backend_ICC2/4_Report/07_extract_sta/hold_eco15_maxcap_occupied_from_eco14/check_legality.after_max_cap_eco.rpt
-6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_tt1p05v25c_propclk/
-6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_ss0p95v125c_propclk/
-6_STA/4_Report/hold_eco15_maxcap_occupied_from_eco14_spef_ff1p16vn40c_propclk/
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco17_flop_q_load_split/residual_maxcap_output_buffer_eco_manifest.txt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco17_flop_q_load_split/check_routes.after_output_buffer.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco17_flop_q_load_split/check_legality.after_output_buffer.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco17_flop_q_load_split/constraints.after_output_buffer.rpt
+6_STA/4_Report/hold_eco17_flop_q_load_split_spef_tt1p05v25c_propclk/
+6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ss0p95v125c_propclk/
+6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ff1p16vn40c_propclk/
 ```

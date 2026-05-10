@@ -664,6 +664,8 @@ hold_eco17_flop_q_load_split
 5. ICC2 physical check: route DRC 0, open nets 0, legality 0
 6. PrimeTime SPEF propagated-clock STA: TT/SS/FF -40C cmax/cmin setup/hold clean
 7. PrimeTime report_constraint -all_violators: TT/SS/FF -40C cmax/cmin 모두 violator 없음
+8. final ECO17 Formality N2N PASS
+9. ECO17 GDS candidate export PASS
 ```
 
 남은 것:
@@ -671,6 +673,7 @@ hold_eco17_flop_q_load_split
 ```text
 STA timing/electrical constraint 기준으로는 현재 open 없음.
 final ECO17 netlist Formality N2N도 PASS.
+ICC2 candidate GDS도 생성 완료.
 signoff-like 주장에는 아직 full signoff 범위가 부족함.
 ```
 
@@ -679,6 +682,7 @@ signoff-like 주장에는 아직 full signoff 범위가 부족함.
 ```text
 ECO17은 현재 STA-clean candidate.
 final ECO17은 functional equivalence까지 확인된 backend candidate.
+GDS는 educational final-candidate로 생성됨.
 다음 flow는 결과 패키징 또는 추가 signoff성 check 선택.
 ```
 
@@ -695,4 +699,9 @@ final ECO17은 functional equivalence까지 확인된 backend candidate.
 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.verify.rpt
 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.failing_points.rpt
 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.unmatched_points.post_verify.rpt
+7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/cv32e40p_synth_wrap.hold_eco17_gds_candidate.gds
+7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/gds_export_manifest.txt
+7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/check_routes.after_filler.rpt
+7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/check_legality.after_filler.rpt
+7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/constraints.after_filler.rpt
 ```

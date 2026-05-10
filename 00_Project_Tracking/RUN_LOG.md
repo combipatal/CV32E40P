@@ -1750,3 +1750,12 @@ Result: PASS
 Notes: Compared the backend handoff post-DFT netlist against the ECO17 STA-clean netlist in functional mode. Constants: scan_cg_en_i=0, scan_en=0, scan_in=0. scan_out is don't-verify because it is not an architectural output in functional mode. Formality reports Verification SUCCEEDED with 2243 passing compare points, 0 failing compare points, and 0 unmatched compare points. 74 clock-gate LAT points are not compared, consistent with previous N2N runs.
 Evidence: 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.verify.rpt, 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.failing_points.rpt, 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.unmatched_points.post_verify.rpt, 5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/n2n_hold_eco17_flop_q_load_split.passing_points.post_verify.rpt, 5_FM_N2N/2_Output/n2n_hold_eco17_flop_q_load_split_fm_session.fss, 5_FM_N2N/3_Log/fm_n2n_hold_eco17_flop_q_load_split.command.log, and 5_FM_N2N/3_Log/fm_n2n_hold_eco17_flop_q_load_split.formality.log.
 ```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -f 7_Backend_ICC2/0_Script/09_gds/run_write_gds_eco17_candidate.tcl
+Stage: ICC2 ECO17 GDS candidate export
+Result: PASS_CANDIDATE_GDS_WRITTEN
+Notes: Copied the ECO17 STA/N2N clean block to cv32e40p_synth_wrap_hold_eco17_gds_candidate, inserted standard-cell fillers, reconnected PG pins, and wrote GDS/DEF/netlist/SDC. The generated GDS is a 46 MB GDSII Stream v5.0 file. After filler insertion, ICC2 check_routes reports open nets 0 and DRC 0; check_legality reports 0 violations; report_constraints reports total violations 0. This is an educational ICC2 candidate GDS, not full signoff GDS because signoff DRC/LVS/IR/EM/antenna/metal fill are not complete.
+Evidence: 7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/gds_export_manifest.txt, 7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/cv32e40p_synth_wrap.hold_eco17_gds_candidate.gds, 7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/check_routes.after_filler.rpt, 7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/check_legality.after_filler.rpt, 7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/constraints.after_filler.rpt, and docs/backend/gds_candidate_export_2026_05_10.md.
+```

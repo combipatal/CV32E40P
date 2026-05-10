@@ -267,6 +267,7 @@ ECO17 flop-Q load split | STA_CONSTRAINT_CLEAN | 7_Backend_ICC2/2_Output/07_extr
 ECO17 TT SPEF STA | PASS | 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_tt1p05v25c_propclk | cmax/cmin global_timing reports no setup or hold violations; report_constraint -all_violators files contain no violator rows
 ECO17 SS SPEF STA | PASS | 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ss0p95v125c_propclk | cmax/cmin global_timing reports no setup or hold violations; report_constraint -all_violators files contain no violator rows
 ECO17 FF -40C SPEF STA | PASS | 6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ff1p16vn40c_propclk | cmax/cmin global_timing reports no setup or hold violations; report_constraint -all_violators files contain no violator rows
+ECO17 GDS candidate export | PASS_WITH_SIGNOFF_CAVEAT | 7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/gds_export_manifest.txt | filler inserted, PG reconnected, GDSII Stream v5.0 written; after-filler route DRC 0/open nets 0/legality 0/ICC2 constraint violations 0; not full signoff GDS
 ```
 
 ### DFT/ATPG

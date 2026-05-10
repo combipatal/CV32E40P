@@ -208,3 +208,106 @@ ICC2 route DRC 0
 ICC2 legality 0
 PT report_constraint all_violators empty or explained
 ```
+
+## ECO8/ECO9 Hold Trials
+
+ECO8 tried automatic ICC2 hold repair with an 80 ps margin.
+
+Result:
+
+```text
+Inserted buffers: 0
+Reason: active ICC2 ECO scenario did not see the FF -40C propagated-clock hold failure.
+PT FF -40C hold: unchanged from ECO7.
+Decision: reject as no-effect.
+```
+
+ECO9 tried manual DELLN insertion on every unique FF -40C cmin hold endpoint.
+
+ICC2 physical result:
+
+```text
+Inserted DELLN1X2_HVT cells: 268
+route DRC: 0
+open nets: 0
+legality violations: 0
+```
+
+FF -40C PrimeTime result:
+
+```text
+cmax: no setup violations; hold WNS -0.00 ns / TNS -0.00 ns / 5 endpoints
+cmin: no setup violations; hold WNS -0.00 ns / TNS -0.00 ns / 1 endpoint
+```
+
+SS PrimeTime result:
+
+```text
+cmax: setup WNS -0.44 ns / TNS -1.04 ns / 4 endpoints; hold clean
+cmin: setup WNS -0.11 ns / TNS -0.14 ns / 2 endpoints; hold clean
+```
+
+Why ECO9 is rejected:
+
+```text
+The blanket DELLN insertion fixed most short hold paths but also added endpoint
+delay to setup-critical long paths.
+
+Worst broken path:
+  mhpmcounter_q_reg[2][2] -> mhpmcounter_q_reg[2][63]
+
+The inserted DELLN1X2_HVT on mhpmcounter_q_reg[2][63]/D adds about 0.32 ns
+at SS on a long counter chain. ECO7 only had small positive SS margin, so this
+single endpoint delay is enough to create -0.44 ns setup slack.
+```
+
+Current diagnosis:
+
+```text
+The remaining problem is no longer "which delay cell exists".
+The problem is setup/hold tradeoff across corners.
+
+Hold-only endpoint insertion is too blunt.
+The next fix must either:
+  1. run a real MCMM-aware ICC2 hold ECO with SS setup and FF hold scenarios, or
+  2. use manual filtered delay insertion and separately recover setup-critical
+     mhpmcounter paths.
+```
+
+Recommended next trial:
+
+```text
+ECO10 filtered manual hold ECO:
+  Start from ECO7, not ECO9.
+  Insert DELLN1X2_HVT only on non-mhpmcounter endpoint groups first.
+  Exclude mhpmcounter high-bit endpoints that broke SS setup.
+  Re-run FF -40C hold and SS setup.
+
+  Script support:
+    run_hold_eco9_manual_delln1.tcl now accepts INCLUDE_ENDPOINT_REGEX and
+    EXCLUDE_ENDPOINT_REGEX, so ECO10 can reuse the same simple script with
+    endpoint filters instead of editing the Tcl each time.
+
+If hold remains only on mhpmcounter:
+  Try paired ECO:
+    add minimal hold delay on selected mhpmcounter endpoints
+    recover setup by swapping selected NAND2X0/INVX1/HADDX cells in the same
+    counter path from HVT to RVT
+  Then route_eco and re-run SS/FF PT.
+```
+
+Evidence:
+
+```text
+7_Backend_ICC2/3_Log/07_extract_sta/hold_eco8_margin80ps.log
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco8_margin80ps/hold_eco_manifest.txt
+6_STA/3_Log/pt_hold_eco8_10ns_spef_ff1p16vn40c_propclk.log
+7_Backend_ICC2/3_Log/07_extract_sta/hold_eco9_manual_delln1_all.log
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco9_manual_delln1_all/hold_manual_eco_manifest.txt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco9_manual_delln1_all/check_routes.after_hold_manual.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco9_manual_delln1_all/check_legality.after_hold_manual.rpt
+6_STA/3_Log/pt_hold_eco9_10ns_spef_ff1p16vn40c_propclk.log
+6_STA/3_Log/pt_hold_eco9_10ns_spef_ss0p95v125c_propclk.log
+6_STA/4_Report/hold_eco9_manual_delln1_all_spef_ff1p16vn40c_propclk/
+6_STA/4_Report/hold_eco9_manual_delln1_all_spef_ss0p95v125c_propclk/
+```

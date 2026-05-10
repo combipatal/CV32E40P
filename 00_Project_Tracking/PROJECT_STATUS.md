@@ -521,6 +521,41 @@ Best next trial:
   hold-specific delay insertion, preferably HVT DELLN cells first, then route_eco and SS/FF PT rerun.
 ```
 
+2026-05-10 hold ECO8/ECO9 update:
+
+```text
+ECO8 automatic hold-margin trial inserted 0 buffers.
+Reason: active ICC2 ECO scenario did not see the FF -40C propagated-clock hold violations that PrimeTime reports.
+Result: rejected as no-effect.
+
+ECO9 manually inserted DELLN1X2_HVT on all 268 unique FF -40C cmin hold endpoints.
+Physical result: route DRC 0, open nets 0, legality 0.
+FF -40C result: hold nearly fixed but still has tiny rounded violations:
+  cmax WNS -0.00 / TNS -0.00 / 5 endpoints
+  cmin WNS -0.00 / TNS -0.00 / 1 endpoint
+SS result: setup broken:
+  cmax WNS -0.44 / TNS -1.04 / 4 endpoints
+  cmin WNS -0.11 / TNS -0.14 / 2 endpoints
+
+Root cause of ECO9 rejection:
+  blanket endpoint delay insertion also hit long mhpmcounter setup paths.
+  Worst path is mhpmcounter_q_reg[2][2] -> mhpmcounter_q_reg[2][63].
+  The endpoint DELLN1 adds about 0.32 ns at SS on a path that only had small margin after ECO7.
+```
+
+Current fix direction:
+
+```text
+1. Do not accept blanket DELLN insertion.
+2. Prefer MCMM-aware ICC2 hold ECO with SS setup and FF hold scenarios visible to the tool.
+3. If staying manual, split the problem:
+   a. fix non-setup-critical FF hold endpoints first,
+   b. handle mhpmcounter endpoints with paired setup recovery or clock-skew-aware ECO,
+   c. re-run SS setup after every hold trial.
+4. Next practical trial candidate:
+   ECO10 filtered DELLN1 endpoint insertion, excluding mhpmcounter high-bit counter endpoints that created SS setup violations.
+```
+
 증거:
 
 ```text

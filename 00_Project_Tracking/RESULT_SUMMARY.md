@@ -150,6 +150,8 @@ Max-cap ECO4 occupied_site | NOT_FINAL | 7_Backend_ICC2/2_Output/07_extract_sta/
 Max-cap ECO5 route repair | PASS_WITH_TRANSITION_NOTE | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt | ICC2 route DRC 0, legality 0, internal max_cap 0; PT SPEF max_cap 0 in cmax/cmin; one tiny cmax max_transition report remains with rounded slack 0.00
 Maxtran ECO6 U246 RVT swap | PASS | 7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/maxtran_eco_manifest.txt | U246 changed from AND4X4_HVT to AND4X4_RVT because no AND4X8_HVT exists; ICC2 route DRC 0, legality 0, internal max_transition/max_cap 0
 SS setup ECO7 FADDX RVT trial | SETUP_FIXED_HOLD_OPEN | 7_Backend_ICC2/2_Output/07_extract_sta/ss_setup_eco7_fadd_rvt_trial/ss_setup_eco_manifest.txt | 32 critical FADDX HVT cells changed to RVT; ICC2 route DRC 0, legality 0, internal max_transition/max_cap 0; SS propagated-clock setup clean; FF -40C hold still open
+Hold ECO8 automatic margin trial | NO_EFFECT_REJECTED | 7_Backend_ICC2/2_Output/07_extract_sta/hold_eco8_margin80ps/hold_eco_manifest.txt | ICC2/PT ECO inserted 0 buffers because the active ICC2 scenario did not see the FF -40C propagated-clock hold failures; PT FF -40C hold unchanged from ECO7
+Hold ECO9 manual DELLN1 all-endpoint trial | HOLD_IMPROVED_SETUP_BROKEN_REJECTED | 7_Backend_ICC2/2_Output/07_extract_sta/hold_eco9_manual_delln1_all/hold_manual_eco_manifest.txt | Inserted 268 DELLN1X2_HVT cells; physical result route DRC 0/open nets 0/legality 0; FF -40C hold reduced to tiny rounded violations, but SS setup broke on mhpmcounter paths, so the blanket method is rejected
 ```
 
 ### Timing
@@ -192,6 +194,12 @@ SS setup ECO7 SPEF STA SS cmax propagated-clock | 10 ns | no setup violation, wo
 SS setup ECO7 SPEF STA SS cmin propagated-clock | 10 ns | no setup violation, worst listed +0.25 ns | no hold violation | not summarized | not summarized | SS cmin setup also clean after ECO7
 SS setup ECO7 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -1.99 ns | not summarized | not summarized | FF hold remains open; same magnitude as ECO6
 SS setup ECO7 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -2.39 ns | not summarized | not summarized | remaining target is hold-specific ECO
+Hold ECO8 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -1.99 ns | not summarized | not summarized | no-effect automatic hold ECO; same as ECO7
+Hold ECO8 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -2.39 ns | not summarized | not summarized | no-effect automatic hold ECO; same as ECO7
+Hold ECO9 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.00 ns / TNS -0.00 ns / 5 endpoints | not summarized | not summarized | 268 DELLN1X2_HVT cells nearly fix FF hold, but this ECO is rejected because SS setup breaks
+Hold ECO9 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.00 ns / TNS -0.00 ns / 1 endpoint | not summarized | not summarized | remaining hold is tiny, but SS setup regression makes this unacceptable as final
+Hold ECO9 SPEF STA SS cmax propagated-clock | 10 ns | setup WNS -0.44 ns / TNS -1.04 ns / 4 endpoints | no hold violation | not summarized | not summarized | blanket DELLN insertion broke long mhpmcounter setup paths
+Hold ECO9 SPEF STA SS cmin propagated-clock | 10 ns | setup WNS -0.11 ns / TNS -0.14 ns / 2 endpoints | no hold violation | not summarized | not summarized | setup regression confirms need for MCMM-aware or filtered hold ECO
 ```
 
 ### Fmax Estimate

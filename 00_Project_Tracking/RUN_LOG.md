@@ -1553,3 +1553,39 @@ Result: PASS
 Notes: Reference is the no_or2x1_nor2x012_hvt post-DFT netlist. Implementation is the ICC2 maxcap_eco5_route_repair netlist. Functional constants were applied to scan_cg_en_i, scan_en, and scan_in. scan_out was marked don't-verify for functional mode. Verification SUCCEEDED with 2243 passing compare points, 0 failing, and 0 unmatched. 74 clock-gate LAT points remain not compared, matching previous N2N behavior.
 Evidence: 5_FM_N2N/3_Log/fm_n2n_maxcap_eco5_route_repair.log, 5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.failing_points.rpt, 5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.unmatched_points.post_verify.rpt, 5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.passing_points.post_verify.rpt, and 5_FM_N2N/2_Output/n2n_maxcap_eco5_route_repair_fm_session.fss.
 ```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/probe_and4_hvt_cells.log -f 7_Backend_ICC2/0_Script/07_extract_sta/probe_and4_hvt_cells.tcl
+Stage: ICC2 AND4 HVT drive availability probe
+Result: RECORDED
+Notes: SAED32 HVT provides AND4X1_HVT, AND4X2_HVT, and AND4X4_HVT only. The failing transition driver U246 was already AND4X4_HVT, so true HVT drive upsize to AND4X8_HVT is not available. The nearest small ECO alternative is same-drive VT swap to AND4X4_RVT or AND4X4_LVT.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/probe_and4_hvt_cells.log.
+```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/maxtran_eco6_u246_rvt_swap.log -f 7_Backend_ICC2/0_Script/07_extract_sta/run_maxtran_eco6_u246_rvt_swap.tcl
+Stage: ICC2 max_transition ECO6 U246 RVT swap
+Result: PASS
+Notes: Copied the ECO5 block and changed one cell: u_core/core_i/id_stage_i/U246 from AND4X4_HVT to AND4X4_RVT. The cell was marked dont_touch. route_eco changed 1 net and finished with 0 open nets and 0 route violations. Final check_routes reports open nets 0 and DRC 0. check_legality reports 0 violations. ICC2 internal constraints report max_transition 0, max_capacitance 0, and total violations 0. Netlist, SDC, SDF, DEF, and cmax/cmin SPEF were exported.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/maxtran_eco6_u246_rvt_swap.log, 7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/maxtran_eco_manifest.txt, 7_Backend_ICC2/4_Report/07_extract_sta/maxtran_eco6_u246_rvt_swap/u246.before.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxtran_eco6_u246_rvt_swap/u246.after.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxtran_eco6_u246_rvt_swap/check_routes.after_maxtran_eco.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxtran_eco6_u246_rvt_swap/check_legality.after_maxtran_eco.rpt, and 7_Backend_ICC2/4_Report/07_extract_sta/maxtran_eco6_u246_rvt_swap/constraints.after_maxtran_eco.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: env TAG=maxtran_eco6_u246_rvt_swap NETLIST=7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/cv32e40p_synth_wrap.maxtran_eco6_u246_rvt_swap.vg SPEF_MAX_FILE=7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/cv32e40p_synth_wrap.maxtran_eco6_u246_rvt_swap.spef.saed32_cmax_25.spef SPEF_MIN_FILE=7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/cv32e40p_synth_wrap.maxtran_eco6_u246_rvt_swap.spef.saed32_cmin_25.spef REPORT_DIR=6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef REPORT_PREFIX=maxtran_eco6.func_tt_10ns_spef pt_shell -f 6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl | tee 6_STA/3_Log/pt_maxtran_eco6_10ns_spef.log
+Stage: PrimeTime ECO6 SPEF STA
+Result: PASS
+Notes: PrimeTime linked the ECO6 netlist, read functional 10 ns SDC, and annotated cmax/cmin SPEF. cmax and cmin report_constraint -all_violators are empty. cmax/cmin global_timing both report no setup violations and no hold violations. Worst listed setup slack is +2.17 ns in cmax. Worst listed hold slack is +0.05 ns in cmin. This clears the previous ECO5 cmax max_transition residue while preserving max_cap, setup, and hold clean status.
+Evidence: 6_STA/3_Log/pt_maxtran_eco6_10ns_spef.log, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef/maxtran_eco6.func_tt_10ns_spef.run_manifest.rpt, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef/maxtran_eco6.func_tt_10ns_spef.cmax.constraints.rpt, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef/maxtran_eco6.func_tt_10ns_spef.cmin.constraints.rpt, 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef/maxtran_eco6.func_tt_10ns_spef.cmax.global_timing.rpt, and 6_STA/4_Report/maxtran_eco6_u246_rvt_swap_spef/maxtran_eco6.func_tt_10ns_spef.cmin.global_timing.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: fm_shell -f 5_FM_N2N/0_Script/run_fm_n2n_maxtran_eco6_u246_rvt_swap.tcl | tee 5_FM_N2N/3_Log/fm_n2n_maxtran_eco6_u246_rvt_swap.log
+Stage: Formality N2N post-DFT vs maxtran ECO6 U246 RVT swap
+Result: PASS
+Notes: Reference is the no_or2x1_nor2x012_hvt post-DFT netlist. Implementation is the ICC2 maxtran_eco6_u246_rvt_swap netlist. Functional constants were applied to scan_cg_en_i, scan_en, and scan_in. scan_out was marked don't-verify for functional mode. Verification SUCCEEDED with 2243 passing compare points, 0 failing, and 0 unmatched. 74 clock-gate LAT points remain not compared, matching previous N2N behavior.
+Evidence: 5_FM_N2N/3_Log/fm_n2n_maxtran_eco6_u246_rvt_swap.log, 5_FM_N2N/4_Report/maxtran_eco6_u246_rvt_swap/n2n_maxtran_eco6_u246_rvt_swap.failing_points.rpt, 5_FM_N2N/4_Report/maxtran_eco6_u246_rvt_swap/n2n_maxtran_eco6_u246_rvt_swap.unmatched_points.post_verify.rpt, 5_FM_N2N/4_Report/maxtran_eco6_u246_rvt_swap/n2n_maxtran_eco6_u246_rvt_swap.passing_points.post_verify.rpt, and 5_FM_N2N/2_Output/n2n_maxtran_eco6_u246_rvt_swap_fm_session.fss.
+```

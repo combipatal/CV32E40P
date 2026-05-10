@@ -148,6 +148,7 @@ Post-route ECO SPEF extraction | PASS | 7_Backend_ICC2/2_Output/07_extract_sta/p
 Max-cap ECO3 open_site | PARTIAL | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco3_open_site/max_cap_eco_manifest.txt | ICC2 internal max_cap 368 -> 2, but external PT SPEF still reports cmax 11 and cmin 1 design-rule violations
 Max-cap ECO4 occupied_site | NOT_FINAL | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco4_occupied_site/max_cap_eco_manifest.txt | ICC2 internal max_cap 13 -> 0 and PT max_cap 0, but route DRC has 3 M1 Shorts; repaired by ECO5
 Max-cap ECO5 route repair | PASS_WITH_TRANSITION_NOTE | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt | ICC2 route DRC 0, legality 0, internal max_cap 0; PT SPEF max_cap 0 in cmax/cmin; one tiny cmax max_transition report remains with rounded slack 0.00
+Maxtran ECO6 U246 RVT swap | PASS | 7_Backend_ICC2/2_Output/07_extract_sta/maxtran_eco6_u246_rvt_swap/maxtran_eco_manifest.txt | U246 changed from AND4X4_HVT to AND4X4_RVT because no AND4X8_HVT exists; ICC2 route DRC 0, legality 0, internal max_transition/max_cap 0
 ```
 
 ### Timing
@@ -174,6 +175,8 @@ Post-route ECO SPEF STA cmin | 10 ns | +2.35 ns listed worst setup slack | no se
 Max-cap ECO5 SPEF STA cmax | 10 ns | +2.17 ns listed worst setup slack | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after max-cap ECO and route repair; max_capacitance violations 0; one max_transition item remains with rounded slack 0.00 and precision note
 Max-cap ECO5 SPEF STA cmin | 10 ns | not summarized | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after max-cap ECO and route repair; max_capacitance violations 0; listed worst hold slack +0.05 ns
 Max-cap ECO5 cmax transition probe | 10 ns | no setup violation | no hold violation | not summarized | not summarized | Remaining max_transition is U246/Y, required 0.0948 ns, actual 0.0953 ns, slack -0.0005 ns; net n255 has 14 loads and about 31.6868 fF max total cap
+Maxtran ECO6 SPEF STA cmax | 10 ns | +2.17 ns listed worst setup slack | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after U246 AND4X4_HVT->AND4X4_RVT swap; cmax report_constraint all_violators empty
+Maxtran ECO6 SPEF STA cmin | 10 ns | not summarized | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after U246 RVT swap; cmin report_constraint all_violators empty; listed worst hold slack +0.05 ns
 ```
 
 ### Fmax Estimate
@@ -206,6 +209,7 @@ R2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Na
 N2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x012_or2x4_hvt pre-DFT vs post-DFT remains equivalent in functional mode
 N2N post-route ECO DRC clean | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 exported post-route ECO netlist; scan_out don't-verify; 74 clock-gate LAT not compared
 N2N maxcap ECO5 route repair | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 maxcap_eco5_route_repair netlist; unmatched 0; scan_out don't-verify; 74 clock-gate LAT not compared
+N2N maxtran ECO6 U246 RVT swap | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 maxtran_eco6_u246_rvt_swap netlist; unmatched 0; scan_out don't-verify; 74 clock-gate LAT not compared
 ```
 
 ### DFT/ATPG

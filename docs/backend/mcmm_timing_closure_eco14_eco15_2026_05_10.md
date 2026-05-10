@@ -194,3 +194,37 @@ Minimum ECO16 validation:
 4. PT FF -40C cmax/cmin setup/hold clean and constraints clean
 5. Record result in RUN_LOG, PROJECT_STATUS, and RESULT_SUMMARY
 ```
+
+## ECO16 Concrete Trial Plan
+
+Netlist inspection of the ECO15 export maps the 8 residual pins to this first trial list:
+
+```text
+Violating PT pin                                            Current cell/ref              First ECO16 action
+u_core/core_i/id_stage_i/U498/Y                             NBUFFX4_HVT                  try stronger buffer or RVT buffer equivalent
+u_core/core_i/cs_registers_i/ZBUF_570_inst_1936/Y           NBUFFX4_HVT                  try stronger buffer or RVT buffer equivalent
+u_core/core_i/U1913/Y                                       INVX2_HVT                    size to INVX4_HVT
+u_core/core_i/U2030/Y                                       NBUFFX2_HVT                  try stronger buffer or RVT buffer equivalent
+u_core/core_i/id_stage_i/ZBUF_69_inst_3241/Y                NBUFFX2_HVT                  try stronger buffer or RVT buffer equivalent
+u_core/core_i/id_stage_i/ZBUF_77_inst_1849/Y                NBUFFX2_HVT                  try stronger buffer or RVT buffer equivalent
+u_core/core_i/U318/Y                                        NBUFFX2_HVT                  try stronger buffer or RVT buffer equivalent
+u_core/core_i/id_stage_i/register_file_i/mem_reg[9][14]/Q   SDFFARX1_RVT                 do not blindly resize flop; prefer one load-split buffer if still violated
+```
+
+Notes:
+
+```text
+1. The NBUFF rows are buffer-tree residuals from earlier ECOs or synthesis buffering.
+2. The INV row is the cleanest first size_cell candidate.
+3. The flop Q row is only 0.01 over limit; avoid changing scan flop type unless library support and FM/DFT impact are checked.
+4. If direct stronger NBUFF cells are not available as legal timing lib cells in the current ICC2 setup, use load split buffer insertion instead.
+```
+
+ECO16 should be intentionally small:
+
+```text
+step 1: fix the 7 non-flop drivers
+step 2: rerun ICC2 route_eco and PT FF cmax only
+step 3: touch the flop Q net only if it remains a violator
+step 4: rerun full TT/SS/FF cmax/cmin PT
+```

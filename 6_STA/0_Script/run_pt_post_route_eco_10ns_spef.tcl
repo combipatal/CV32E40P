@@ -15,10 +15,16 @@ if {[info exists ::env(TAG)]} {
   set TAG $::env(TAG)
 }
 
-# TT mixed-VT timing DB입니다.
-set RVT_TT_DB /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_tt1p05v25c.db
-set LVT_TT_DB /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_lvt/db_nldm/saed32lvt_tt1p05v25c.db
-set HVT_TT_DB /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/db_nldm/saed32hvt_tt1p05v25c.db
+# mixed-VT timing DB입니다.
+# 기본은 기존 TT이고, SS/FF 확인은 env CORNER로 corner 이름만 바꿉니다.
+set CORNER tt1p05v25c
+if {[info exists ::env(CORNER)]} {
+  set CORNER $::env(CORNER)
+}
+
+set RVT_DB /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_rvt/db_nldm/saed32rvt_$CORNER.db
+set LVT_DB /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_lvt/db_nldm/saed32lvt_$CORNER.db
+set HVT_DB /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/db_nldm/saed32hvt_$CORNER.db
 
 # ICC2 post-route ECO export와 SPEF입니다.
 set NETLIST 7_Backend_ICC2/2_Output/08_export/$TAG/cv32e40p_synth_wrap.$TAG.vg
@@ -44,14 +50,22 @@ set REPORT_DIR 6_STA/4_Report/post_route_eco_drc_clean_spef
 if {[info exists ::env(REPORT_DIR)]} {
   set REPORT_DIR $::env(REPORT_DIR)
 }
-set REPORT_PREFIX post_route_eco.func_tt_10ns_spef
+set REPORT_PREFIX post_route_eco.func_${CORNER}_10ns_spef
 if {[info exists ::env(REPORT_PREFIX)]} {
   set REPORT_PREFIX $::env(REPORT_PREFIX)
 }
 file mkdir $REPORT_DIR
 file mkdir 6_STA/3_Log
 
-set link_path [list * $RVT_TT_DB $LVT_TT_DB $HVT_TT_DB]
+# 지정 corner의 세 VT library가 모두 있는지 먼저 확인합니다.
+foreach DB_FILE [list $RVT_DB $LVT_DB $HVT_DB] {
+  if {![file exists $DB_FILE]} {
+    puts "ERROR: missing timing DB: $DB_FILE"
+    exit 1
+  }
+}
+
+set link_path [list * $RVT_DB $LVT_DB $HVT_DB]
 
 # post-route ECO netlist를 읽고 top design을 link합니다.
 read_verilog $NETLIST
@@ -91,9 +105,13 @@ set ANNO_MIN_STATUS [catch {
 
 set FP [open $REPORT_DIR/$REPORT_PREFIX.run_manifest.rpt w]
 puts $FP "tag=$TAG"
+puts $FP "corner=$CORNER"
 puts $FP "report_prefix=$REPORT_PREFIX"
 puts $FP "netlist=$NETLIST"
 puts $FP "sdc=$SDC_FILE"
+puts $FP "rvt_db=$RVT_DB"
+puts $FP "lvt_db=$LVT_DB"
+puts $FP "hvt_db=$HVT_DB"
 puts $FP "spef_max=$SPEF_MAX_FILE"
 puts $FP "spef_min=$SPEF_MIN_FILE"
 puts $FP "report_annotated_parasitics_cmax_status=$ANNO_MAX_STATUS"

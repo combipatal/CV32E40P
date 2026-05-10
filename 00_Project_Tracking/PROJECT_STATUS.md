@@ -451,10 +451,21 @@ unmatched compare points 0
 다음 후보:
 
 ```text
-1. PT max_transition 0.5 ps residue를 고칠지 waiver/note로 둘지 결정
-2. DEF/GDS export
-3. signoff checklist 정리
-4. front-end 중심 포트폴리오 산출물 패키징
+1. SS setup violation closure 방향 결정
+2. FF hold violation closure 방향 결정
+3. DEF/GDS export
+4. signoff checklist 정리
+5. front-end 중심 포트폴리오 산출물 패키징
+```
+
+2026-05-10 update:
+
+```text
+ECO6 post-route SPEF STA was extended beyond TT.
+SS ss0p95v125c at 10 ns is not closed: cmax setup WNS -0.69 ns / TNS -81.72 ns / 549 endpoints; cmin setup WNS -0.45 ns / TNS -18.33 ns / 149 endpoints; hold clean.
+FF ff1p16v125c at 10 ns is not closed for hold: cmax hold WNS -0.02 ns / TNS -0.07 ns / 9 endpoints; cmin hold WNS -0.02 ns / TNS -0.08 ns / 10 endpoints; setup clean.
+FF ff1p16vn40c at 10 ns is the stronger hold stress: cmax hold WNS -0.02 ns / TNS -0.27 ns / 69 endpoints; cmin hold WNS -0.02 ns / TNS -0.34 ns / 92 endpoints; setup clean.
+Conclusion: TT is clean, but multi-corner STA is open.
 ```
 
 증거:

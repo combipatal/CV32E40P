@@ -177,6 +177,12 @@ Max-cap ECO5 SPEF STA cmin | 10 ns | not summarized | no setup violation | not s
 Max-cap ECO5 cmax transition probe | 10 ns | no setup violation | no hold violation | not summarized | not summarized | Remaining max_transition is U246/Y, required 0.0948 ns, actual 0.0953 ns, slack -0.0005 ns; net n255 has 14 loads and about 31.6868 fF max total cap
 Maxtran ECO6 SPEF STA cmax | 10 ns | +2.17 ns listed worst setup slack | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after U246 AND4X4_HVT->AND4X4_RVT swap; cmax report_constraint all_violators empty
 Maxtran ECO6 SPEF STA cmin | 10 ns | not summarized | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after U246 RVT swap; cmin report_constraint all_violators empty; listed worst hold slack +0.05 ns
+Maxtran ECO6 SPEF STA SS cmax | 10 ns | -0.69 ns | -81.72 ns | not summarized | not summarized | ss0p95v125c setup violated: 549 endpoints; hold clean
+Maxtran ECO6 SPEF STA SS cmin | 10 ns | -0.45 ns | -18.33 ns | not summarized | not summarized | ss0p95v125c setup violated: 149 endpoints; hold clean
+Maxtran ECO6 SPEF STA FF125 cmax | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.07 ns | not summarized | not summarized | ff1p16v125c setup clean; hold violated on 9 endpoints
+Maxtran ECO6 SPEF STA FF125 cmin | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.08 ns | not summarized | not summarized | ff1p16v125c setup clean; hold violated on 10 endpoints
+Maxtran ECO6 SPEF STA FF-40 cmax | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.27 ns | not summarized | not summarized | ff1p16vn40c setup clean; hold violated on 69 endpoints
+Maxtran ECO6 SPEF STA FF-40 cmin | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.34 ns | not summarized | not summarized | ff1p16vn40c setup clean; hold violated on 92 endpoints
 ```
 
 ### Fmax Estimate

@@ -1,5 +1,28 @@
 # Result Summary
 
+## Final Closure Summary
+
+```text
+Status: CLOSED_AS_EDUCATIONAL_FE_TO_BE_IMPLEMENTATION_FLOW
+Closure date: 2026-05-10 UTC
+Final candidate: hold_eco17_flop_q_load_split / hold_eco17_gds_candidate
+Result: 8.5 ns FE closure + ECO17 backend candidate + final N2N PASS + educational GDS export
+Boundary: not tapeout-ready, not full foundry signoff
+```
+
+```text
+Final evidence:
+- 8.5 ns post-DFT SDF STA setup/hold clean, setup slack +0.44 ns, hold slack +0.04 ns
+- ATPG 98.40% test coverage / 98.31% fault coverage / 416 patterns
+- ECO17 route DRC 0, open nets 0, legality 0
+- TT/SS/FF -40C propagated-clock SPEF STA setup/hold clean for cmax/cmin
+- TT/SS/FF -40C report_constraint -all_violators clean for cmax/cmin
+- ECO17 N2N Formality PASS: 2243 passing, 0 failing, 0 unmatched
+- GDSII Stream v5.0 educational candidate generated, recorded size 46 MB
+```
+
+See also: `00_Project_Tracking/PROJECT_CLOSURE.md`.
+
 ## Summary Tables
 
 ### Implementation

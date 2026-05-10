@@ -2137,3 +2137,15 @@ Evidence:
   6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ss0p95v125c_propclk/ss_setup_eco7.func_ss0p95v125c_10ns_spef_propclk.cmax.global_timing.rpt
   6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/ss_setup_eco7.func_ff1p16vn40c_10ns_spef_propclk.cmin.global_timing.rpt
 ```
+
+## Project Closure Decision
+
+```text
+Date: 2026-05-10 UTC
+Decision: close CV32E40P as an educational FE-to-BE implementation flow
+Final candidate: hold_eco17_flop_q_load_split / hold_eco17_gds_candidate
+Accepted scope: 8.5 ns FE closure, post-route MCMM ECO17 timing/electrical cleanup, final ECO17 N2N Formality PASS, educational GDS candidate export
+Reason: the project now has enough evidence for the intended learning/portfolio goal; further work would shift into full foundry signoff scope, which is outside this project.
+Claim boundary: not tapeout-ready, not foundry signoff clean, not production signoff GDS
+Next active implementation direction: MNIST/NPU project
+```

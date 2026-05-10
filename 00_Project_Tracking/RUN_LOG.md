@@ -1759,3 +1759,11 @@ Result: PASS_CANDIDATE_GDS_WRITTEN
 Notes: Copied the ECO17 STA/N2N clean block to cv32e40p_synth_wrap_hold_eco17_gds_candidate, inserted standard-cell fillers, reconnected PG pins, and wrote GDS/DEF/netlist/SDC. The generated GDS is a 46 MB GDSII Stream v5.0 file. After filler insertion, ICC2 check_routes reports open nets 0 and DRC 0; check_legality reports 0 violations; report_constraints reports total violations 0. This is an educational ICC2 candidate GDS, not full signoff GDS because signoff DRC/LVS/IR/EM/antenna/metal fill are not complete.
 Evidence: 7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/gds_export_manifest.txt, 7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/cv32e40p_synth_wrap.hold_eco17_gds_candidate.gds, 7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/check_routes.after_filler.rpt, 7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/check_legality.after_filler.rpt, 7_Backend_ICC2/4_Report/09_gds/hold_eco17_gds_candidate/constraints.after_filler.rpt, and docs/backend/gds_candidate_export_2026_05_10.md.
 ```
+
+```text
+Date: 2026-05-10 UTC
+Command: project closure declaration
+Stage: CV32E40P project closure
+Result: CLOSED_AS_EDUCATIONAL_FE_TO_BE_IMPLEMENTATION_FLOW
+Notes: Project is closed as a learning/portfolio FE-to-BE implementation flow. Final scope includes 8.5 ns FE closure, ECO17 post-route MCMM timing/electrical cleanup, final ECO17 N2N Formality PASS, and educational GDS candidate export. Boundary is explicit: not tapeout-ready and not full foundry signoff because signoff DRC/LVS, antenna, IR/EM, noise, metal fill, and final signoff STA methodology are outside scope. See 00_Project_Tracking/PROJECT_CLOSURE.md.
+```

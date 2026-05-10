@@ -3,14 +3,17 @@
 ## Current Phase
 
 ```text
-Front-End baseline completed; 8.5 ns front-end closure trial completed; ICC2 backend init/floorplan/place/power/CTS/route first pass completed
-Route DRC diagnosis, 60%/M8 trials, lower-metal DRC detail breakdown, detail-route repair trials, PG top-port cleanup, off-track pin object diagnosis, CO/VIA contact diagnosis, Milkyway reference open trial, pin-access/M1-track probe, M1 retrack route trial, create_pin_check_lib trial, blocked-access detail extraction, pin-access/DRC overlap parse, placement spreading trial, scan DEF handoff trial, advanced legalizer/pin-color trial, DRC marker context probe, hotspot partial blockage probe, route DRC root-cause hypothesis write-up, hotspot DRC-to-PG distance probe, PG M2 offset probe, PG blockage trials, route grid option probes, and current-best DRC geometry residue analysis completed; root cause narrowed but route DRC not closed
+Status: CLOSED_AS_EDUCATIONAL_FE_TO_BE_IMPLEMENTATION_FLOW
+Closure date: 2026-05-10 UTC
+Final candidate: hold_eco17_flop_q_load_split / hold_eco17_gds_candidate
+Meaning: 8.5 ns FE closure, post-route MCMM ECO17 timing/electrical cleanup, final ECO17 N2N Formality PASS, and educational GDS candidate export are complete.
+Claim boundary: not tapeout-ready and not full foundry signoff.
 ```
 
 ## Next Milestone
 
 ```text
-Use 8.5 ns front-end closure as the time-limited portfolio finish point unless the user explicitly asks for an 8.0 ns stretch run or backend continuation.
+Implementation is closed. Next work is portfolio/report packaging, script-study extraction, and moving active implementation effort to MNIST/NPU.
 ```
 
 ## Frozen Baseline
@@ -51,6 +54,11 @@ Not included: production signoff, post-route STA, IR/EM, GDS signoff.
 [x] PrimeTime STA
 [x] Portfolio summary tables
 [x] 8.5 ns front-end closure trial
+[x] ICC2 init/floorplan/power/place/CTS/route learning flow
+[x] Post-route SPEF STA and MCMM ECO closure through ECO17
+[x] Final ECO17 Formality N2N
+[x] Educational GDS candidate export
+[x] Project closure declaration
 ```
 
 ## Current Notes

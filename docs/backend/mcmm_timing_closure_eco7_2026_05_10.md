@@ -364,6 +364,119 @@ First probe:
   before inserting DELLN on the same endpoint group.
 ```
 
+## ECO11-ECO13 Hold/Setup Tradeoff
+
+ECO11:
+
+```text
+Start block: hold_eco10_delln1_no_mhpmcounter
+Action: insert NBUFFX2_HVT on 50 mhpmcounter endpoints
+Physical: route DRC 0, open nets 0, legality 0
+
+SS propagated-clock STA:
+  cmax clean
+  cmin clean
+
+FF -40C propagated-clock STA:
+  cmax hold WNS -0.01 / TNS -0.03 / 8 endpoints
+  cmin hold WNS -0.01 / TNS -0.07 / 18 endpoints
+```
+
+ECO12:
+
+```text
+Start block: hold_eco11_mhpmcounter_nbuffx2
+Action: add 19 NBUFFX2_HVT cells on residual endpoints
+Physical: route DRC 0, open nets 0, legality 0
+
+FF -40C propagated-clock STA:
+  cmax hold WNS -0.00 / TNS -0.00 / 5 endpoints
+  cmin hold WNS -0.00 / TNS -0.00 / 1 endpoint
+
+SS propagated-clock STA:
+  cmax setup WNS -0.07 / TNS -0.07 / 1 endpoint
+  cmin clean
+
+Verdict: reject as final because SS setup is violated.
+```
+
+ECO13:
+
+```text
+Start block: hold_eco12_residual_nbuffx2
+Action: add 6 final NBUFFX2_HVT cells listed in
+        7_Backend_ICC2/1_Input/hold_eco13_residual_endpoints.rpt
+Physical: route DRC 0, open nets 0, legality 0
+
+FF -40C propagated-clock STA:
+  cmax clean
+  cmin clean
+
+SS propagated-clock STA:
+  cmax setup WNS -0.07 / TNS -0.07 / 1 endpoint
+  cmin clean
+
+Verdict: reject as final because SS setup is still violated.
+```
+
+Current diagnosis:
+
+```text
+The broad non-mhpmcounter hold problem is solved by ECO10.
+The remaining problem is a narrow mhpmcounter counter-chain setup/hold tradeoff.
+
+Failing SS setup path after ECO13:
+  Startpoint: mhpmcounter_q_reg[2][2]
+  Endpoint:   mhpmcounter_q_reg[2][63]
+  Worst slack: -0.07 ns at SS cmax propagated-clock
+
+The path contains many HVT stages:
+  NAND2X0_HVT
+  INVX1_HVT
+  HADDX1_HVT
+  AO22X1_HVT
+
+The endpoint side includes inserted NBUFFX2_HVT cells.
+This fixes FF hold but consumes about the remaining SS setup margin.
+```
+
+Ranked fix hypotheses:
+
+```text
+1. Targeted setup recovery on the same mhpmcounter path.
+   Prediction:
+     swapping selected HVT cells in the path to RVT should recover >70 ps SS setup
+     while FF hold remains clean or only mildly regresses.
+
+2. Reduce endpoint delay on mhpmcounter_q_reg[2][63].
+   Prediction:
+     removing one late NBUFFX2_HVT from the endpoint should clean SS setup,
+     but may re-open a very small FF hold violation on that endpoint.
+
+3. Move delay earlier or distribute delay away from the setup-critical endpoint.
+   Prediction:
+     earlier/smaller delay may improve FF hold without adding the full delay
+     directly to the capture D arc of the longest counter setup path.
+
+4. Replace manual ECO with real MCMM ICC2 hold repair.
+   Prediction:
+     if ICC2 sees FF hold and SS setup scenarios simultaneously, it should avoid
+     hold fixes that break the mhpmcounter setup path.
+```
+
+Recommended next action:
+
+```text
+Do a small setup-recovery ECO from ECO13:
+  1. Use the ECO13 SS cmax setup report as the target path.
+  2. Swap a small number of cells near the endpoint from HVT to RVT first.
+  3. Re-route ECO.
+  4. Re-run PT:
+       FF -40C cmax/cmin
+       SS cmax/cmin
+  5. Accept only if route DRC 0, legality 0, FF hold clean, and SS setup clean.
+```
+
 Evidence:
 
 ```text
@@ -386,4 +499,17 @@ Evidence:
 6_STA/3_Log/pt_hold_eco10_10ns_spef_ss0p95v125c_propclk.log
 6_STA/4_Report/hold_eco10_delln1_no_mhpmcounter_spef_ff1p16vn40c_propclk/
 6_STA/4_Report/hold_eco10_delln1_no_mhpmcounter_spef_ss0p95v125c_propclk/
+7_Backend_ICC2/3_Log/07_extract_sta/hold_eco11_mhpmcounter_nbuffx2.log
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco11_mhpmcounter_nbuffx2/hold_manual_eco_manifest.txt
+6_STA/3_Log/pt_hold_eco11_10ns_spef_ff1p16vn40c_propclk.log
+6_STA/3_Log/pt_hold_eco11_10ns_spef_ss0p95v125c_propclk.log
+7_Backend_ICC2/3_Log/07_extract_sta/hold_eco12_residual_nbuffx2.log
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco12_residual_nbuffx2/hold_manual_eco_manifest.txt
+6_STA/3_Log/pt_hold_eco12_10ns_spef_ff1p16vn40c_propclk.log
+6_STA/3_Log/pt_hold_eco12_10ns_spef_ss0p95v125c_propclk.log
+7_Backend_ICC2/3_Log/07_extract_sta/hold_eco13_final6_nbuffx2.log
+7_Backend_ICC2/2_Output/07_extract_sta/hold_eco13_final6_nbuffx2/hold_manual_eco_manifest.txt
+6_STA/3_Log/pt_hold_eco13_10ns_spef_ff1p16vn40c_propclk.log
+6_STA/3_Log/pt_hold_eco13_10ns_spef_ss0p95v125c_propclk.log
+6_STA/4_Report/hold_eco13_final6_nbuffx2_spef_ss0p95v125c_propclk/hold_eco13.func_ss0p95v125c_10ns_spef_propclk.cmax.setup_timing.rpt
 ```

@@ -205,6 +205,18 @@ Hold ECO10 SPEF STA SS cmax propagated-clock | 10 ns | no setup violation | no h
 Hold ECO10 SPEF STA SS cmin propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | SS remains clean after 218 DELLN insertions
 Hold ECO10 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.27 ns / 28 endpoints | not summarized | not summarized | remaining hold endpoints are mhpmcounter-focused
 Hold ECO10 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.48 ns / 51 endpoints | not summarized | not summarized | remaining hold endpoints are the excluded mhpmcounter paths
+Hold ECO11 SPEF STA SS cmax propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | 50 NBUFFX2_HVT cells on mhpmcounter endpoints preserve SS setup
+Hold ECO11 SPEF STA SS cmin propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | SS cmin remains clean
+Hold ECO11 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.01 ns / TNS -0.03 ns / 8 endpoints | not summarized | not summarized | mhpmcounter hold reduced but not closed
+Hold ECO11 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.01 ns / TNS -0.07 ns / 18 endpoints | not summarized | not summarized | residual hold remains
+Hold ECO12 SPEF STA SS cmax propagated-clock | 10 ns | setup WNS -0.07 ns / TNS -0.07 ns / 1 endpoint | no hold violation | not summarized | not summarized | additional NBUFFX2_HVT over-fixes hold and breaks one mhpmcounter setup path
+Hold ECO12 SPEF STA SS cmin propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | SS cmin remains clean
+Hold ECO12 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | hold WNS -0.00 ns / TNS -0.00 ns / 5 endpoints | not summarized | not summarized | near-clean hold, but rejected because SS cmax setup is violated
+Hold ECO12 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | hold WNS -0.00 ns / TNS -0.00 ns / 1 endpoint | not summarized | not summarized | near-clean hold, but rejected because SS cmax setup is violated
+Hold ECO13 SPEF STA SS cmax propagated-clock | 10 ns | setup WNS -0.07 ns / TNS -0.07 ns / 1 endpoint | no hold violation | not summarized | not summarized | FF hold clean, but one SS setup path remains violated
+Hold ECO13 SPEF STA SS cmin propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | SS cmin clean
+Hold ECO13 SPEF STA FF-40 cmax propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | FF cmax setup/hold clean after final 6 NBUFFX2_HVT insertions
+Hold ECO13 SPEF STA FF-40 cmin propagated-clock | 10 ns | no setup violation | no hold violation | not summarized | not summarized | FF cmin setup/hold clean after final 6 NBUFFX2_HVT insertions
 ```
 
 ### Fmax Estimate

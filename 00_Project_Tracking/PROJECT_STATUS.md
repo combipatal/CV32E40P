@@ -590,6 +590,49 @@ Probe mhpmcounter hold/setup tradeoff:
   4. rerun FF hold and SS setup.
 ```
 
+2026-05-10 ECO11-ECO13 update:
+
+```text
+ECO11:
+  Start from ECO10.
+  Insert NBUFFX2_HVT on 50 mhpmcounter endpoints.
+  Physical: route DRC 0, open nets 0, legality 0.
+  SS cmax/cmin: setup/hold clean.
+  FF -40C: hold reduced but still open.
+    cmax WNS -0.01 / TNS -0.03 / 8 endpoints
+    cmin WNS -0.01 / TNS -0.07 / 18 endpoints
+
+ECO12:
+  Start from ECO11.
+  Insert 19 more NBUFFX2_HVT on residual endpoints.
+  Physical: route DRC 0, open nets 0, legality 0.
+  FF -40C: hold almost clean.
+    cmax WNS -0.00 / TNS -0.00 / 5 endpoints
+    cmin WNS -0.00 / TNS -0.00 / 1 endpoint
+  SS cmax: setup broken, WNS -0.07 / TNS -0.07 / 1 endpoint.
+  Rejected as final.
+
+ECO13:
+  Start from ECO12.
+  Insert 6 more NBUFFX2_HVT on final rounded hold endpoints.
+  Physical: route DRC 0, open nets 0, legality 0.
+  FF -40C cmax/cmin: setup/hold clean.
+  SS cmin: setup/hold clean.
+  SS cmax: setup still broken, WNS -0.07 / TNS -0.07 / 1 endpoint.
+  Rejected as final.
+
+Current root cause:
+  Remaining tradeoff is one mhpmcounter long setup path.
+  Path: mhpmcounter_q_reg[2][2] -> mhpmcounter_q_reg[2][63].
+  ECO13 has two NBUFFX2_HVT cells near the capture D path.
+  This closes FF hold but consumes the small SS setup margin.
+
+Best next fix candidates:
+  1. Recover setup on the mhpmcounter chain by targeted HVT->RVT swaps on NAND2X0/INVX1/HADDX/AO22 cells in the reported SS path.
+  2. Back off one endpoint NBUFFX2 on mhpmcounter_q_reg[2][63] and use smaller/earlier distributed delay if possible.
+  3. Build real MCMM ICC2 scenarios so hold repair sees FF hold and SS setup together.
+```
+
 증거:
 
 ```text

@@ -140,6 +140,65 @@ alu_div_i/Cnt_DP_reg[0] -> Cnt_DP_reg[1]
 instruction_obi_i/state_q_reg -> obi_addr_q_reg[*]
 ```
 
+## Hold Probe
+
+A deeper FF -40C hold probe was run after ECO7.
+
+Script:
+
+```text
+6_STA/0_Script/probe_eco7_ff_hold_paths.tcl
+```
+
+Evidence:
+
+```text
+6_STA/3_Log/pt_probe_eco7_ff_hold_paths.log
+6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/hold_probe/
+```
+
+Repeated endpoint/startpoint module groups in the top violating paths:
+
+```text
+Group                                                cmax paths  cmin paths
+prefetch_buffer_i/fifo_i -> fifo_i                   65          65
+instruction_obi_i -> instruction_obi_i               30          30
+alu_div_i -> alu_div_i                               20          21
+prefetch_controller_i -> prefetch_controller_i        4           2
+mhpmevent_minstret_o_reg -> mhpmcounter_q[*]         17          44
+```
+
+Observed worst path style:
+
+```text
+FF launch -> one or two small data gates -> FF capture
+```
+
+Examples:
+
+```text
+debug_force_wakeup_q_reg/QN -> AND3X1_HVT -> dcsr_q_reg[cause][8]/D
+Cnt_DP_reg[0]/QN -> MUX41X1_HVT -> Cnt_DP_reg[1]/D
+state_q_reg/Q -> NBUFFX4_HVT -> AO22X1_HVT -> obi_addr_q_reg[*]/D
+```
+
+Available delay cells exist in all VT libraries:
+
+```text
+DELLN1X2_RVT/LVT/HVT
+DELLN2X2_RVT/LVT/HVT
+DELLN3X2_RVT/LVT/HVT
+```
+
+Refined next trial:
+
+```text
+Use ICC2 hold ECO or targeted DELLN insertion.
+Start with repeated groups, not one-off endpoints.
+Prefer HVT delay cells for hold because setup is already fixed but still needs margin preservation.
+Re-run SS setup after every hold trial.
+```
+
 Acceptance target:
 
 ```text

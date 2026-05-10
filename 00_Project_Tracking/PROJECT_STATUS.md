@@ -504,6 +504,23 @@ Next hold-fix direction:
 5. Check route DRC, legality, PT constraints, and Formality if the ECO is accepted.
 ```
 
+Hold probe result:
+
+```text
+Top 300 FF -40C hold paths were extracted for ECO7.
+Repeated groups:
+  prefetch_buffer_i/fifo_i self paths: 65 cmax / 65 cmin
+  instruction_obi_i self paths: 30 cmax / 30 cmin
+  alu_div_i self paths: 20 cmax / 21 cmin
+  mhpmevent_minstret_o_reg -> mhpmcounter_q paths: 17 cmax / 44 cmin
+Available hold delay cells:
+  DELLN1X2_RVT/LVT/HVT
+  DELLN2X2_RVT/LVT/HVT
+  DELLN3X2_RVT/LVT/HVT
+Best next trial:
+  hold-specific delay insertion, preferably HVT DELLN cells first, then route_eco and SS/FF PT rerun.
+```
+
 증거:
 
 ```text

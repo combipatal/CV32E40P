@@ -1643,3 +1643,12 @@ Result: SETUP_FIXED_HOLD_OPEN
 Notes: ECO7 fixes SS setup. SS cmax and cmin global_timing report no setup or hold violations; worst listed SS setup slack is +0.10 ns in cmax and +0.25 ns in cmin. FF -40C setup remains clean, but hold remains open: cmax WNS -0.05 ns/TNS -1.99 ns/225 endpoints and cmin WNS -0.05 ns/TNS -2.39 ns/268 endpoints. The next fix should be a hold-specific ECO, not another setup-speed ECO.
 Evidence: 6_STA/3_Log/pt_ss_setup_eco7_10ns_spef_ss0p95v125c_propclk.log, 6_STA/3_Log/pt_ss_setup_eco7_10ns_spef_ff1p16vn40c_propclk.log, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ss0p95v125c_propclk/ss_setup_eco7.func_ss0p95v125c_10ns_spef_propclk.cmax.global_timing.rpt, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ss0p95v125c_propclk/ss_setup_eco7.func_ss0p95v125c_10ns_spef_propclk.cmin.global_timing.rpt, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/ss_setup_eco7.func_ff1p16vn40c_10ns_spef_propclk.cmax.global_timing.rpt, and 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/ss_setup_eco7.func_ff1p16vn40c_10ns_spef_propclk.cmin.global_timing.rpt.
 ```
+
+```text
+Date: 2026-05-10
+Command: pt_shell -output_log_file 6_STA/3_Log/pt_probe_eco7_ff_hold_paths.log -f 6_STA/0_Script/probe_eco7_ff_hold_paths.tcl
+Stage: PrimeTime ECO7 FF -40C hold path probe
+Result: RECORDED
+Notes: Generated top 300 cmax/cmin min-delay violating path reports with propagated clock. Main repeated groups are prefetch_buffer/fifo, instruction_obi, alu_div, and mhpmevent_minstret-to-mhpmcounter paths. Worst path style is short reg-to-reg with one or two data cells. SAED32 libraries provide DELLN1X2/DELLN2X2/DELLN3X2 delay cells in RVT/LVT/HVT, so next trial should be a hold-specific ECO using delay insertion or ICC2 hold repair, followed by SS setup recheck.
+Evidence: 6_STA/3_Log/pt_probe_eco7_ff_hold_paths.log, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/hold_probe/eco7.ff1p16vn40c.cmax.hold_300.rpt, 6_STA/4_Report/ss_setup_eco7_fadd_rvt_trial_spef_ff1p16vn40c_propclk/hold_probe/eco7.ff1p16vn40c.cmin.hold_300.rpt, and docs/backend/mcmm_timing_closure_eco7_2026_05_10.md.
+```

@@ -76,6 +76,16 @@ link_design
 read_sdc $SDC_FILE
 read_parasitics $SPEF_MAX_FILE
 
+# post-route clock tree를 실제 clock path로 볼지 선택합니다.
+# 기본값은 기존 결과 보존을 위해 ideal clock이고, 탐색 시 PROPAGATE_CLOCK=1을 줍니다.
+set PROPAGATE_CLOCK 0
+if {[info exists ::env(PROPAGATE_CLOCK)]} {
+  set PROPAGATE_CLOCK $::env(PROPAGATE_CLOCK)
+}
+if {$PROPAGATE_CLOCK == 1} {
+  set_propagated_clock [get_clocks clk_i]
+}
+
 # cmax corner: setup 중심 report입니다.
 check_timing -verbose > $REPORT_DIR/$REPORT_PREFIX.cmax.check_timing.rpt
 report_global_timing > $REPORT_DIR/$REPORT_PREFIX.cmax.global_timing.rpt
@@ -109,6 +119,7 @@ puts $FP "corner=$CORNER"
 puts $FP "report_prefix=$REPORT_PREFIX"
 puts $FP "netlist=$NETLIST"
 puts $FP "sdc=$SDC_FILE"
+puts $FP "propagate_clock=$PROPAGATE_CLOCK"
 puts $FP "rvt_db=$RVT_DB"
 puts $FP "lvt_db=$LVT_DB"
 puts $FP "hvt_db=$HVT_DB"

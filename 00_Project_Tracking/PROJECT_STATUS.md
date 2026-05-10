@@ -468,6 +468,18 @@ FF ff1p16vn40c at 10 ns is the stronger hold stress: cmax hold WNS -0.02 ns / TN
 Conclusion: TT is clean, but multi-corner STA is open.
 ```
 
+2026-05-10 propagated-clock probe:
+
+```text
+PROPAGATE_CLOCK=1 was added to the PrimeTime post-route SPEF script and tested on SS and FF -40C.
+The timing reports now show propagated clock network delays.
+SS improves slightly but remains setup-open: cmax WNS -0.65 ns / TNS -67.21 ns / 426 endpoints; cmin WNS -0.42 ns / TNS -14.97 ns / 121 endpoints.
+FF -40C setup remains clean, but hold is more clearly open: cmax WNS -0.05 ns / TNS -1.99 ns / 225 endpoints; cmin WNS -0.05 ns / TNS -2.39 ns / 268 endpoints.
+SS worst setup paths are dominated by ALU/id_stage paths with long HVT FADDX carry chains.
+FF worst hold paths are short reg-to-reg paths around cs_registers, alu_div, and prefetch_buffer/instruction_obi.
+Best next fix class is real MCMM closure: SS setup scenario + FF hold scenario in ICC2/PT, then setup optimization and hold buffer insertion/ECO.
+```
+
 증거:
 
 ```text

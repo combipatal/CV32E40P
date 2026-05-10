@@ -183,6 +183,10 @@ Maxtran ECO6 SPEF STA FF125 cmax | 10 ns | no setup violation | hold WNS -0.02 n
 Maxtran ECO6 SPEF STA FF125 cmin | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.08 ns | not summarized | not summarized | ff1p16v125c setup clean; hold violated on 10 endpoints
 Maxtran ECO6 SPEF STA FF-40 cmax | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.27 ns | not summarized | not summarized | ff1p16vn40c setup clean; hold violated on 69 endpoints
 Maxtran ECO6 SPEF STA FF-40 cmin | 10 ns | no setup violation | hold WNS -0.02 ns / TNS -0.34 ns | not summarized | not summarized | ff1p16vn40c setup clean; hold violated on 92 endpoints
+Maxtran ECO6 SPEF STA SS cmax propagated-clock probe | 10 ns | -0.65 ns | -67.21 ns | not summarized | not summarized | propagated clock confirmed; setup still violated on 426 endpoints
+Maxtran ECO6 SPEF STA SS cmin propagated-clock probe | 10 ns | -0.42 ns | -14.97 ns | not summarized | not summarized | propagated clock confirmed; setup still violated on 121 endpoints
+Maxtran ECO6 SPEF STA FF-40 cmax propagated-clock probe | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -1.99 ns | not summarized | not summarized | propagated clock confirmed; hold violated on 225 endpoints
+Maxtran ECO6 SPEF STA FF-40 cmin propagated-clock probe | 10 ns | no setup violation | hold WNS -0.05 ns / TNS -2.39 ns | not summarized | not summarized | propagated clock confirmed; hold violated on 268 endpoints
 ```
 
 ### Fmax Estimate

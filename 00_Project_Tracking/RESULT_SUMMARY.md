@@ -143,6 +143,11 @@ NOR2 resize ECO + advanced legalizer/pin-color M1/M2 | OPEN_REJECTED_AS_FIX | 7_
 NOR2 resize ECO + M9 max signal route | OPEN_REJECTED_AS_FIX | 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_m9/06_route/check_routes.rpt | route DRC worsens to 125 with open nets 0, legality 0, PG clean; allowing M9 is not a closure knob for the residual lower-metal A2 issue
 trim_all_pin NDM + NOR2 resize ECO | OPEN_BUT_NEAR_CLEAN | 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco_ndm_trim_all_pin/06_route/check_routes.rpt | route DRC improves 67 -> 1 with open nets 0, legality 0, PG clean; remaining marker is M1 Off-grid at u_core/core_i/U1723 MUX41X2_HVT/S0
 trim_all_pin NDM + NOR2 resize ECO + one MUX41 resize ECO | ROUTE_DRC_CLEAN | 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_routes.rpt | official check_routes reports open nets 0 and DRC 0; check_legality 0 violations; PG connectivity all floating counts 0; route log check_pg_drc says No errors found
+Post-route ECO export | PASS | 7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/export_manifest.txt | ICC2 exported post-route ECO .vg/.sdc/.sdf/.def; before-export check_routes remains open nets 0 and DRC 0; before-export legality 0
+Post-route ECO SPEF extraction | PASS | 7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/extract_manifest.txt | ICC2 write_parasitics performed NEX extraction and wrote cmax/cmin SPEF; before-extract route DRC 0 and legality 0
+Max-cap ECO3 open_site | PARTIAL | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco3_open_site/max_cap_eco_manifest.txt | ICC2 internal max_cap 368 -> 2, but external PT SPEF still reports cmax 11 and cmin 1 design-rule violations
+Max-cap ECO4 occupied_site | NOT_FINAL | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco4_occupied_site/max_cap_eco_manifest.txt | ICC2 internal max_cap 13 -> 0 and PT max_cap 0, but route DRC has 3 M1 Shorts; repaired by ECO5
+Max-cap ECO5 route repair | PASS_WITH_TRANSITION_NOTE | 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt | ICC2 route DRC 0, legality 0, internal max_cap 0; PT SPEF max_cap 0 in cmax/cmin; one tiny cmax max_transition report remains with rounded slack 0.00
 ```
 
 ### Timing
@@ -164,6 +169,11 @@ no_or2x1_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | see topo
 no_or2x1_nor2x02_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | see topo_no_or2x1_nor2x02_hvt reports | see topo_no_or2x1_nor2x02_hvt post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; route DRC improves to 188 but remains open
 no_or2x1_nor2x012_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | see topo_no_or2x1_nor2x012_hvt reports | see topo_no_or2x1_nor2x012_hvt post_dft.power.rpt | PT post-DFT SDF STA setup/hold clean; route DRC improves to 110 but remains open
 no_or2x1_nor2x0124_hvt post-DFT topo/SDF | 10 ns | no setup violation | 0.00 ns | 45487.20 pre-DFT cell area | see topo_no_or2x1_nor2x0124_hvt reports | PT post-DFT SDF STA setup/hold clean; backend route trial rejected because DRC worsens to 481
+Post-route ECO SPEF STA cmax | 10 ns | +2.17 ns listed worst setup slack | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after route-clean ECO; global_timing reports no setup/hold violations; hold slack +0.05 ns; max_capacitance violations remain 376
+Post-route ECO SPEF STA cmin | 10 ns | +2.35 ns listed worst setup slack | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after route-clean ECO; global_timing reports no setup/hold violations; hold slack +0.05 ns; max_capacitance violations remain 179
+Max-cap ECO5 SPEF STA cmax | 10 ns | +2.17 ns listed worst setup slack | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after max-cap ECO and route repair; max_capacitance violations 0; one max_transition item remains with rounded slack 0.00 and precision note
+Max-cap ECO5 SPEF STA cmin | 10 ns | not summarized | no setup violation | not summarized | not summarized | PrimeTime SPEF STA after max-cap ECO and route repair; max_capacitance violations 0; listed worst hold slack +0.05 ns
+Max-cap ECO5 cmax transition probe | 10 ns | no setup violation | no hold violation | not summarized | not summarized | Remaining max_transition is U246/Y, required 0.0948 ns, actual 0.0953 ns, slack -0.0005 ns; net n255 has 14 loads and about 31.6868 fF max total cap
 ```
 
 ### Fmax Estimate
@@ -194,6 +204,8 @@ R2N no_or2x1_nor2x0124_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | OR2X1_H
 N2N no_or2x1_nor2x0124_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x0124_hvt pre-DFT vs post-DFT remains equivalent in functional mode
 R2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | Narrow OR2X4_HVT add-on avoidance synthesis remains equivalent to RTL
 N2N no_or2x1_nor2x012_or2x4_hvt | Formality W-2024.09-SP5 | PASS | 2243 | 0 | no_or2x1_nor2x012_or2x4_hvt pre-DFT vs post-DFT remains equivalent in functional mode
+N2N post-route ECO DRC clean | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 exported post-route ECO netlist; scan_out don't-verify; 74 clock-gate LAT not compared
+N2N maxcap ECO5 route repair | Formality W-2024.09-SP5 | PASS | 2243 | 0 | post-DFT no_or2x1_nor2x012_hvt netlist vs ICC2 maxcap_eco5_route_repair netlist; unmatched 0; scan_out don't-verify; 74 clock-gate LAT not compared
 ```
 
 ### DFT/ATPG

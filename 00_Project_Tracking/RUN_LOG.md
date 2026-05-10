@@ -1463,3 +1463,93 @@ Result: ROUTE_DRC_CLEAN
 Notes: All 43 NOR2X4_HVT to NOR2X2_HVT swaps and the final u_core/core_i/U1723 MUX41X2_HVT to MUX41X1_HVT swap passed and were kept dont_touch. Official check_routes reports open nets 0, TOTAL VIOLATIONS 0, and Total number of DRCs 0. check_legality reports 0 violations. PG connectivity has all floating counts 0 for VDD/VSS and check_pg_drc in the route log reports No errors found. This closes the ICC2 route DRC goal for this controlled backend trial, but it is not full signoff; extraction, post-route STA, output DEF/GDS, and ECO equivalence policy remain future work.
 Evidence: 7_Backend_ICC2/3_Log/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin.log, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/01_init_design/eco_swap.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_routes.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_legality.rpt, 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt, and 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_drc.rpt.
 ```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/08_export/export_post_route_eco_drc_clean.log -f 7_Backend_ICC2/0_Script/08_export/run_export_post_route_eco_netlist.tcl
+Stage: ICC2 post-route ECO export
+Result: PASS
+Notes: Opened the DRC-clean saved block and exported the post-route ECO netlist plus SDC, SDF, and DEF. Export check_routes remains open nets 0 and DRC 0, and check_legality remains 0 violations. The first write_sdc attempt exposed ICC2's required -output syntax; the script was corrected and rerun successfully with write_sdc/write_sdf/write_def status 0.
+Evidence: 7_Backend_ICC2/3_Log/08_export/export_post_route_eco_drc_clean.log, 7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/export_manifest.txt, 7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.vg, 7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.sdc, 7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.sdf, 7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.def, 7_Backend_ICC2/4_Report/08_export/post_route_eco_drc_clean/check_routes.before_export.rpt, and 7_Backend_ICC2/4_Report/08_export/post_route_eco_drc_clean/check_legality.before_export.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: fm_shell -f 5_FM_N2N/0_Script/run_fm_n2n_post_route_eco_drc_clean.tcl | tee 5_FM_N2N/3_Log/fm_n2n_post_route_eco_drc_clean.log
+Stage: Formality N2N post-DFT vs post-route ECO
+Result: PASS
+Notes: Reference is the no_or2x1_nor2x012_hvt post-DFT netlist. Implementation is the ICC2 exported post-route ECO netlist. Functional constants were applied to scan_cg_en_i, scan_en, and scan_in. scan_out was marked don't-verify because it is not an architectural functional output in this comparison. Verification SUCCEEDED with 2243 passing compare points, 0 failing, and 0 unmatched. 74 clock-gate LAT points remain not compared, matching previous N2N behavior.
+Evidence: 5_FM_N2N/3_Log/fm_n2n_post_route_eco_drc_clean.log, 5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.failing_points.rpt, 5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.unmatched_points.post_verify.rpt, 5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.passing_points.post_verify.rpt, and 5_FM_N2N/2_Output/n2n_post_route_eco_drc_clean_fm_session.fss.
+```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/extract_spef_post_route_eco_drc_clean.log -f 7_Backend_ICC2/0_Script/07_extract_sta/run_extract_spef_post_route_eco_drc_clean.tcl
+Stage: ICC2 post-route ECO RC extraction / SPEF export
+Result: PASS
+Notes: Opened the DRC-clean saved block and exported SPEF for max/min parasitic corners. ICC2 W-2024.09-SP2 does not provide a standalone extract_rc command in this setup, but write_parasitics ran NEX extraction and wrote both cmax/cmin SPEF files. Before extraction, check_routes remained open nets 0, TOTAL VIOLATIONS 0, and DRC 0. check_legality remained 0 violations.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/extract_spef_post_route_eco_drc_clean.log, 7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/extract_manifest.txt, 7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.spef.saed32_cmax_25.spef, 7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.spef.saed32_cmin_25.spef, 7_Backend_ICC2/4_Report/07_extract_sta/post_route_eco_drc_clean/check_routes.before_extract.rpt, and 7_Backend_ICC2/4_Report/07_extract_sta/post_route_eco_drc_clean/check_legality.before_extract.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: pt_shell -f 6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl | tee 6_STA/3_Log/pt_post_route_eco_10ns_spef.log
+Stage: PrimeTime post-route ECO SPEF STA
+Result: PASS_WITH_MAX_CAP_NOTE
+Notes: PrimeTime linked the ICC2 exported post-route ECO netlist, read the functional 10 ns SDC, and annotated cmax/cmin SPEF sequentially. report_annotated_parasitics shows 17863 pin-to-pin nets annotated as RC networks for both cmax and cmin. global_timing reports no setup violations and no hold violations for both cmax and cmin. Worst listed setup slack is 2.17 ns in cmax and 2.35 ns in cmin. Worst listed hold slack is 0.05 ns for both cmax and cmin. Constraint reports still show max_capacitance design-rule violations: 376 in cmax and 179 in cmin. Treat timing as closed for this 10 ns SPEF STA run, but do not claim full signoff clean until max capacitance is cleaned or waived.
+Evidence: 6_STA/3_Log/pt_post_route_eco_10ns_spef.log, 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.run_manifest.rpt, 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.global_timing.rpt, 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.global_timing.rpt, 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.annotated_parasitics.rpt, 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.annotated_parasitics.rpt, 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.constraints.rpt, and 6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.constraints.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: ECO_TAG=maxcap_eco3_open_site icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco3_open_site.log -f 7_Backend_ICC2/0_Script/07_extract_sta/run_max_cap_eco1_open_site.tcl
+Stage: ICC2 max_capacitance ECO, open_site mode
+Result: PARTIAL_REPAIR
+Notes: eco_opt -types max_capacitance reduced ICC2 internal max_cap violations from 368 to 2. ECO inserted 312 buffers and resized 61 cells. The remaining 2 violations were reported unfixable because no open free site was available. ICC2 route DRC and legality stayed clean, but external PrimeTime SPEF STA still reported 11 cmax and 1 cmin design-rule violations, so this is not accepted as final closure.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco3_open_site.log, 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco3_open_site/max_cap_eco_manifest.txt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco3_open_site/check_routes.after_max_cap_eco.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco3_open_site/check_legality.after_max_cap_eco.rpt, 6_STA/3_Log/pt_maxcap_eco3_10ns_spef.log, 6_STA/4_Report/maxcap_eco3_open_site_spef/maxcap_eco3.func_tt_10ns_spef.cmax.constraints.rpt, and 6_STA/4_Report/maxcap_eco3_open_site_spef/maxcap_eco3.func_tt_10ns_spef.cmin.constraints.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: ECO_TAG=maxcap_eco4_occupied_site SRC_BLOCK=cv32e40p_synth_wrap_maxcap_eco3_open_site PHYSICAL_MODE=occupied_site icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco4_occupied_site.log -f 7_Backend_ICC2/0_Script/07_extract_sta/run_max_cap_eco1_open_site.tcl
+Stage: ICC2 max_capacitance ECO, occupied_site mode
+Result: MAX_CAP_REPAIRED_BUT_ROUTE_DRC_OPEN
+Notes: eco_opt cleaned ICC2 internal max_cap violations from 13 to 0 with 8 inserted buffers and 5 resized cells. External PrimeTime SPEF STA no longer reported max_capacitance violations, but the final ICC2 check_routes report showed 3 M1 Short violations near bbox x=210.381..210.835, y=122.064..122.224. Therefore ECO4 is not accepted as backend-clean final output.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco4_occupied_site.log, 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco4_occupied_site/max_cap_eco_manifest.txt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco4_occupied_site/check_routes.after_max_cap_eco.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco4_occupied_site/route_drc_short_detail.rpt, 6_STA/3_Log/pt_maxcap_eco4_10ns_spef.log, 6_STA/4_Report/maxcap_eco4_occupied_site_spef/maxcap_eco4.func_tt_10ns_spef.cmax.constraints.rpt, and 6_STA/4_Report/maxcap_eco4_occupied_site_spef/maxcap_eco4.func_tt_10ns_spef.cmin.constraints.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco5_route_repair.log -f 7_Backend_ICC2/0_Script/07_extract_sta/run_max_cap_eco5_route_repair.tcl
+Stage: ICC2 post-max-cap route repair and SPEF export
+Result: PASS
+Notes: ECO5 copied the ECO4 block and repaired the local M1 short area using route_detail around bbox {{210.0000 121.5000} {211.2000 122.8000}}, followed by route_eco. Final check_routes reports open nets 0 and DRC 0. check_legality reports 0 violations. ICC2 internal report_constraints reports max_capacitance 0, min_capacitance 0, max_transition 0, and total violations 0. SPEF cmax/cmin files were exported successfully.
+Evidence: 7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco5_route_repair.log, 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/check_routes.after_route_repair.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/check_legality.after_route_repair.rpt, 7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/constraints.after_route_repair.rpt, 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/cv32e40p_synth_wrap.maxcap_eco5_route_repair.spef.saed32_cmax_25.spef, and 7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/cv32e40p_synth_wrap.maxcap_eco5_route_repair.spef.saed32_cmin_25.spef.
+```
+
+```text
+Date: 2026-05-10
+Command: env TAG=maxcap_eco5_route_repair NETLIST=7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/cv32e40p_synth_wrap.maxcap_eco5_route_repair.vg SPEF_MAX_FILE=7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/cv32e40p_synth_wrap.maxcap_eco5_route_repair.spef.saed32_cmax_25.spef SPEF_MIN_FILE=7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/cv32e40p_synth_wrap.maxcap_eco5_route_repair.spef.saed32_cmin_25.spef REPORT_DIR=6_STA/4_Report/maxcap_eco5_route_repair_spef REPORT_PREFIX=maxcap_eco5.func_tt_10ns_spef pt_shell -f 6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl | tee 6_STA/3_Log/pt_maxcap_eco5_10ns_spef.log
+Stage: PrimeTime post-route max-cap ECO SPEF STA
+Result: PASS_WITH_TRANSITION_NOTE
+Notes: PrimeTime linked the ECO5 netlist, read functional 10 ns SDC, and annotated cmax/cmin SPEF. cmax and cmin global_timing both report no setup violations and no hold violations. Worst listed setup slack remains +2.17 ns in cmax. Worst listed hold slack remains +0.05 ns in cmin. report_constraint no longer reports max_capacitance violations in cmax or cmin. One cmax max_transition item remains on u_core/core_i/id_stage_i/U246/Y with rounded slack 0.00 and the tool note "increase significant digits"; ICC2 internal constraints report total violations 0. Treat max_cap as repaired, while keeping the transition note visible.
+Evidence: 6_STA/3_Log/pt_maxcap_eco5_10ns_spef.log, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.run_manifest.rpt, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.global_timing.rpt, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.global_timing.rpt, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.constraints.rpt, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.constraints.rpt, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.annotated_parasitics.rpt, and 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.annotated_parasitics.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: pt_shell -f 6_STA/0_Script/probe_pt_maxcap_eco5_transition.tcl | tee 6_STA/3_Log/pt_probe_maxcap_eco5_transition.log
+Stage: PrimeTime maxcap ECO5 max_transition detail probe
+Result: RECORDED
+Notes: The remaining PT cmax max_transition item is u_core/core_i/id_stage_i/U246/Y. With 4 significant digits, required transition is 0.0948 ns, actual transition is 0.0953 ns, slack is -0.0005 ns. The net is u_core/core_i/id_stage_i/n255, driven by AND4X4_HVT U246/Y, with 14 loads, max total capacitance about 31.6868 fF, and annotated max wire capacitance 23.8425 fF. report_timing through the pin reports no timing path with slack below 0.0 ns. This is a tiny slew design-rule residue, not a setup/hold timing failure and not a max_capacitance violation.
+Evidence: 6_STA/3_Log/pt_probe_maxcap_eco5_transition.log, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.cmax.max_transition_4digits.rpt, 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.bad_net_connections.rpt, and 6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.bad_pin_timing_paths.rpt.
+```
+
+```text
+Date: 2026-05-10
+Command: fm_shell -f 5_FM_N2N/0_Script/run_fm_n2n_maxcap_eco5_route_repair.tcl | tee 5_FM_N2N/3_Log/fm_n2n_maxcap_eco5_route_repair.log
+Stage: Formality N2N post-DFT vs maxcap ECO5 route repair
+Result: PASS
+Notes: Reference is the no_or2x1_nor2x012_hvt post-DFT netlist. Implementation is the ICC2 maxcap_eco5_route_repair netlist. Functional constants were applied to scan_cg_en_i, scan_en, and scan_in. scan_out was marked don't-verify for functional mode. Verification SUCCEEDED with 2243 passing compare points, 0 failing, and 0 unmatched. 74 clock-gate LAT points remain not compared, matching previous N2N behavior.
+Evidence: 5_FM_N2N/3_Log/fm_n2n_maxcap_eco5_route_repair.log, 5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.failing_points.rpt, 5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.unmatched_points.post_verify.rpt, 5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.passing_points.post_verify.rpt, and 5_FM_N2N/2_Output/n2n_maxcap_eco5_route_repair_fm_session.fss.
+```

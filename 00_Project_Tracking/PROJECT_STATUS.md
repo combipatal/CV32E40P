@@ -243,8 +243,8 @@ Full backend signoff is not complete.
 남은 backend 후속:
 
 ```text
-1. ECO equivalence/signoff policy 결정
-2. extraction / post-route STA
+1. extraction / post-route STA
+2. SPEF 기반 PrimeTime signoff-style timing check
 3. DEF/GDS 출력
 4. signoff DRC/LVS/IR/EM은 별도 signoff tool evidence 필요
 ```
@@ -258,4 +258,214 @@ Full backend signoff is not complete.
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/check_legality.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_drc.rpt
+```
+
+## 2026-05-10 Post-Route ECO Export And Formality
+
+완료한 후속 flow:
+
+```text
+1. ICC2 route-clean saved block에서 post-route ECO netlist export
+2. post-DFT netlist vs post-route ECO netlist Formality N2N
+```
+
+export 산출물:
+
+```text
+7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.vg
+7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.sdc
+7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.sdf
+7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.def
+```
+
+export 전 block check:
+
+```text
+check_routes:
+  open nets 0
+  TOTAL VIOLATIONS 0
+  Total number of DRCs 0
+
+check_legality:
+  TOTAL 0 Violations
+```
+
+Formality N2N:
+
+```text
+reference:
+  3_DFT/2_Output/post_dft_topo_no_or2x1_nor2x012_hvt/cv32e40p_synth_wrap.post_dft_topo_no_or2x1_nor2x012_hvt.vg
+
+implementation:
+  7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.vg
+
+result:
+  Verification SUCCEEDED
+  passing compare points 2243
+  failing compare points 0
+  unmatched compare points 0
+  scan_out don't-verify 1
+  clock-gate LAT not compared 74
+```
+
+현재 판정:
+
+```text
+Backend ECO functional equivalence is checked for functional mode.
+다음 단계는 RC extraction / SPEF 생성 / PrimeTime post-route STA.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/08_export/export_post_route_eco_drc_clean.log
+7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/export_manifest.txt
+7_Backend_ICC2/4_Report/08_export/post_route_eco_drc_clean/check_routes.before_export.rpt
+7_Backend_ICC2/4_Report/08_export/post_route_eco_drc_clean/check_legality.before_export.rpt
+5_FM_N2N/3_Log/fm_n2n_post_route_eco_drc_clean.log
+5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.failing_points.rpt
+5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.unmatched_points.post_verify.rpt
+5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.passing_points.post_verify.rpt
+```
+
+## 2026-05-10 Post-Route SPEF STA
+
+완료:
+
+```text
+1. ICC2 route-clean saved block에서 SPEF 추출
+2. PrimeTime에서 post-route ECO netlist + SPEF 기반 STA 수행
+```
+
+SPEF:
+
+```text
+cmax:
+  7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.spef.saed32_cmax_25.spef
+
+cmin:
+  7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.spef.saed32_cmin_25.spef
+
+annotation:
+  cmax/cmin 모두 17863 pin-to-pin nets annotated as RC networks
+```
+
+PrimeTime 결과:
+
+```text
+cmax:
+  setup violation 없음
+  hold violation 없음
+  worst listed setup slack +2.17 ns
+  worst listed hold slack +0.05 ns
+  max_capacitance violations 376
+
+cmin:
+  setup violation 없음
+  hold violation 없음
+  worst listed setup slack +2.35 ns
+  worst listed hold slack +0.05 ns
+  max_capacitance violations 179
+```
+
+현재 판정:
+
+```text
+10 ns post-route SPEF STA timing은 닫힘.
+단, max_capacitance design-rule violation이 남아 full signoff clean은 아님.
+```
+
+## 2026-05-10 Max-Cap ECO Update
+
+목표:
+
+```text
+post-route SPEF STA의 max_capacitance violation을 줄이고,
+route DRC와 setup/hold timing을 유지한다.
+```
+
+진행:
+
+```text
+ECO3 open_site:
+  ICC2 internal max_cap 368 -> 2
+  PT SPEF residual cmax 11, cmin 1
+  판정: partial
+
+ECO4 occupied_site:
+  ICC2 internal max_cap 13 -> 0
+  PT SPEF max_cap 0
+  route DRC M1 Short 3개 발생
+  판정: max_cap은 해결, route clean 아님
+
+ECO5 route repair:
+  ECO4 block 복사
+  short bbox 주변 incremental route_detail + route_eco
+  route DRC 0
+  legality 0
+  ICC2 internal constraints total violation 0
+  PT SPEF max_cap cmax/cmin 0
+```
+
+현재 판정:
+
+```text
+max_capacitance cleanup은 완료 후보.
+10 ns setup/hold timing도 유지됨.
+단, PT cmax constraint report에 max_transition 1개가 precision note와 함께 남음:
+  u_core/core_i/id_stage_i/U246/Y
+  required 0.0948 ns, actual 0.0953 ns, slack -0.0005 ns
+
+ICC2 internal constraint report는 max_transition 0, max_capacitance 0, total 0.
+따라서 다음 선택지는 transition note를 별도 추적하거나,
+필요하면 max_transition 전용 ECO를 추가로 수행하는 것.
+```
+
+Formality:
+
+```text
+ECO5 netlist N2N Formality PASS.
+passing compare points 2243
+failing compare points 0
+unmatched compare points 0
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco5_route_repair.log
+7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/check_routes.after_route_repair.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/check_legality.after_route_repair.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/constraints.after_route_repair.rpt
+6_STA/3_Log/pt_maxcap_eco5_10ns_spef.log
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.constraints.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.constraints.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.global_timing.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.global_timing.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.cmax.max_transition_4digits.rpt
+5_FM_N2N/3_Log/fm_n2n_maxcap_eco5_route_repair.log
+5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.failing_points.rpt
+```
+
+다음 후보:
+
+```text
+1. PT max_transition 0.5 ps residue를 고칠지 waiver/note로 둘지 결정
+2. DEF/GDS export
+3. signoff checklist 정리
+4. front-end 중심 포트폴리오 산출물 패키징
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/07_extract_sta/extract_spef_post_route_eco_drc_clean.log
+7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/extract_manifest.txt
+6_STA/3_Log/pt_post_route_eco_10ns_spef.log
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.run_manifest.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.global_timing.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.global_timing.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.constraints.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.constraints.rpt
 ```

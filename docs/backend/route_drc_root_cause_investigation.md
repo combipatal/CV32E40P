@@ -3847,3 +3847,288 @@ DEF/GDS output, signoff DRC/LVS/IR/EM evidence가 필요하다.
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_connectivity.rpt
 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_mux41x2x1_eco_ndm_trim_all_pin/06_route/pg_drc.rpt
 ```
+
+## Post-Route ECO Export And Formality N2N
+
+목적:
+
+```text
+DRC clean backend ECO가 기능적으로 같은지 확인한다.
+```
+
+export:
+
+```text
+script:
+  7_Backend_ICC2/0_Script/08_export/run_export_post_route_eco_netlist.tcl
+
+command:
+  icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/08_export/export_post_route_eco_drc_clean.log \
+    -f 7_Backend_ICC2/0_Script/08_export/run_export_post_route_eco_netlist.tcl
+
+outputs:
+  7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.vg
+  7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.sdc
+  7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.sdf
+  7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.def
+```
+
+export 전 check:
+
+```text
+check_routes:
+  open nets 0
+  TOTAL VIOLATIONS 0
+  Total number of DRCs 0
+
+check_legality:
+  TOTAL 0 Violations
+```
+
+Formality:
+
+```text
+script:
+  5_FM_N2N/0_Script/run_fm_n2n_post_route_eco_drc_clean.tcl
+
+reference:
+  post_dft_topo_no_or2x1_nor2x012_hvt netlist
+
+implementation:
+  ICC2 exported post-route ECO netlist
+
+setup:
+  scan_cg_en_i = 0
+  scan_en = 0
+  scan_in = 0
+  scan_out = don't-verify
+```
+
+결과:
+
+```text
+Verification SUCCEEDED
+Passing compare points: 2243
+Failing compare points: 0
+Unmatched compare points: 0
+Clock-gate LAT not compared: 74
+Don't verify: scan_out 1
+```
+
+해석:
+
+```text
+backend size_cell ECO와 ICC2 post-route export netlist는
+functional mode에서 post-DFT handoff netlist와 등가다.
+
+scan_out은 scan chain output이므로 normal functional mode 비교에서는
+architectural output으로 쓰지 않는다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/08_export/export_post_route_eco_drc_clean.log
+7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/export_manifest.txt
+5_FM_N2N/3_Log/fm_n2n_post_route_eco_drc_clean.log
+5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.failing_points.rpt
+5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.unmatched_points.post_verify.rpt
+5_FM_N2N/4_Report/post_route_eco_drc_clean/n2n_post_route_eco_drc_clean.passing_points.post_verify.rpt
+```
+
+## Post-Route SPEF STA
+
+목적:
+
+```text
+route-clean ECO block에서 RC를 추출하고 PrimeTime에서 SPEF 기반 timing을 확인한다.
+```
+
+SPEF:
+
+```text
+script:
+  7_Backend_ICC2/0_Script/07_extract_sta/run_extract_spef_post_route_eco_drc_clean.tcl
+
+command:
+  icc2_shell -batch -output_log_file 7_Backend_ICC2/3_Log/07_extract_sta/extract_spef_post_route_eco_drc_clean.log \
+    -f 7_Backend_ICC2/0_Script/07_extract_sta/run_extract_spef_post_route_eco_drc_clean.tcl
+
+outputs:
+  7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.spef.saed32_cmax_25.spef
+  7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.spef.saed32_cmin_25.spef
+```
+
+PrimeTime:
+
+```text
+script:
+  6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl
+
+command:
+  pt_shell -f 6_STA/0_Script/run_pt_post_route_eco_10ns_spef.tcl | tee 6_STA/3_Log/pt_post_route_eco_10ns_spef.log
+
+netlist:
+  7_Backend_ICC2/2_Output/08_export/post_route_eco_drc_clean/cv32e40p_synth_wrap.post_route_eco_drc_clean.vg
+
+constraint:
+  constraints/cv32e40p_func_10ns.sdc
+```
+
+결과:
+
+```text
+SPEF cmax/cmin generated.
+cmax/cmin 모두 17863 pin-to-pin nets annotated as RC networks.
+cmax global timing: no setup violations, no hold violations.
+cmin global timing: no setup violations, no hold violations.
+Worst listed setup slack: +2.17 ns cmax, +2.35 ns cmin.
+Worst listed hold slack: +0.05 ns cmax/cmin.
+```
+
+잔여 note:
+
+```text
+max_capacitance design-rule violations:
+  cmax 376
+  cmin 179
+
+따라서 route DRC와 setup/hold timing은 clean으로 볼 수 있지만,
+full signoff clean은 아직 주장하지 않는다.
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/07_extract_sta/extract_spef_post_route_eco_drc_clean.log
+7_Backend_ICC2/2_Output/07_extract_sta/post_route_eco_drc_clean/extract_manifest.txt
+6_STA/3_Log/pt_post_route_eco_10ns_spef.log
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.run_manifest.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.global_timing.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.global_timing.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.annotated_parasitics.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.annotated_parasitics.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmax.constraints.rpt
+6_STA/4_Report/post_route_eco_drc_clean_spef/post_route_eco.func_tt_10ns_spef.cmin.constraints.rpt
+```
+
+## Max-Cap ECO And Route Repair
+
+목적:
+
+```text
+route-clean ECO block의 post-route SPEF STA에서 남은 max_capacitance violation을 줄인다.
+기존 route DRC clean 상태를 유지한다.
+```
+
+수정 흐름:
+
+```text
+1. ECO3 open_site
+   eco_opt -types max_capacitance -physical_mode open_site
+   결과: ICC2 internal max_cap 368 -> 2
+   한계: PT SPEF residual cmax 11, cmin 1
+
+2. ECO4 occupied_site
+   ECO3 block에서 eco_opt -types max_capacitance -physical_mode occupied_site
+   결과: ICC2 internal max_cap 13 -> 0, PT SPEF max_cap 0
+   한계: final check_routes에서 M1 Short 3개 발생
+
+3. ECO5 route repair
+   ECO4 block 복사
+   short bbox 주변 incremental route_detail 수행
+   후속 route_eco로 전체 route consistency 확인
+   결과: route DRC 0, legality 0, PT SPEF max_cap 0 유지
+```
+
+ECO4 short 위치:
+
+```text
+Error type: Short
+Layer: M1
+Bbox 0: {210.3810 122.0640} {210.5310 122.2240}
+Bbox 1: {210.5330 122.0690} {210.6830 122.2190}
+Bbox 2: {210.6850 122.0690} {210.8350 122.2190}
+```
+
+ECO5 repair box:
+
+```text
+{{210.0000 121.5000} {211.2000 122.8000}}
+```
+
+ECO5 결과:
+
+```text
+ICC2 check_routes:
+  open nets 0
+  TOTAL VIOLATIONS 0
+  Total number of DRCs 0
+
+ICC2 check_legality:
+  TOTAL 0 Violations
+
+ICC2 report_constraints:
+  max_transition violations 0
+  max_capacitance violations 0
+  min_capacitance violations 0
+  total violations 0
+
+PrimeTime SPEF:
+  cmax max_capacitance violations 0
+  cmin max_capacitance violations 0
+  cmax/cmin global_timing: no setup violations, no hold violations
+  worst listed setup slack +2.17 ns
+  worst listed hold slack +0.05 ns
+```
+
+잔여 note:
+
+```text
+PrimeTime cmax constraint report에는 max_transition 1개가 남는다.
+pin: u_core/core_i/id_stage_i/U246/Y
+4-digit required/actual/slack: 0.0948 ns / 0.0953 ns / -0.0005 ns
+net: u_core/core_i/id_stage_i/n255
+driver: AND4X4_HVT U246/Y
+loads: 14
+max total capacitance: about 31.6868 fF
+
+이 항목은 max_capacitance 문제가 아니며,
+ICC2 internal constraints에서는 total violation 0으로 보고된다.
+report_timing through the pin shows no timing path with negative slack.
+따라서 이것은 setup/hold failure가 아니라 매우 작은 slew design-rule residue다.
+```
+
+Formality:
+
+```text
+ECO5 netlist N2N Formality PASS.
+reference: post_dft_topo_no_or2x1_nor2x012_hvt
+implementation: maxcap_eco5_route_repair
+passing compare points: 2243
+failing compare points: 0
+unmatched compare points: 0
+```
+
+증거:
+
+```text
+7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco3_open_site.log
+7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco4_occupied_site.log
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco4_occupied_site/route_drc_short_detail.rpt
+7_Backend_ICC2/3_Log/07_extract_sta/max_cap_eco5_route_repair.log
+7_Backend_ICC2/2_Output/07_extract_sta/maxcap_eco5_route_repair/route_repair_manifest.txt
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/check_routes.after_route_repair.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/check_legality.after_route_repair.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/maxcap_eco5_route_repair/constraints.after_route_repair.rpt
+6_STA/3_Log/pt_maxcap_eco5_10ns_spef.log
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.constraints.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.constraints.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmax.global_timing.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.func_tt_10ns_spef.cmin.global_timing.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.cmax.max_transition_4digits.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.bad_net_connections.rpt
+6_STA/4_Report/maxcap_eco5_route_repair_spef/maxcap_eco5.transition_probe.bad_pin_timing_paths.rpt
+5_FM_N2N/3_Log/fm_n2n_maxcap_eco5_route_repair.log
+5_FM_N2N/4_Report/maxcap_eco5_route_repair/n2n_maxcap_eco5_route_repair.failing_points.rpt
+```

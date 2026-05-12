@@ -1,0 +1,90 @@
+2.  Synopsys Commands                                        Command Reference
+                                 remove_tracks
+
+NAME
+       remove_tracks
+              Removes tracks from the current design.
+
+SYNTAX
+       status remove_tracks
+              -all | track_list | -layer layer [-dir X | Y]
+              [-force]
+              [-verbose]
+
+   Data Types
+       track_list     list
+       layer        collection of one item
+
+ARGUMENTS
+       -force Ignore  locked status of the objects. If this option is not pro-
+              vided and any of the affected objects has locked status, command
+              will fail generating tcl error.
+
+       -all   Removes all tracks in the current design.
+
+              The  track_list,  -all, and -layer arguments are mutually exclu-
+              sive; you must specify one of these arguments.
+
+       track_list
+              Specifies a list of tracks to remove. The list may contain track
+              names,  patterns,  or collections. A collection may be specified
+              by using the get_tracks command.
+
+              The track_list, -all, and -layer arguments are  mutually  exclu-
+              sive; you must specify one of these arguments.
+
+       -layer layer
+              Specifies  the routing layer from which to remove the track. You
+              can specify only one layer, either by layer name, or  a  collec-
+              tion containing one layer.
+
+              The  track_list,  -all, and -layer arguments are mutually exclu-
+              sive; you must specify one of these arguments.
+
+       -dir X | Y
+              Specifies the direction of the routing  tracks  to  be  removed.
+              The valid values are X and Y.
+
+              By  default, the direction is the routing direction of the layer
+              specified in the physical library.
+
+              The option must be used with the -layer option.
+
+       -verbose
+              Prints additional messages.
+
+DESCRIPTION
+       This command removes the specified tracks from the current design.
+
+   Multicorner-Multimode Support
+       This command has no dependency on scenario-specific information.
+
+EXAMPLES
+       The following example removes all tracks that are  inside  {{2  2}  {25
+       25}}.
+         prompt> remove_tracks [get_tracks -within {{2 2} {25 25}}]
+         1
+
+       The following example removes all tracks that are located on the metal2
+       layer.
+         prompt> remove_tracks [get_tracks -of_objects METAL2] -verbose
+         Removing track TRACK_4683
+         1
+
+       The following example removes the routing tracks from the routing layer
+       named m3 on the floorplan.
+
+         prompt> remove_tracks -layer m3
+         Warning: Direction is not specified. Using the layer preferred direction.
+         (NDMUI-125)
+         1
+         prompt> remove_tracks -layer m3 -dir X
+         1
+
+SEE ALSO
+       create_track(2)
+       get_tracks(2)
+       report_tracks(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

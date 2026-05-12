@@ -1,0 +1,321 @@
+
+2.  Synopsys Commands                                        Command Reference
+                                 insert_buffer
+
+NAME
+       insert_buffer
+              Adds  buffer  cells on the nets that are connected to the speci-
+              fied pins.
+
+SYNTAX
+       collection insert_buffer
+              [-new_net_names new_net_names]
+              [-new_cell_names new_cell_names]
+              [-inverter_pair]
+              [-no_of_cells number]
+              object_list
+              [-lib_cell buffer_lib_cell] | [buffer_lib_cell]
+              [-snap]
+              [-respect_voltage_areas]
+
+   Data Types
+       new_net_names         list
+       new_cell_names        list
+       number                integer
+       object_list           list
+       buffer_lib_cell       collection
+
+ARGUMENTS
+       -new_net_names new_net_names
+              Specifies the names of the new nets to add. You must specify one
+              net  name  per buffer when adding buffers, and two net names per
+              inverter pair when adding inverter pairs. If the  specified  net
+              name  already  exists,  the  command  adds  a suffix of "_%d" or
+              "_%d_%d" to the net name.
+
+              Optionally, if you specify only the common base name,  the  tool
+              generates new net names by adding unique numeric suffixes to the
+              common base name. The specified  names  can  be  any  valid  net
+              names,  but must be the leaf names. They must not be the hierar-
+              chical names and must not contain embedded hierarchical  separa-
+              tors.  They  must be unique in the current context, as specified
+              by the current instance. By default, the command uses  the  base
+              name eco_net.
+
+       -new_cell_names new_cell_names
+              Specifies the names of the new cells to be added. You must spec-
+              ify one cell name per buffer when adding buffers, and  two  cell
+              names per inverter pair when adding inverter pairs. If the spec-
+              ified cell name already exists, the command  adds  a  suffix  of
+              "_%d" or "_%d_%d" to the cell name.
+
+              Optionally,  if  you specify only the common base name, the tool
+              generates new cell names by adding unique  numeric  suffixes  to
+              the  common  base name. These names can be any valid cell names,
+              but must be the leaf names. They must not  be  the  hierarchical
+              names  and  must  not  contain embedded hierarchical separators.
+              They must be unique in the current context, as specified by  the
+              current instance.
+
+              By default, the command uses eco_cell as the common base name.
+
+       -inverter_pair
+              Adds inverter pairs instead of buffer cells. If you specify this
+              option, you must supply a library cell  that  has  an  inverting
+              output.  You can use this option when the specified library cell
+              or buffer has both inverting and noninverting outputs.
+
+       -no_of_cells number
+              Specifies the number of buffer cells or  inverter  pairs  to  be
+              inserted  per net. The inserted repeaters are connected back-to-
+              back in series. By default, the command inserts a single  buffer
+              cell or inverter pair per net.
+
+       object_list
+              Specifies  a list of nets, pins, or ports that must be buffered.
+              The new buffer cells or inverter pairs are placed close  to  the
+              specified pins or ports if their cells are placed.
+
+              If  you specify a net, the tool connects the buffers or inverter
+              pairs such that a new buffer cell is the new load of the  origi-
+              nal net.
+
+              If  you  specify pins, the tool groups all of the specified pins
+              based on the nets to which they are connected. When the  grouped
+              pins  are  load  pins, the tool adds the buffers so that the new
+              buffer cells can drive them. When the grouped  pins  are  driver
+              pins, the tool connects the new buffer cells so that they become
+              the load of the specified driver pin.
+
+       -lib_cell buffer_lib_cell
+              Specifies the library cell to be used as buffer. In  this  case,
+              the object is either a named library cell or a library cell col-
+              lection. This is a required  option.  This  option  is  mutually
+              exclusive with buffer_lib_cell.
+
+              If the library cell has both inverting and noninverting outputs,
+              that  is,  it  can  act  both  as  buffer  and   inverter,   the
+              -inverter_pair  option  controls  which  output is used.  If the
+              library cell has multiple outputs, the command  uses  the  first
+              noninverting or inverting output.
+
+       buffer_lib_cell
+              This  positional  option is exactly equivalent to -lib_cell. And
+              it is mutually exclusive with -lib_cell.
+
+       -snap  Put the new buffer cells next to the target cell, then snap  the
+              buffer cells to the closest site, and flip the buffer cells when
+              needed.
+
+              If you specify a net or a driver pin with this option,  the  new
+              buffer cells are placed next to the target cell of driver pin if
+              the target cell are placed.
+
+              If you specify a load pin with this option, the new buffer cells
+              are  placed  next  to  the target cell of load pin if the target
+              cell are placed.
+
+              If you specify a list of load pins on the  same  net  with  this
+              option,  the  new  buffer  cells are placed in the center of all
+              load pins if the target cell are placed.
+
+              This  option  is  mutually  exclusive  with  the  -respect_volt-
+              age_areas option.
+
+       -respect_voltage_areas
+              Inserts  buffers  within  the hierarchy of the voltage area such
+              that the buffer is physically in  the  layout.  This  option  is
+              mutually exclusive with the -snap option.
+
+DESCRIPTION
+       This  command  adds  buffers or inverter pairs at one or more specified
+       pins or ports. A library cell with a single input and multiple  outputs
+       is  a  buffer,  as  long  as each output has the same or inverted logic
+       function as the input.
+
+       Like all other netlist  editing  commands,  the  command  arguments  to
+       insert_buffer must be valid for the command to run successfully. If the
+       command succeeds, the result is a collection of the newly-added  cells.
+       If  the  command  fails,  the command returns an empty collection or an
+       empty string and does not change the netlist.
+
+       By default, each newly-created cell  has  a  name  beginning  with  the
+       eco_cell  string  and  ending with a unique numeric suffix. Each newly-
+       created net has a name beginning with the  eco_net  string  and  ending
+       with a unique numeric suffix. To override the automatic name generation
+       by the tool, use the -new_net_names and -new_cell_names options.
+
+       You can mimic buffer addition by using other  commands,  such  as  cre-
+       ate_cell,  create_net, disconnect_net, and connect_net. The insert_buf-
+       fer command provides a more efficient and safe way to add buffers.
+
+       This command support editing a Verilog module  in  the  module  aspect,
+       through edit_module.
+
+       This  command  checks  if  the  block  is editable before adding buffer
+       cells.
+
+       This  command  honors  the  design.eco_freeze_silicon_mode  application
+       option.  When  this  application  option  is  true,  the  is_fs_eco_add
+       attribute of the added buffers is set to true.
+
+       This command is exactly equivalent to add_buffer.
+
+       The insert_buffer command uses the following basic rules to  check  its
+       arguments for validity:
+
+       o  The  pin  or port must be in scope; that is, at or below the current
+         instance. For  a  description  of  special  scoping  rules,  see  the
+         "Buffering Inside Boundary Pins" section.
+
+       o The pin or port must be connected to a net.
+
+       o Bidirectional pins cannot be buffered.
+
+       o The net cannot be either a PG net or a tie net.
+
+       o The specified library cell cannot be sequential.
+
+       o The specified library cell must be a buffer, as previously defined.
+
+       o  The  number  argument of the -no_of_cells option must be a positive,
+         nonzero integer.
+
+       o The library cell must have an inverting  output,  when  you  use  the
+         -inverter_pair  option.  The  command uses the first inverting output
+         and adds two cells so that it preserves the logic of the path.
+
+   Adding and Connecting the New Buffer
+       The following figure shows an example network that is used to  describe
+       the  rules  used by the insert_buffer command to connect the new buffer
+       or inverter pair:
+
+                                +--- e3/A
+                                |
+         e1/Z ---- old_net -----+--- e4/A
+                                |
+                                +--- e5/A
+
+       If the specified pin is a load, the load is first disconnected from its
+       old  net  and  then connected to the new net, as shown in the following
+       figure:
+
+                                +--- eco_cell --- eco_net --- e3/A
+                                |
+         e1/Z ---- old_net -----+--- e4/A
+                                |
+                                +--- e5/A
+
+       If the specified pin is a driver, all loads on  that  net  are  discon-
+       nected  from  the old net and are connected to the new net, as shown in
+       the following figure:
+
+                                                    +--- e3/A
+                                                    |
+         e1/Z --- old_net --- eco_cell --- eco_net -+--- e4/A
+                                                    |
+                                                    +--- e5/A
+
+       If you specify a list of load pins on the same net, these load pins are
+       grouped and the new net drives them, as shown in the following figure:
+
+                           +--- e3/A
+                           |
+         e1/Z --- old_net -+- eco_cell --- eco_net -+--- e4/A
+                                                    |
+                                                    +--- e5/A
+
+       Note that the tool cannot buffer a net driven by multiple drivers.
+
+   Buffering Inside Boundary Pins
+       When you use this command to add a buffer at a pin on the boundary of a
+       hierarchical block, the command adds the buffer either inside  or  out-
+       side  the  hierarchical  block,  depending  on the current hierarchical
+       scope. To add the buffer inside the hierarchical block, set  the  scope
+       to  that  block by using the current_instance command, and then run the
+       insert_buffer command. The tool adds the buffer  within  the  block  to
+       which the current_instance is set.
+
+   Don't touch support for nets
+       When  application  option  eco.insert_buffer.honor_dont_touch is set to
+       true, nets with dont_touch attribute are skipped.
+
+   Multicorner-Multimode Support
+       This command has no dependency on scenario-specific information.
+
+EXAMPLES
+       The following example specifies a library cell that is  not  a  buffer.
+       The command fails and generates an error message.
+
+         prompt> insert_buffer e1/Z -lib_cell class/AN2P
+         Information: Buffering net old_net. (HFS-701)
+         Error: library cell 'AN2P' is not a buffer or an inverter. (ECOUI-010)
+
+       The following example specifies a buffer for the library cell:
+
+         prompt> insert_buffer e1/Z -lib_cell class/B1I
+         {eco_cell}
+
+       The  following  example specifies an inverter for the library cell. The
+       command  succeeds  and  creates  the  new  cells  named  eco_cell   and
+       eco_cell_1.   The  new  nets  are  named  eco_net  and  eco_net_1.  The
+       report_cells command displays the connections for cell e3.
+
+         prompt> insert_buffer e3/A -lib_cell class/IV -inverter_pair
+         {eco_cell eco_cell_1}
+
+         prompt> report_cells -connections e3
+         ****************************************
+         Report : cell
+          -connections
+         ****************************************
+
+         Connections for cell 'e3':
+          Reference:   B1I
+          Library:     class
+
+          Input Pins         Net
+          ----------------   ------------
+          A                  eco_net
+
+          Output Pins        Net
+          ----------------   ------------
+          Z                  out2
+
+         1
+         prompt> report_nets -connections eco_net
+         ****************************************
+         Report : net
+          -connections
+         ****************************************
+
+         Connections for net 'eco_net':
+
+          Driver Pins        Type
+          ------------       ----------------
+          eco_cell/Z         Output Pin (IV)
+
+          Load Pins          Type
+          ------------       ----------------
+          e3/A               Input Pin (B1I)
+
+         1
+
+       Editing a Verilog module in the module aspect:
+
+         prompt> edit_module r4000 { insert_buffer -lib_cell BUFFHVTD2 MemWrite \
+            -new_cell_names ecoCell -new_net_names ecoNet}
+
+SEE ALSO
+       add_buffer(2)
+       current_instance(2)
+       edit_module(2)
+       get_pins(2)
+       remove_buffers(2)
+       report_cells(2)
+       report_nets(2)
+       size_cell(2)
+       eco.add_buffer.honor_dont_touch(3)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

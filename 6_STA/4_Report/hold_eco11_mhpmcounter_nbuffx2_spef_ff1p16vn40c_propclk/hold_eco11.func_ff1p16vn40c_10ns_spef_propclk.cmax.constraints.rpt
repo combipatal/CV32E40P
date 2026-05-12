@@ -1,0 +1,71 @@
+****************************************
+Report : constraint
+	-all_violators
+	-path slack_only
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP5-3
+Date   : Sun May 10 12:05:08 2026
+****************************************
+
+
+
+   min_delay/hold ('clk_i' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/D    -0.01  (VIOLATED)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/D    -0.01  (VIOLATED)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/D    -0.01  (VIOLATED)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/cnt_q_reg[1]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/cnt_q_reg[0]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/State_SP_reg[1]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mtvec_q_reg[10]/D             0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mtvec_q_reg[18]/D             0.00  (VIOLATED: increase significant digits)
+
+
+
+
+   max_capacitance
+
+                             Required        Actual
+   Pin                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   u_core/core_i/cs_registers_i/U83/Y
+                               16.00          17.99          -1.99  (VIOLATED)
+   u_core/core_i/U2357/Y       16.00          17.59          -1.59  (VIOLATED)
+   u_core/core_i/cs_registers_i/U177/Y
+                               32.00          32.74          -0.74  (VIOLATED)
+   u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q_reg[22]/Q
+                                8.00           8.66          -0.66  (VIOLATED)
+   u_core/core_i/U2346/Y       16.00          16.49          -0.49  (VIOLATED)
+   u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q_reg[0]/Q
+                                8.00           8.43          -0.43  (VIOLATED)
+   u_core/core_i/id_stage_i/ZBUF_6845_inst_1190/Y
+                               32.00          32.40          -0.40  (VIOLATED)
+   u_core/core_i/id_stage_i/mult_operand_a_ex_o_reg[5]/Q
+                                8.00           8.31          -0.31  (VIOLATED)
+   u_core/core_i/id_stage_i/U2931/Y
+                                8.00           8.27          -0.27  (VIOLATED)
+   u_core/core_i/ZBUF_54_inst_2148/Y
+                               16.00          16.24          -0.24  (VIOLATED)
+   u_core/core_i/id_stage_i/U498/Y
+                               32.00          32.17          -0.17  (VIOLATED)
+   u_core/core_i/cs_registers_i/ZBUF_570_inst_1936/Y
+                               32.00          32.09          -0.09  (VIOLATED)
+   u_core/core_i/U1913/Y       16.00          16.09          -0.09  (VIOLATED)
+   u_core/core_i/id_stage_i/register_file_i/mem_reg[10][5]/Q
+                                8.00           8.04          -0.04  (VIOLATED)
+   u_core/core_i/U2030/Y       16.00          16.04          -0.04  (VIOLATED)
+   u_core/core_i/id_stage_i/ZBUF_69_inst_3241/Y
+                               16.00          16.01          -0.01  (VIOLATED)
+   u_core/core_i/id_stage_i/ZBUF_77_inst_1849/Y
+                               16.00          16.01          -0.01  (VIOLATED)
+   u_core/core_i/U318/Y        16.00          16.01          -0.01  (VIOLATED)
+   u_core/core_i/id_stage_i/register_file_i/mem_reg[9][14]/Q
+                                8.00           8.01          -0.01  (VIOLATED)
+
+
+1

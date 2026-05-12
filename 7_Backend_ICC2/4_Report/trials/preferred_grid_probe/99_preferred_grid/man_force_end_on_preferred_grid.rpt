@@ -1,0 +1,39 @@
+3.  Attributes and Variables                                 Command Reference
+                   route.detail.force_end_on_preferred_grids
+
+NAME
+       route.detail.force_end_on_preferred_grids
+              Controls whether all metal ends must be snapped to the preferred
+              grid if the preferred grid is defined for the layer.
+
+TYPE
+       Boolean
+
+DEFAULT
+       false
+
+DESCRIPTION
+       This application option  controls  whether  every  metal  end  must  be
+       snapped  to  the  preferred  grid  if  both  the preferred grid and the
+       required technology file attributes (end to end forbidden space, end of
+       line one neighbor rule, uncut shape condition or end off preferred grid
+       center rule) are defined for the layer with preferred grid.
+
+       By default (false), only cut metal ends must be on the preferred  grid.
+       The  router  has  the flexibility to do random routing for natural line
+       ends and can use patching to fix DRC  violations  on  fixed  preroutes,
+       pins, and routing blockages.
+
+       When true, all metal ends must be snapped to the preferred grid.
+
+SEE ALSO
+       get_app_option_value(2)
+       get_app_options(2)
+       report_app_options(2)
+       set_app_option(2)
+       route_opt(2)
+       route_auto(2)
+       route_detail(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

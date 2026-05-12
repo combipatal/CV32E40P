@@ -1,0 +1,36 @@
+create_pin_check_lib trial
+preplace_option_file=/DATA/home/edu135/CV32E40P/7_Backend_ICC2/2_Output/trials/create_pin_check_lib_trial/pin_check_preplace_options.tcl
+
+Trial 1: all NDM refs together
+create all status=0
+1
+
+check all analyze_lib_cell status=0
+
+check all analyze_lib_pin status=1
+0
+
+Trial VT=rvt
+create rvt status=0
+1
+check rvt analyze_lib_cell status=0
+
+check rvt analyze_lib_pin status=1
+0
+
+Trial VT=lvt
+create lvt status=0
+1
+check lvt analyze_lib_cell status=0
+
+check lvt analyze_lib_pin status=1
+0
+
+Trial VT=hvt
+create hvt status=0
+1
+check hvt analyze_lib_cell status=0
+
+check hvt analyze_lib_pin status=1
+0
+

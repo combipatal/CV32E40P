@@ -1,0 +1,177 @@
+****************************************
+Report : constraint
+	-all_violators
+	-path slack_only
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP5-3
+Date   : Sun May 10 11:20:17 2026
+****************************************
+
+
+
+   min_delay/hold ('clock_gating_default' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/core_i/ex_stage_i/mult_i/clk_gate_mulh_CS_reg/latch/EN
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/load_store_unit_i/clk_gate_rdata_q_reg/latch/EN
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/EN      0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/clk_gate_AReg_DP_reg/latch/EN
+                                                              0.00  (VIOLATED: increase significant digits)
+
+   min_delay/hold ('clk_i' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/D    -0.02  (VIOLATED)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/D    -0.02  (VIOLATED)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/D    -0.02  (VIOLATED)
+   u_core/core_i/ex_stage_i/regfile_waddr_lsu_reg[0]/D       -0.01  (VIOLATED)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/trans_addr_q_reg[29]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/regfile_waddr_lsu_reg[1]/D       -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[0]/D          -0.01  (VIOLATED)
+   u_core/core_i/cs_registers_i/dcsr_q_reg[cause][8]/D       -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[10]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[27]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[28]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[19]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[20]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/if_stage_i/pc_id_o_reg[15]/D                -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[25]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/status_cnt_q_reg[0]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[13]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[14]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[18]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/trans_addr_q_reg[31]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[3]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][1]/D     0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][1]/D     0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/regfile_waddr_lsu_reg[3]/D        0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[6]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][1]/D     0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[4]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[24]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[15]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[7]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/regfile_waddr_lsu_reg[4]/D        0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/Cnt_DP_reg[0]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[17]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][7]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][1]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch0_q_reg[13]/D         0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][23]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][10]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch1_q_reg[18]/D         0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][14]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][16]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][23]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[2]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][19]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][6]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/cnt_q_reg[1]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch0_q_reg[14]/D         0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mscratch_q_reg[20]/D          0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][8]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch1_q_reg[28]/D         0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][31]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/id_stage_i/controller_i/debug_force_wakeup_q_reg/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][13]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][0]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch1_q_reg[26]/D         0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][6]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mscratch_q_reg[18]/D          0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][9]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[16]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[21]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch1_q_reg[27]/D         0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/dscratch1_q_reg[8]/D          0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][16]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[0][5]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/fifo_i/mem_q_reg[1][15]/D
+                                                              0.00  (VIOLATED: increase significant digits)
+
+
+
+   clock_gating_hold
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/core_i/ex_stage_i/mult_i/clk_gate_mulh_CS_reg/latch/EN
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/load_store_unit_i/clk_gate_rdata_q_reg/latch/EN
+                                                              0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/EN      0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/alu_i/alu_div_i/clk_gate_AReg_DP_reg/latch/EN
+                                                              0.00  (VIOLATED: increase significant digits)
+
+
+   max_capacitance
+
+                             Required        Actual
+   Pin                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   u_core/core_i/id_stage_i/ZBUF_6845_inst_1190/Y
+                               32.00          32.40          -0.40  (VIOLATED)
+   u_core/core_i/id_stage_i/U498/Y
+                               32.00          32.17          -0.17  (VIOLATED)
+   u_core/core_i/cs_registers_i/U177/Y
+                               32.00          32.09          -0.09  (VIOLATED)
+   u_core/core_i/U1913/Y       16.00          16.09          -0.09  (VIOLATED)
+   u_core/core_i/cs_registers_i/ZBUF_570_inst_1936/Y
+                               32.00          32.08          -0.08  (VIOLATED)
+   u_core/core_i/U2357/Y       16.00          16.07          -0.07  (VIOLATED)
+   u_core/core_i/U2030/Y       16.00          16.04          -0.04  (VIOLATED)
+   u_core/core_i/id_stage_i/ZBUF_69_inst_3241/Y
+                               16.00          16.01          -0.01  (VIOLATED)
+   u_core/core_i/id_stage_i/ZBUF_77_inst_1849/Y
+                               16.00          16.01          -0.01  (VIOLATED)
+   u_core/core_i/id_stage_i/register_file_i/mem_reg[9][14]/Q
+                                8.00           8.01          -0.01  (VIOLATED)
+   u_core/core_i/U318/Y        16.00          16.00           0.00  (VIOLATED: increase significant digits)
+
+
+1

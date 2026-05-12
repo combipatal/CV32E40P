@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>CV32E40P Backend DRC and ECO Learning Report</title>
+  <style>
+    @page { size: A4; margin: 16mm 14mm; }
+    body {
+      font-family: "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+      color: #111827;
+      line-height: 1.55;
+      font-size: 10.5pt;
+      background: #fff;
+    }
+    .page-break { break-before: page; }
+    .major-section { break-before: page; }
+    h1, h2, h3 { break-after: avoid; color: #111827; }
+    h1 { font-size: 22pt; margin: 0 0 8px; }
+    h2 { font-size: 15pt; margin-top: 20px; border-bottom: 1px solid #d1d5db; padding-bottom: 4px; }
+    h3 { font-size: 12pt; margin-top: 15px; }
+    a { color: #1d4ed8; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; break-inside: avoid; margin: 10px 0 14px; table-layout: fixed; }
+    caption { text-align: left; font-weight: 700; margin: 0 0 5px; color: #374151; }
+    th, td { border: 1px solid #d1d5db; padding: 6px 8px; vertical-align: top; word-break: break-word; }
+    th { background: #f3f4f6; font-weight: 700; }
+    .dense { font-size: 9.2pt; line-height: 1.42; }
+    .script-table { font-size: 8.75pt; line-height: 1.34; }
+    pre {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 8.5pt;
+      line-height: 1.45;
+      break-inside: avoid;
+      margin-top: 4px;
+    }
+    code { font-family: "Consolas", "D2Coding", monospace; }
+    ol.toc { padding-left: 22px; line-height: 1.8; }
+    ol.toc li { margin: 2px 0; }
+    .summary-box { border-left: 4px solid #2563eb; background: #eff6ff; padding: 10px 12px; margin: 12px 0; }
+    .note-box { border-left: 4px solid #6b7280; background: #f9fafb; padding: 10px 12px; margin: 12px 0; }
+    .warn-box { border-left: 4px solid #b45309; background: #fffbeb; padding: 10px 12px; margin: 12px 0; }
+    .gate-box { border-left: 4px solid #047857; background: #ecfdf5; padding: 9px 12px; margin: 12px 0; }
+    .code-title { font-size: 9pt; font-weight: 700; color: #374151; margin-top: 10px; }
+    .ok { color: #065f46; font-weight: 700; }
+    .bad { color: #991b1b; font-weight: 700; }
+    .small { font-size: 9pt; color: #374151; }
+  </style>
+</head>
+<body>
+  <h1>CV32E40P Backend DRC and ECO Learning Report</h1>
+  <p><strong>부제:</strong> ICC2 Backend Route DRC Debug, MCMM SPEF STA, Targeted ECO, Formality N2N, Educational GDS Candidate</p>
+  <p><strong>작성 기준:</strong> 2026-05-10 프로젝트 기록, ICC2 reports/logs, Python 후처리 scripts, ECO Tcl, PrimeTime/Formality 결과</p>
+
+  <div class="summary-box">
+    <h2 id="summary">현재 상태 요약</h2>
+    <p>Backend는 처음부터 깨끗한 route가 나온 flow가 아니었다. 초기 <code>route_auto</code>는 open nets 0, legality 0, PG clean이었지만 route DRC 408개가 남았다. 이후 DRC type, layer matrix, hotspot, PG stripe proximity, stdcell pin access, LEF/NDM 품질, route option, cell selection, targeted ECO를 순서대로 분해했다.</p>
+    <p>최종 candidate는 <code>hold_eco17_flop_q_load_split</code> / <code>hold_eco17_gds_candidate</code>다. ECO17은 route DRC 0, open nets 0, legality 0, TT/SS/FF -40C propagated-clock SPEF STA setup/hold clean, <code>report_constraint -all_violators</code> clean, Formality N2N PASS, GDSII Stream v5.0 생성까지 완료했다.</p>
+  </div>
+
+  <table class="dense">
+    <caption>표 1. Backend 최종 candidate 결과 요약</caption>
+    <tr><th>항목</th><th>최종 결과</th><th>해석</th></tr>
+    <tr><td>Final logical/physical candidate</td><td><code>hold_eco17_flop_q_load_split</code></td><td>STA/N2N clean backend candidate</td></tr>
+    <tr><td>GDS candidate</td><td><code>hold_eco17_gds_candidate</code></td><td>filler 삽입 후 GDS export용 copied block</td></tr>
+    <tr><td>Route DRC</td><td>0</td><td>ICC2 <code>check_routes</code> 기준</td></tr>
+    <tr><td>Open nets</td><td>0</td><td>route connectivity clean</td></tr>
+    <tr><td>Legality</td><td>0 violations</td><td>placement/filler legality clean</td></tr>
+    <tr><td>MCMM STA</td><td>TT/SS/FF -40C cmax/cmin setup/hold clean</td><td>PrimeTime propagated-clock SPEF STA 기준</td></tr>
+    <tr><td>Electrical constraints</td><td>all_violators clean</td><td>max_cap/max_transition/min_cap/min_pulse open 없음</td></tr>
+    <tr><td>N2N Formality</td><td>2243 passing, 0 failing, 0 unmatched</td><td>post-DFT handoff vs ECO17 netlist functional equivalent</td></tr>
+    <tr><td>GDS</td><td>GDSII Stream v5.0, 46 MB</td><td>educational final-candidate GDS</td></tr>
+  </table>
+
+  <div class="warn-box">
+    <strong>Claim boundary.</strong> 이 결과는 educational FE-to-BE implementation flow closure다. Tapeout-ready 또는 full foundry signoff라고 쓰면 안 된다. 빠진 항목은 signoff DRC deck, LVS, antenna signoff, IR/EM, noise, metal fill, final signoff STA methodology다.
+  </div>
+
+  <h2 id="toc" class="page-break">Table of Contents</h2>
+  <ol class="toc">
+    <li><a href="#goal-flow">Backend 목표와 전체 Flow</a></li>
+    <li><a href="#init-flow">ICC2 Init/Floorplan/PG/Place/CTS</a></li>
+    <li><a href="#part-a">Part A. Route DRC Debug</a></li>
+    <li><a href="#route-debug-chronology">Route DRC Debug Chronology</a></li>
+    <li><a href="#library-pin-access">Library/Pin Access Root-Cause Narrowing</a></li>
+    <li><a href="#drc67-to-clean">DRC67에서 Route DRC Clean까지</a></li>
+    <li><a href="#part-b">Part B. Post-route STA/Electrical Closure</a></li>
+    <li><a href="#eco-chronology">ECO10/ECO13/ECO15/ECO16/ECO17 Chronology</a></li>
+    <li><a href="#part-c">Part C. ECO17 Final Candidate</a></li>
+    <li><a href="#gds-export">GDS Export</a></li>
+    <li><a href="#python-appendix">Python Script Appendix</a></li>
+    <li><a href="#tcl-appendix">Tcl Script Appendix</a></li>
+    <li><a href="#practice-boundary">실무 관점과 Claim Boundary</a></li>
+    <li><a href="#evidence">Evidence Index</a></li>
+    <li><a href="#conclusion">최종 결론</a></li>
+  </ol>
+
+  <h2 id="goal-flow" class="major-section">1. Backend 목표와 전체 Flow</h2>
+  <p>Backend의 목표는 post-DFT netlist를 ICC2 physical design으로 만들고, floorplan, power, placement, CTS, route, DRC debug, extraction, MCMM STA, ECO, GDS export까지 학습하는 것이다. 중요한 점은 “한 번에 성공”이 아니라 “문제를 어떤 증거로 좁혔는가”다.</p>
+  <table class="dense">
+    <caption>표 2. Backend 전체 stage와 확인 report</caption>
+    <tr><th>Stage</th><th>주요 script</th><th>목적</th><th>확인 report</th></tr>
+    <tr><td>NDM/reference setup</td><td><code>build_saed32_ndm*.tcl</code></td><td>DB+LEF 기반 ICC2 reference library 생성</td><td>NDM build log</td></tr>
+    <tr><td>init_design</td><td><code>run_init_design_check.tcl</code></td><td>post-DFT netlist link/save</td><td>check_design, design_physical</td></tr>
+    <tr><td>floorplan</td><td><code>run_floorplan_initial.tcl</code></td><td>core/die, pins, utilization</td><td>utilization, physical report</td></tr>
+    <tr><td>power</td><td><code>run_power_initial.tcl</code></td><td>PG ring/mesh/rails</td><td>check_pg_connectivity, check_pg_drc</td></tr>
+    <tr><td>place</td><td><code>run_place_initial.tcl</code></td><td>placement/legalization</td><td>check_legality, timing</td></tr>
+    <tr><td>CTS</td><td><code>run_cts_initial.tcl</code></td><td>clock tree insertion/routing</td><td>clock_qor, timing, legality</td></tr>
+    <tr><td>route DRC debug</td><td><code>run_route_initial.tcl</code>, utility probes</td><td>initial 408 route DRC 원인 분해</td><td>check_routes, DRC matrix, marker context</td></tr>
+    <tr><td>post-route STA/ECO</td><td><code>07_extract_sta/*.tcl</code></td><td>SPEF, timing/electrical ECO</td><td>PT global_timing, constraints</td></tr>
+    <tr><td>GDS</td><td><code>run_write_gds_eco17_candidate.tcl</code></td><td>filler/PG/GDS export</td><td>manifest, check_routes, check_legality</td></tr>
+  </table>
+
+  <h2 id="init-flow">2. ICC2 Init/Floorplan/PG/Place/CTS</h2>
+  <p>초기 backend setup은 clean handoff를 만드는 단계다. 여기서 중요한 것은 route DRC가 아직 없어도, netlist가 physical library에 정상 link되고 PG/placement/CTS가 fatal 없이 진행되는지 확인하는 것이다.</p>
+  <table class="dense">
+    <caption>표 3. Initial backend setup 결과</caption>
+    <tr><th>항목</th><th>결과</th><th>해석</th></tr>
+    <tr><td>NDM build</td><td>PASS_WITH_NOTE</td><td>RVT/LVT/HVT NDM을 DB+LEF로 생성</td></tr>
+    <tr><td>init_design</td><td>0 errors, 14004 warnings</td><td>physical design으로 open/link/save 가능</td></tr>
+    <tr><td>floorplan</td><td>utilization 65.40%, 382 pins</td><td>초기 rectangular floorplan</td></tr>
+    <tr><td>placement</td><td>14083 cells, legality 0</td><td>placement 자체는 legal</td></tr>
+    <tr><td>PG</td><td>PG DRC clean, VDD/VSS floating std cells 0</td><td>power delivery 기본 연결 가능</td></tr>
+    <tr><td>CTS</td><td>2130 sinks, 6 levels, 11 repeaters, clock DRC 0</td><td>clock tree 생성 완료, whole-design electrical DRC는 open</td></tr>
+  </table>
+
+  <h2 id="part-a" class="major-section">3. Part A. Route DRC Debug</h2>
+  <p>Part A의 목표는 초기 route DRC 408개를 “무작정 줄이는 것”이 아니라, 어떤 물리 원인 축으로 생기는지 좁히는 것이었다. 최종적으로 문제는 lower-metal pin access, HVT OR/NOR A2 pin geometry, NDM pin trimming, PG obstruction interaction, route/via grid behavior가 겹친 문제로 정리됐다.</p>
+  <table class="dense">
+    <caption>표 4. 초기 route DRC breakdown</caption>
+    <tr><th>Trial</th><th>Route DRC</th><th>좋아진 점</th><th>판단</th></tr>
+    <tr><td>Initial route</td><td>408</td><td>open nets 0, legality 0, PG clean</td><td>route DRC debug 시작점</td></tr>
+    <tr><td>60% utilization</td><td>407</td><td>거의 변화 없음</td><td>density-only fix reject</td></tr>
+    <tr><td>60% + M8 bound</td><td>400</td><td>소폭 개선</td><td>layer bound만으로 closure 불가</td></tr>
+    <tr><td>detail repair 1iter</td><td>383</td><td>count 개선</td><td>class 악화가 있어 root fix 아님</td></tr>
+    <tr><td>detail repair 200iter</td><td>398</td><td>반복해도 수렴 안 함</td><td>blind repair reject</td></tr>
+  </table>
+  <p>DRC matrix는 대부분 M1, M2, M1-M2, VIA1에 집중됐다. 이 말은 global routing congestion보다 lower-metal pin access, contact/via legality, track/grid alignment, stdcell physical abstract 품질을 봐야 한다는 뜻이다.</p>
+  <div class="code-title">Code 1. 초기 DRC class/layer matrix 요약</div>
+  <pre><code>First route DRC classes:
+diff-net spacing 131
+less-than-min-area 8
+needs-fat-contact 106
+off-grid 163
+
+60% + M8 matrix:
+M1 125, M1-M2 108, M2 88, VIA1 79</code></pre>
+
+  <h2 id="route-debug-chronology">4. Route DRC Debug Chronology</h2>
+  <p>아래 표는 route DRC 원인을 좁힌 주요 실험이다. 채택 trial만이 아니라 reject trial도 다음 판단을 만든 근거이므로 함께 기록했다.</p>
+  <table class="script-table">
+    <caption>표 5. Route DRC debug trial chronology</caption>
+    <tr><th>Trial</th><th>목적</th><th>결과 숫자</th><th>채택/기각</th><th>다음 판단</th></tr>
+    <tr><td>PG top port cleanup</td><td>VDD/VSS top port no-pin/unplaced warning 제거</td><td>PG clean 유지, route DRC open</td><td>부분 채택</td><td>PG warning과 route DRC를 분리</td></tr>
+    <tr><td>off-track pin diagnosis</td><td>off-track warning 객체 식별</td><td>SDFFARX1_RVT/QN, INVX8_LVT/A, MUX41X1_HVT/S1</td><td>기록</td><td>stdcell pin access로 초점 이동</td></tr>
+    <tr><td>CO/VIA contact diagnosis</td><td>ZRT-022 원인 확인</td><td>CO default contact 0, VIA1 default 있음</td><td>기록</td><td>CO warning과 VIA1 routing issue 분리</td></tr>
+    <tr><td>Milkyway ref open</td><td>원본 MW reference 사용 가능성 확인</td><td>icc_shell/MDataPrep license unavailable</td><td>blocked</td><td>DB+LEF NDM path 유지</td></tr>
+    <tr><td>pin access / M1 track probe</td><td>pin access와 track mismatch 확인</td><td>same ref population 117 blocked pins</td><td>기록</td><td>blocked access detail 추출</td></tr>
+    <tr><td>M1 retrack route</td><td>M1 track 재생성으로 off-track 제거 시도</td><td>27260 DRC</td><td>reject</td><td>manual track patch 금지</td></tr>
+    <tr><td>create_pin_check_lib</td><td>정식 pin-check lib flow 확인</td><td>analyze_lib_cell succeeds, analyze_lib_pin LIB-001</td><td>부분 성공</td><td>pin-check 품질 evidence 확보</td></tr>
+    <tr><td>blocked access detail</td><td>blocked access ref 분해</td><td>SDFFARX1_RVT 116, MUX41X1_HVT 9</td><td>기록</td><td>SDFF/MUX local contributor 확인</td></tr>
+    <tr><td>pin access / DRC overlap</td><td>blocked points와 DRC marker 거리 매칭</td><td>289/305 within 50um, 193/305 within 25um</td><td>기록</td><td>같은 물리영역 문제로 판단</td></tr>
+    <tr><td>placement spreading</td><td>hotspot density 완화</td><td>400 -> 390, blocked pins 117 -> 144</td><td>reject</td><td>density-only 아님</td></tr>
+    <tr><td>scan DEF handoff</td><td>scan chain placement awareness</td><td>398 DRC</td><td>open</td><td>scan DEF만으로 부족</td></tr>
+    <tr><td>advanced legalizer/pin color</td><td>pin color/legalizer 개선</td><td>605 DRC</td><td>reject</td><td>legalizer option 아님</td></tr>
+    <tr><td>hotspot partial blockage</td><td>hotspot local density 감소</td><td>398 -> 390</td><td>weak</td><td>root cause 추가 분해</td></tr>
+    <tr><td>PG M2 offset</td><td>PG stripe obstruction 가설 테스트</td><td>signal 377, PG DRC 97</td><td>invalid</td><td>PG 위치 영향은 있음</td></tr>
+    <tr><td>PG M2 cut/blockage</td><td>hotspot PG obstruction 국소 완화</td><td>381 -> 377, 376, 368</td><td>cause evidence</td><td>PG+pin access interaction 확인</td></tr>
+  </table>
+
+  <h2 id="library-pin-access">5. Library/Pin Access Root-Cause Narrowing</h2>
+  <p>최종 route DRC clean으로 가기 전 가장 중요한 관찰은 HVT OR/NOR 계열의 특정 pin access가 lower-metal DRC에 강하게 기여한다는 점이었다. 특히 OR2X1_HVT, NOR2X0/X1/X2_HVT 회피는 DRC를 크게 줄였다.</p>
+  <table class="dense">
+    <caption>표 6. HVT OR/NOR/MUX contributor narrowing</caption>
+    <tr><th>Trial</th><th>결과</th><th>해석</th></tr>
+    <tr><td>MUX41X*_HVT avoidance</td><td>route DRC 399</td><td>MUX41 pin issue는 있지만 broad ban은 closure 방향 아님</td></tr>
+    <tr><td>OR2X1_HVT avoidance</td><td>368 -> 203</td><td>OR2X1_HVT가 major spacing/fat-contact contributor</td></tr>
+    <tr><td>OR2X1 + NOR2X0/X2_HVT avoidance</td><td>203 -> 188</td><td>NOR 계열도 contributor</td></tr>
+    <tr><td>OR2X1 + NOR2X0/X1/X2_HVT avoidance</td><td>188 -> 110</td><td>NOR2X1_HVT가 major lower-metal/off-grid contributor</td></tr>
+    <tr><td>add broad NOR2X4_HVT ban</td><td>481</td><td>구조 재합성이 커져 악화, reject</td></tr>
+  </table>
+  <p>여기서 중요한 실무적 판단은 “cell type 전체 ban”이 항상 좋은 fix가 아니라는 점이다. broad <code>dont_use</code>는 logic restructuring, area/timing 변화, 새로운 pin access 문제를 만들 수 있다. 그래서 이후 방향은 targeted ECO로 이동했다.</p>
+
+  <h2 id="drc67-to-clean" class="major-section">6. DRC67에서 Route DRC Clean까지</h2>
+  <p>Part A의 마지막 연결 지점은 67 DRC current-best와 route DRC clean candidate 사이였다. 67개 marker 중 55개는 Routable A2 access point 근처였고, 나머지 12개는 SDFFARX1_RVT/SDFFASX1_RVT 주변 local M1 marker였다. 즉 남은 문제도 단일 원인이 아니라 A2 lower-metal access와 local flop interaction이 섞여 있었다.</p>
+  <table class="dense">
+    <caption>표 7. 67 DRC current-best 이후 route DRC clean으로 간 흐름</caption>
+    <tr><th>Trial</th><th>문제</th><th>분석 근거</th><th>결과</th><th>판단</th></tr>
+    <tr><td>A1/A2 commutative pin swap</td><td>A2 edge pin access residue 완화</td><td>A2 marker와 pin access point가 가까움</td><td>110 -> 103 또는 조합 trial 112</td><td>효과는 있으나 main closure 아님</td></tr>
+    <tr><td>NOR2X4_HVT/A2 -> NOR2X2_HVT</td><td>dominant NOR2X4 A2 edge class</td><td>43 matched NOR2X4_HVT/A2 instance</td><td>110 -> 67</td><td>당시 best targeted ECO</td></tr>
+    <tr><td>NOR2X4_HVT/A2 -> NOR2X1_HVT</td><td>더 작은 drive가 좋은지 확인</td><td>same target class</td><td>109</td><td>작다고 항상 좋은 것 아님, reject</td></tr>
+    <tr><td>OR2X4_HVT add-on resize</td><td>remaining OR2X4 contributor 제거</td><td>OR2X4 A2 track-center mismatch</td><td>97</td><td>best보다 나빠 reject</td></tr>
+    <tr><td>M1 connect-within-pin option</td><td>lower-metal via/pin containment forcing</td><td>Off-grid 감소 가능성</td><td>67 -> 109</td><td>Needs-fat-contact/within-pin 문제 증가, reject</td></tr>
+    <tr><td>trim_all_pin NDM + NOR2 ECO</td><td>pin abstract와 route access mismatch 완화</td><td>modified NDM pin shape 영향 확인</td><td>67 -> 1</td><td>library abstract가 원인 축임을 강하게 확인</td></tr>
+    <tr><td>trim_all_pin + one MUX41 resize ECO</td><td>마지막 MUX41X2/S0 residue 제거</td><td>single residual marker 분석</td><td>0</td><td>route DRC clean candidate</td></tr>
+  </table>
+  <div class="gate-box">
+    <strong>Part A에서 Part B로 넘어간 이유:</strong> route DRC가 0이 되고 open nets 0, legality 0이 유지됐다. 이제 더 이상 route DRC count만 볼 수 없고, routed parasitic SPEF 기반 STA와 electrical constraint를 확인해야 했다.
+  </div>
+
+  <h2 id="part-b" class="major-section">7. Part B. Post-route STA/Electrical Closure</h2>
+  <p>Route DRC 0은 끝이 아니다. 실제 routed parasitic을 SPEF로 추출한 뒤 PrimeTime에서 setup/hold와 electrical constraints를 봐야 한다. 특히 final check는 TT만 보면 부족하고, SS setup과 FF hold가 서로 trade-off를 만들 수 있다.</p>
+  <table class="dense">
+    <caption>표 8. Route-clean 이후 post-route STA/electrical closure 흐름</caption>
+    <tr><th>단계</th><th>핵심 확인</th><th>결과</th><th>다음 판단</th></tr>
+    <tr><td>Initial SPEF STA</td><td>TT cmax/cmin setup/hold, max_cap</td><td>setup/hold clean, max_cap 376/179</td><td>timing clean만으로 부족, electrical ECO 필요</td></tr>
+    <tr><td>ECO3/ECO4/ECO5</td><td>max_cap repair와 route DRC 유지</td><td>ECO5 route DRC 0, PT max_cap 0, tiny max_transition note</td><td>TT는 좋아졌지만 MCMM 필요</td></tr>
+    <tr><td>ECO6/ECO7/ECO9</td><td>max_transition, SS setup, FF hold</td><td>각 corner trade-off 노출</td><td>hold-only ECO는 너무 blunt함</td></tr>
+    <tr><td>ECO10-ECO13</td><td>filtered hold insertion과 mhpmcounter trade-off</td><td>FF hold 개선, SS setup 일부 break</td><td>targeted setup recovery 필요</td></tr>
+    <tr><td>ECO14-ECO17</td><td>setup recovery, max_cap residual closure</td><td>ECO17 TT/SS/FF cmax/cmin clean</td><td>final candidate로 승격</td></tr>
+  </table>
+
+  <h2 id="eco-chronology">8. ECO10/ECO13/ECO15/ECO16/ECO17 Chronology</h2>
+  <p>아래 표는 최종 ECO17이 왜 final인지 설명하기 위한 핵심 ECO 흐름이다. ECO10과 ECO13은 hold/setup trade-off를 좁혔고, ECO15~ECO17은 setup/hold clean 이후 남은 electrical max_cap을 닫았다.</p>
+  <table class="script-table">
+    <caption>표 9. ECO10~ECO17 상세 chronology</caption>
+    <tr><th>ECO</th><th>문제</th><th>분석 근거</th><th>조치 / 사용 script</th><th>결과</th><th>채택/기각 및 다음 ECO 이유</th></tr>
+    <tr><td>ECO10<br><code>hold_eco10_delln1_no_mhpmcounter</code></td><td>FF -40C hold를 닫아야 하지만, ECO9처럼 모든 endpoint에 delay를 넣으면 SS setup이 깨짐</td><td>ECO9에서 mhpmcounter high-bit counter path가 SS setup을 크게 악화. ECO7에는 작은 양의 SS setup margin만 있었음</td><td><code>run_hold_eco9_manual_delln1.tcl</code> 재사용. <code>EXCLUDE_ENDPOINT_REGEX=mhpmcounter_q_reg</code>로 setup-critical endpoint 제외. 218개 DELLN1X2_HVT 삽입</td><td>route DRC 0, open nets 0, legality 0. SS cmax/cmin setup/hold clean. FF hold는 cmax WNS -0.02/TNS -0.27/28 endpoints, cmin WNS -0.02/TNS -0.48/51 endpoints</td><td>부분 채택. non-mhpmcounter hold는 안전하게 해결 가능함을 증명. 남은 hold가 mhpmcounter 중심이라 ECO11~ECO13로 이어짐</td></tr>
+    <tr><td>ECO13<br><code>hold_eco13_final6_nbuffx2</code></td><td>ECO11/ECO12 이후 residual FF hold를 마저 닫아야 함</td><td>ECO12에서 hold는 거의 닫혔지만 SS cmax setup WNS -0.07/TNS -0.07 한 endpoint가 발생</td><td><code>run_hold_eco9_manual_delln1.tcl</code>를 NBUFFX2_HVT delay cell로 사용. <code>hold_eco13_residual_endpoints.rpt</code> 기반 6개 NBUFFX2_HVT 추가</td><td>FF -40C cmax/cmin setup/hold clean. SS cmin clean. SS cmax setup WNS -0.07/TNS -0.07 한 endpoint 유지</td><td>final로는 기각. FF hold closure evidence는 얻었지만 SS setup이 깨져 ECO14 setup recovery가 필요해짐</td></tr>
+    <tr><td>ECO15<br><code>hold_eco15_maxcap_occupied_from_eco14</code></td><td>ECO14에서 setup/hold는 clean이지만 electrical max_cap이 남음</td><td>ECO14가 U1856/U1857 HVT->RVT로 SS setup을 회복했고 FF hold도 유지. 그러나 PT constraint에 max_cap residual 존재</td><td><code>run_max_cap_eco1_open_site.tcl</code>를 <code>PHYSICAL_MODE=occupied_site</code>로 사용. ICC2 <code>eco_opt -types max_capacitance</code>, <code>route_eco</code>, TT/SS/FF PT rerun</td><td>ICC2 internal max_cap 10 -> 0, route DRC 0/open nets 0/legality 0. PT TT/SS setup/hold/constraints clean. FF -40C cmax에 8개 작은 max_cap residual</td><td>부분 채택. setup/hold는 clean이나 external PT FF cmax가 더 엄격한 residual을 봄. ECO16으로 focused residual max_cap 수정</td></tr>
+    <tr><td>ECO16b<br><code>hold_eco16b_residual_maxcap_size7_legalize</code></td><td>ECO15 이후 FF -40C cmax max_cap 8개 중 non-flop 7개를 닫아야 함</td><td>잔여 pin list가 짧고 violation magnitude가 작음. 첫 ECO16 sizing은 cell width 변화로 overlap/route DRC risk가 있어 legalize가 필요했음</td><td><code>run_residual_maxcap_size_eco.tcl</code>. 7개 non-flop residual driver size-up 후 <code>legalize_placement</code>, <code>route_eco</code></td><td>size_ok 7, size_fail 0. route DRC 0/open nets 0/legality 0. ICC2 max_cap 0. PT FF cmax residual 1개만 남음: <code>mem_reg[9][14]/Q</code> required 8.00 actual 8.01</td><td>부분 채택. 마지막 violator가 scan flop Q라 flop 자체 resize/swap보다 load split이 안전하다고 판단. ECO17로 이어짐</td></tr>
+    <tr><td>ECO17<br><code>hold_eco17_flop_q_load_split</code></td><td>마지막 flop Q max_cap 0.01 residual을 닫아야 함</td><td>문제는 logic depth가 아니라 flop Q fanout/load. scan flop 직접 변경은 DFT 구조와 flop mapping risk가 큼</td><td><code>run_residual_maxcap_output_buffer_eco.tcl</code>. <code>add_buffer -snap</code>로 <code>NBUFFX2_HVT</code> 1개를 flop Q 뒤에 삽입해 downstream load split</td><td>added 1, failed 0. route DRC 0/open nets 0/legality 0. TT/SS/FF -40C cmax/cmin setup/hold clean. all <code>report_constraint -all_violators</code> clean</td><td>final candidate로 채택. scan flop 자체를 바꾸지 않아 DFT risk가 작고, MCMM STA/electrical/N2N/GDS evidence가 모두 연결됨</td></tr>
+  </table>
+  <div class="gate-box">
+    <strong>ECO17이 final인 이유:</strong> ECO17은 route DRC, open nets, legality, MCMM setup/hold, max_cap/max_transition/min_cap/min_pulse, N2N equivalence를 모두 통과했다. 또한 scan flop을 직접 바꾸지 않고 buffer로 load를 split했으므로 DFT 구조 변경 risk가 작다.
+  </div>
+
+  <h2 id="part-c" class="major-section">9. Part C. ECO17 Final Candidate</h2>
+  <p>Physical ECO가 기능을 바꾸지 않았는지 확인하려면 Formality N2N이 필요하다. reference는 backend handoff post-DFT netlist이고, implementation은 ECO17 netlist다. functional mode에서 scan/test ports를 0으로 고정하고 scan_out은 don't-verify로 처리했다.</p>
+  <table class="dense">
+    <caption>표 10. Final ECO17 Formality N2N 결과</caption>
+    <tr><th>항목</th><th>결과</th></tr>
+    <tr><td>Tool</td><td>Formality W-2024.09-SP5</td></tr>
+    <tr><td>Script</td><td><code>5_FM_N2N/0_Script/run_fm_n2n_hold_eco17_flop_q_load_split.tcl</code></td></tr>
+    <tr><td>Reference</td><td><code>post_dft_topo_no_or2x1_nor2x012_hvt</code></td></tr>
+    <tr><td>Implementation</td><td><code>hold_eco17_flop_q_load_split</code></td></tr>
+    <tr><td>Passing</td><td>2243</td></tr>
+    <tr><td>Failing</td><td>0</td></tr>
+    <tr><td>Unmatched</td><td>0</td></tr>
+    <tr><td>Not compared</td><td>74 clock-gate LAT, 1 scan_out don't-verify</td></tr>
+  </table>
+  <div class="warn-box">
+    이 결과는 ECO17 netlist가 post-DFT functional reference와 동일하다는 논리 검증이다. foundry signoff DRC/LVS나 production DFT signoff를 대체하지 않는다.
+  </div>
+
+  <h2 id="gds-export">10. GDS Export</h2>
+  <p>GDS export는 <code>hold_eco17_flop_q_load_split</code> block을 직접 덮지 않고 <code>cv32e40p_synth_wrap_hold_eco17_gds_candidate</code>로 복사해 수행했다. 이후 standard-cell filler를 삽입하고 PG net을 reconnect한 뒤 GDS/DEF/VG/SDC를 썼다.</p>
+  <table class="dense">
+    <caption>표 11. GDS export 전후 check와 output</caption>
+    <tr><th>항목</th><th>내용</th></tr>
+    <tr><td>Script</td><td><code>7_Backend_ICC2/0_Script/09_gds/run_write_gds_eco17_candidate.tcl</code></td></tr>
+    <tr><td>Command</td><td><code>icc2_shell -batch -f 7_Backend_ICC2/0_Script/09_gds/run_write_gds_eco17_candidate.tcl</code></td></tr>
+    <tr><td>Pre-GDS checks</td><td><code>check_routes</code>, <code>check_legality</code>, <code>check_pg_connectivity</code>, <code>check_pg_drc</code>, <code>report_constraint -all_violators</code></td></tr>
+    <tr><td>Filler</td><td>RVT/HVT/LVT SHFILL list 검색, 실제 삽입은 RVT SHFILL 계열</td></tr>
+    <tr><td>PG reconnect</td><td>VDD 16903 -> 47765 pins, VSS 16903 -> 47765 pins</td></tr>
+    <tr><td>Handoff output</td><td><code>write_verilog</code>, <code>write_def</code>, <code>write_sdc</code>, <code>write_gds</code>, manifest 기록</td></tr>
+    <tr><td>GDS</td><td><code>cv32e40p_synth_wrap.hold_eco17_gds_candidate.gds</code>, GDSII Stream v5.0, 46 MB</td></tr>
+  </table>
+  <div class="code-title">Code 2. run_write_gds_eco17_candidate.tcl 핵심 command</div>
+  <pre><code>copy_block -from_block cv32e40p_synth_wrap_hold_eco17_flop_q_load_split \
+           -to_block cv32e40p_synth_wrap_hold_eco17_gds_candidate
+create_stdcell_fillers -lib_cells $filler_lib_cells -prefix FILL_ECO17_
+connect_pg_net -automatic
+check_pg_connectivity
+check_pg_drc
+check_routes
+check_legality
+report_constraints -all_violators
+write_verilog $VG_OUT
+write_def -version 5.8 $DEF_OUT
+write_sdc $SDC_OUT
+write_gds -long_names -hierarchy design_lib -layer_map $GDS_MAP \
+          -merge_files [list $RVT_GDS $LVT_GDS $HVT_GDS] $GDS_OUT</code></pre>
+  <table class="dense">
+    <caption>표 12. Post-filler GDS candidate checks</caption>
+    <tr><th>Post-filler check</th><th>결과</th></tr>
+    <tr><td>open nets</td><td>0</td></tr>
+    <tr><td>route DRC</td><td>0</td></tr>
+    <tr><td>legality</td><td>TOTAL 0 Violations</td></tr>
+    <tr><td>max_transition</td><td>0</td></tr>
+    <tr><td>max_capacitance</td><td>0</td></tr>
+    <tr><td>min_capacitance</td><td>0</td></tr>
+    <tr><td>min_pulse_width</td><td>0</td></tr>
+  </table>
+  <div class="warn-box">
+    <strong>GDS claim boundary.</strong> 이 GDS는 educational GDS candidate다. Foundry signoff deck 기반 DRC, LVS, antenna, IR/EM, metal fill, final signoff STA methodology가 없으므로 tapeout-ready GDS라고 부르지 않는다.
+  </div>
+
+  <h2 id="python-appendix" class="major-section">11. Python Script Appendix</h2>
+  <p>Python 후처리는 DRC marker, pin access point, LEF geometry, TSV ECO list를 연결하기 위해 사용했다. ICC2 report만 눈으로 읽으면 “DRC가 많다”는 사실만 보이지만, script로 ref/pin/layer/coordinate를 붙이면 어떤 ECO를 시험할지 정할 수 있다.</p>
+  <table class="script-table">
+    <caption>표 13. Python 분석 script별 입출력과 trial/ECO 연결</caption>
+    <tr><th>Script</th><th>목적</th><th>입력 report</th><th>출력 파일/예시</th><th>핵심 parsing field</th><th>판단 연결</th></tr>
+    <tr><td><code>match_drc_to_cell_pin_access.py</code></td><td>DRC marker coordinate를 stdcell pin access point와 매칭</td><td>check_routes detail report, cell pin access report</td><td>marker별 ref/cell/pin/access candidate table. 예: within 50um 289/305</td><td>marker bbox, layer, via/contact type, instance name, ref_name, pin_name, access point</td><td>blocked access가 hotspot DRC와 공간적으로 관련 있음을 확인하고 OR/NOR/MUX/SDFF 후보를 좁힘</td></tr>
+    <tr><td><code>summarize_drc_marker_context.py</code></td><td>marker 주변 ref/pin/route context 요약</td><td>detailed DRC context dump</td><td>representative marker context summary</td><td>bbox center, nearby instance, ref_name, pin_name, route layer, error class</td><td>OR/NOR/SDFF/MUX local contributor 식별</td></tr>
+    <tr><td><code>summarize_unmatched_drc_markers.py</code></td><td>pin access와 매칭 안 된 marker 분류</td><td>overlap output, route DRC detail</td><td>unmatched buckets. 예: 12 unmatched local M1/flop markers</td><td>matched/unmatched flag, nearest cell/pin, marker type/layer</td><td>A2 access 문제와 local flop M1 residual을 분리</td></tr>
+    <tr><td><code>analyze_a2_lef_access_alignment.py</code></td><td>NOR/OR A2 pin LEF shape와 track alignment 분석</td><td>SAED32 LEF, marker context</td><td>A2 pin/track alignment report</td><td>pin rectangle, track pitch/residue, access x/y, edge vs center</td><td>A2 edge-snapping class 확인, targeted NOR2 resize 후보 선정</td></tr>
+    <tr><td><code>analyze_a2_marker_shape_geometry.py</code></td><td>A2 관련 marker shape의 geometry 패턴 확인</td><td>DRC marker bbox detail, matched A2 table</td><td>shape width/height/layer class summary</td><td>bbox size, layer pair, marker center, nearest pin edge</td><td>Off-grid/needs-fat-contact가 같은 A2 geometry 주변에서 반복되는지 확인</td></tr>
+    <tr><td><code>analyze_lef_pin_via_windows.py</code></td><td>pin shape 안에 VIA12 legal window가 있는지 분석</td><td>LEF pin definitions, via rule</td><td>via-window class. 예: routable, weak, no legal window</td><td>pin bbox, via cut size, enclosure, legal window count</td><td>valid-via-region weakness 판단, NDM trim/LEF issue 근거 생성</td></tr>
+    <tr><td><code>analyze_via12_contact_marker_fit.py</code></td><td>VIA12 contact가 marker/pin geometry에 맞는지 검토</td><td>marker shape, via/contact rule, LEF pin bbox</td><td>fit/fail report</td><td>via bbox, enclosure, pin edge clearance, DRC class</td><td>needs-fat-contact와 off-grid 원인을 route option이 아니라 pin/via window 문제로 분리</td></tr>
+    <tr><td><code>classify_drc_by_lef_via_window.py</code></td><td>DRC를 LEF via-window class로 분류</td><td>DRC + LEF classification output</td><td>class matrix. 예: Routable A2 55/67</td><td>ref/pin, window class, marker type, distance threshold</td><td>remaining 67 DRC 중 dominant class와 residual class를 분리</td></tr>
+    <tr><td><code>select_a2_commutative_pin_swaps.py</code></td><td>A1/A2 swap 가능한 instance list 생성</td><td>marker context, cell boolean pin equivalence assumption</td><td>pin swap TSV 후보</td><td>instance, ref_name, pin A1/A2, marker count, distance</td><td>A1/A2 commutative pin swap trial 입력 생성</td></tr>
+    <tr><td><code>summarize_cell_pin_access.py</code></td><td>ref/cell/pin별 blocked access count 집계</td><td>pin access detail report</td><td>compact ref/pin count. 예: SDFFARX1_RVT 116, MUX41X1_HVT 9</td><td>ref_name, pin_name, access status, count</td><td>blocked access가 특정 cell/pin에 몰리는지 확인하고 Tcl probe 대상 선정</td></tr>
+  </table>
+
+  <h2 id="tcl-appendix" class="major-section">12. Tcl Script Appendix</h2>
+  <p>Backend Tcl은 학습용으로 command 흐름이 드러나도록 작성했다. 아래 표는 각 script에서 봐야 할 핵심 command와 PASS/FAIL 기준이다.</p>
+  <table class="script-table">
+    <caption>표 14. Backend Tcl script별 command와 PASS/FAIL 기준</caption>
+    <tr><th>Script</th><th>목적</th><th>핵심 command</th><th>생성 output</th><th>PASS 기준</th><th>FAIL/다음 action</th></tr>
+    <tr><td><code>run_route_initial.tcl</code></td><td>CTS 이후 signal route 수행</td><td><code>open_lib</code>, <code>open_block</code>, <code>route_auto</code>, <code>check_routes</code>, <code>check_legality</code></td><td>route block, check_routes report, route log</td><td>open nets 0, route DRC 0, legality 0</td><td>DRC count/type/layer matrix 추출</td></tr>
+    <tr><td><code>run_drc_marker_context.tcl</code></td><td>DRC marker 주변 object context 추출</td><td><code>get_drc_errors</code>, bbox query, nearby cells/nets/pins report</td><td>marker context report</td><td>marker와 ref/pin 후보가 설명 가능</td><td>Python matching으로 후처리</td></tr>
+    <tr><td><code>run_preferred_grid_probe.tcl</code></td><td>routing preferred grid와 option 영향 확인</td><td><code>report_app_options</code>, route option set, <code>check_routes</code></td><td>grid/route option probe reports</td><td>DRC가 줄고 open/legality/PG clean 유지</td><td>count 같거나 악화 시 route knob reject</td></tr>
+    <tr><td><code>run_remaining_drc_pin_access_detail.tcl</code></td><td>remaining DRC와 pin access detail 추출</td><td>pin access report, marker detail, nearby pin query</td><td>remaining marker/pin detail</td><td>dominant ref/pin class 식별</td><td>targeted ECO/TSV 후보 생성</td></tr>
+    <tr><td><code>run_hold_eco9_manual_delln1.tcl</code></td><td>hold endpoint에 delay buffer 삽입</td><td><code>open_lib</code>, endpoint filter, <code>insert_buffer</code>/<code>add_buffer</code>, <code>legalize_placement</code>, <code>route_eco</code>, <code>check_routes</code></td><td>ECO block, VG/DEF/SDC/SDF/SPEF, manifest</td><td>route DRC 0, legality 0, PT hold 개선, SS setup 유지</td><td>SS setup 깨지면 endpoint filter/setup recovery 필요</td></tr>
+    <tr><td><code>run_residual_maxcap_size_eco.tcl</code></td><td>ECO15 후 residual non-flop max_cap driver size-up</td><td><code>size_cell</code>, <code>legalize_placement</code>, <code>route_eco</code>, <code>report_constraint -all_violators</code></td><td>ECO16/ECO16b block, reports, manifest</td><td>size_ok 전부 성공, route/open/legal clean, PT residual 감소</td><td>overlap 발생 시 legalize 추가, flop Q는 별도 load split</td></tr>
+    <tr><td><code>run_residual_maxcap_output_buffer_eco.tcl</code></td><td>flop Q max_cap residual load split</td><td><code>add_buffer -snap</code>, <code>legalize_placement</code>, <code>route_eco</code>, <code>write_verilog</code>, <code>write_def</code>, <code>write_sdc</code></td><td>ECO17 netlist/DEF/SDC/SDF/SPEF, manifest</td><td>added 1, route DRC 0, legality 0, TT/SS/FF constraints clean</td><td>timing regression 시 buffer size/location 재조정</td></tr>
+    <tr><td><code>run_fm_n2n_hold_eco17_flop_q_load_split.tcl</code></td><td>post-DFT handoff netlist와 ECO17 netlist equivalence</td><td><code>read_verilog -r/-i</code>, <code>set_constant</code>, <code>set_dont_verify_point</code>, <code>match</code>, <code>verify</code></td><td>verify/failing/unmatched/passing reports</td><td>Verification SUCCEEDED, failing 0, unmatched 0</td><td>불일치 시 ECO netlist/function 변경 여부 확인</td></tr>
+    <tr><td><code>run_write_gds_eco17_candidate.tcl</code></td><td>ECO17 block 복사, filler/PG reconnect, GDS export</td><td><code>copy_block</code>, <code>create_stdcell_fillers</code>, <code>connect_pg_net</code>, <code>check_pg_connectivity</code>, <code>check_pg_drc</code>, <code>check_routes</code>, <code>check_legality</code>, <code>write_gds</code></td><td>GDS/VG/DEF/SDC, gds_export_manifest</td><td>after-filler route DRC 0, legality 0, constraints 0, GDS file 생성</td><td>PG/DRC 깨지면 filler/PG reconnect 전후 비교</td></tr>
+  </table>
+
+  <h2 id="practice-boundary" class="major-section">13. 실무 관점과 Claim Boundary</h2>
+  <h3>합성 문제가 아니라 route DRC 문제일 때</h3>
+  <p>합성은 R2N/N2N/STA가 clean이어도 backend에서 DRC가 남을 수 있다. 이때 합성 script만 계속 바꾸는 것은 위험하다. 먼저 DRC class와 physical context를 보고 library/pin access/route option/PG obstruction/placement density 중 어디에 가까운지 분리해야 한다.</p>
+  <h3>PD/CAD/library issue 분리 기준</h3>
+  <ul>
+    <li>모든 DRC가 lower-metal과 specific ref/pin에 몰리면 library abstract/pin access 가능성이 높다.</li>
+    <li>PG stripe 주변에서 DRC가 바뀌면 PD floorplan/PG obstruction 영향이 있다.</li>
+    <li>route option만 바꿔도 class가 그대로면 route knob만으로는 root fix가 아니다.</li>
+    <li>LEF/GDS/NDM이 서로 다르면 CAD/library data quality issue로 분리해야 한다.</li>
+  </ul>
+  <h3>Broad dont_use vs Targeted ECO</h3>
+  <p>Broad dont_use는 해당 cell type을 전체 합성에서 제거하기 때문에 구조가 크게 바뀐다. DRC가 줄 수도 있지만 timing/area/routing이 더 나빠질 수 있다. Targeted ECO는 문제 instance만 바꾸므로 변화량이 작고 설명 가능하다. 이 프로젝트에서는 broad NOR2X4_HVT ban이 481 DRC로 악화됐고, targeted NOR2X4->NOR2X2는 67까지 개선했다.</p>
+  <h3>왜 full signoff라고 말하면 안 되는가</h3>
+  <div class="warn-box">
+    이 결과는 ICC2/PrimeTime/Formality 기반 educational FE-to-BE closure다. 하지만 foundry deck 기반 signoff DRC, LVS, antenna, IR/EM, metal fill, signoff STA methodology가 포함되지 않았으므로 tapeout-ready GDS라고 부르지 않는다.
+  </div>
+
+  <h2 id="evidence">14. Evidence Index</h2>
+  <div class="code-title">Code 3. Backend evidence path list</div>
+  <pre><code>00_Project_Tracking/RESULT_SUMMARY.md
+00_Project_Tracking/RUN_LOG.md
+docs/backend/route_drc_root_cause_investigation.md
+docs/backend/backend_fix_trials_2026_05_09.md
+docs/backend/mcmm_timing_closure_eco7_2026_05_10.md
+docs/backend/mcmm_timing_closure_eco14_eco15_2026_05_10.md
+docs/backend/mcmm_timing_closure_eco16_eco17_2026_05_10.md
+docs/backend/gds_candidate_export_2026_05_10.md
+7_Backend_ICC2/4_Report/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/trials/*/06_route/check_routes.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco17_flop_q_load_split/check_routes.after_output_buffer.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco17_flop_q_load_split/check_legality.after_output_buffer.rpt
+7_Backend_ICC2/4_Report/07_extract_sta/hold_eco17_flop_q_load_split/constraints.after_output_buffer.rpt
+6_STA/4_Report/hold_eco17_flop_q_load_split_spef_tt1p05v25c_propclk/
+6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ss0p95v125c_propclk/
+6_STA/4_Report/hold_eco17_flop_q_load_split_spef_ff1p16vn40c_propclk/
+5_FM_N2N/4_Report/hold_eco17_flop_q_load_split/
+7_Backend_ICC2/2_Output/09_gds/hold_eco17_gds_candidate/
+scripts/*.py
+configs/backend/*.tsv</code></pre>
+
+  <h2 id="conclusion">15. 최종 결론</h2>
+  <p>이 backend flow는 initial route DRC 408에서 시작해, 단순 density/route repair/route option으로 해결되지 않는 lower-metal pin-access/NDM/PG interaction 문제를 단계적으로 좁혔다. 최종적으로 route DRC clean, MCMM STA/electrical closure, Formality N2N, GDS export까지 이어졌다.</p>
+  <p>학습 가치의 핵심은 최종 숫자뿐 아니라 reject 이유를 기록했다는 점이다. 실무에서도 DRC closure는 “한 옵션을 맞히는 게임”이 아니라, report를 구조화하고 failure class를 줄이며, timing/equivalence/signoff boundary를 동시에 관리하는 과정이다.</p>
+  <div class="warn-box">
+    최종 표현은 <strong>educational final-candidate GDS</strong>가 맞다. <strong>tapeout-ready</strong>, <strong>foundry signoff clean</strong>, <strong>production signoff complete</strong>라고 쓰지 않는다.
+  </div>
+</body>
+</html>

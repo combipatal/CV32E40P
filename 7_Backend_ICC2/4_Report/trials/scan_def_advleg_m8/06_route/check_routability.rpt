@@ -1,0 +1,213 @@
+
+=========================================================
+==     Check for PG Net Open  ==
+=========================================================
+
+Warning: PG net VSS has opens. (ZRT-764)
+
+>>>>>> Found 1 PG net open
+
+=========================================================
+==     Check for global route app-option  ==
+=========================================================
+
+>>> The option values are suggested.
+
+Warning: Cell contains tie connections which are not connected to real PG. (ZRT-511)
+Cell Min-Routing-Layer = M1
+Cell Max-Routing-Layer = M8
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CO. (ZRT-022)
+Warning: Port VDD of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VSS of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Skipping 6 internal pins that are not physical. Set route.common.verbose_level to > 0 and run routing command to get skipped pin names.
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 3.55 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 3.55 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+Warning: Standard cell pin MUX41X2_HVT/S0 has no valid via regions. (ZRT-044)
+Printing options for 'route.common.*'
+
+Printing options for 'route.detail.*'
+
+Printing options for 'route.auto_via_ladder.*'
+
+
+============================================
+==  Check for design                      ==
+============================================
+
+>>> No net contains a large number of ports 
+
+>>> No port contains a large number of pins 
+
+Warning: Port VDD of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VSS of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+
+>>>>>> Found 2 unplaced ports
+
+================================
+==  Check for PG DPT on Track ==
+================================
+>>>>>> Number of PG rails cross even number of track: 0
+
+============================================
+==  Check for PG PreRoute setting         ==
+============================================
+ No number_of_secondary_pg_pin_connections setting and skip checking 
+ 
+============================================
+==             Check for pins             ==
+============================================
+Warning: pin is off track in the region (271.9750 28.5140) (272.2230 28.5640) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (262.3850 95.9000) (263.6360 95.9500) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (138.2150 175.2920) (138.4630 175.3420) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (138.1390 269.9510) (139.8770 270.0010) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (271.9750 168.9620) (272.2230 169.0120) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (128.3210 186.1880) (129.5720 186.2380) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (271.9750 242.1720) (272.2230 242.2220) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (138.1390 269.9510) (139.8770 270.0010) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (138.1390 295.0070) (139.8770 295.0570) on layer M1. (ZRT-761)
+
+>>>>>> found 9 off track pins
+
+====================================================
+== Check for the Cut Metal not on Preferred Grid ==
+====================================================
+
+============================================
+==  Check for overlap of standard cells   ==
+============================================
+
+>>>>>> No overlap of standard cells found
+
+============================================
+==     Check for min-grid violations      ==
+============================================
+
+  >>>> No Library min-grid violations found
+
+  >>>> No Design min-grid violations found
+
+>>>>>> No min-grid violations found
+
+
+============================================
+==    Check for out-of-boundary ports     ==
+============================================
+
+>>>>>> No out-of-boundary error found
+
+============================================
+==        Check for blocked ports         ==
+============================================
+
+>>>>>> Port might be blocked by layer constraints - min/max and freeze layer settings
+
+>>>>>> Port might be blocked by check port access
+>>> Port u_core/core_i/id_stage_i/register_file_i/mem_reg[25][12] Q at (179.8790 31.8520)_(180.2750 33.2500) on layer M1 might be blocked (reference=SDFFARX1_RVT, net=u_core/core_i/id_stage_i/register_file_i/mem[25][12]).
+>>> Port u_core/core_i/cs_registers_i/mscratch_q_reg[23] Q at (239.7250 28.5080)_(240.1210 29.9060) on layer M1 might be blocked (reference=SDFFARX1_RVT, net=u_core/core_i/cs_registers_i/mscratch_q[23]).
+>>> Port u_core/core_i/cs_registers_i/mscratch_q_reg[12] Q at (239.7250 23.4700)_(240.1210 24.8680) on layer M1 might be blocked (reference=SDFFARX1_RVT, net=u_core/core_i/cs_registers_i/mscratch_q[12]).
+>>> Port u_core/core_i/U5555 A5 at (280.1070 24.1930)_(280.2790 24.3110) on layer M1 might be blocked (reference=AO221X1_HVT, net=u_core/core_i/n6003).
+>>> Port u_core/core_i/U5528 A5 at (279.7130 37.5690)_(279.8850 37.6870) on layer M1 might be blocked (reference=AO221X1_HVT, net=u_core/core_i/n5978).
+>>> Port u_core/core_i/cs_registers_i/U457 A3 at (279.7130 88.6490)_(279.8710 88.7780) on layer M1 might be blocked (reference=AO22X1_HVT, net=u_core/core_i/cs_registers_i/n520).
+>>> Port u_core/core_i/id_stage_i/register_file_i/mem_reg[6][5] Q at (99.7330 204.0460)_(100.1290 205.4440) on layer M1 might be blocked (reference=SDFFARX1_RVT, net=u_core/core_i/id_stage_i/register_file_i/mem[6][5]).
+>>> Port u_core/core_i/cs_registers_i/U1791 A3 at (279.7130 148.8410)_(279.8710 148.9700) on layer M1 might be blocked (reference=AO22X1_HVT, net=u_core/core_i/cs_registers_i/n584).
+>>> Port u_core/core_i/cs_registers_i/U2159 A3 at (279.7130 171.9260)_(279.8710 172.0550) on layer M1 might be blocked (reference=AO22X1_HVT, net=u_core/core_i/cs_registers_i/n602).
+>>> Port u_core/core_i/U5349 A6 at (279.7120 244.1850)_(279.8910 244.5740) on layer M1 might be blocked (reference=OA222X1_HVT, net=u_core/core_i/n5800).
+>>> Port u_core/core_i/U4974 A3 at (279.7130 262.2140)_(279.8710 262.3430) on layer M1 might be blocked (reference=AO22X1_HVT, net=u_core/core_i/n5874).
+>>> Port u_core/core_i/U2745 A6 at (239.7360 286.9940)_(239.9150 287.3830) on layer M1 might be blocked (reference=OAI222X1_HVT, net=u_core/core_i/n2836).
+>>> Port u_core/core_i/U1520 A6 at (239.7360 294.3450)_(239.9150 294.7340) on layer M1 might be blocked (reference=OA222X1_HVT, net=u_core/core_i/n1185).
+>>> Port u_core/core_i/U1550 A6 at (239.7360 291.0010)_(239.9150 291.3900) on layer M1 might be blocked (reference=OA222X1_HVT, net=u_core/core_i/n1267).
+>>> Port u_core/core_i/U5678 A3 at (279.7130 298.9980)_(279.8710 299.1270) on layer M1 might be blocked (reference=AO22X1_HVT, net=u_core/core_i/n1671).
+>>> Port u_core/core_i/U5687 A3 at (279.7130 295.6540)_(279.8710 295.7830) on layer M1 might be blocked (reference=AO22X1_HVT, net=u_core/core_i/n1671).
+>>> Port u_core/core_i/cs_registers_i/clk_gate_mhpmcounter_q_reg[0]/latch CLK at (279.7130 135.1430)_(279.8850 135.2720) on layer M1 might be blocked (reference=CGLPPRX8_HVT, net=u_core/core_i/ZCTSNET_4).
+
+>>>>>> The design might not be cleanly routed because it has 17 possibly blocked ports
+
+>>>>>> Net blocked by layer constraints - min/max and freeze layer settings
+
+>>>>>> No blocked nets found
+
+============================================
+==     Check for shielding violations     ==
+============================================
+
+>>>>>> The following Non-PG net has a shape with shape_use shield_route
+
+>>> No non-PG net has a shape with shape_use shield_route.
+
+>>>>>> The following PG net has shape with shape_use detail_route and shape length is too long.
+
+>>> No PG net has shape with shape_use detail_route and shape length is too long.
+
+>>>>>> The following nets with shield non-default rule has no internal data representation in Zroute.
+
+>>> No nets with shield non-default rule has no internal data representation in Zroute.
+
+
+>>> No valid P/G net specified in route.common.shielding_nets.
+
+============================================
+==     Check for via cut blockage violation   ==
+============================================
+
+>>>>>> The following via cut blockages are wrongly treated as real vias.
+
+>>> No via cut blockage is wrongly treated as real via.
+
+============================================
+==     Check for custom via definition    ==
+============================================
+
+>>> No custom via definition has too many cuts
+
+============================================
+==          Check for via master          ==
+============================================
+
+>>> The total number of via master definition is 302
+
+===============================================
+==     Check non-default rule setting        ==
+===============================================
+
+>>> No NDR width is larger than signalRouteMaxWidth
+
+>>> No NDR shield width is larger than signalRouteMaxWidth
+
+======================================================
+==     Check redundant duplicated PG shapes         ==
+======================================================
+
+>>> No redundant duplicated PG shapes overlap with each other.
+
+=========================================================
+==     Check for shapes with no net  ==
+=========================================================
+
+>>> No shape with no net.
+
+=========================================================
+==     Check for high fanout net  ==
+=========================================================
+
+>>> No high fanout net.
+
+===========================================================
+==     Check library cell has non-routing layer pins     ==
+===========================================================
+
+>>> No cell has non-routing layer pins to be connected.
+
+============================================
+==     Check over promoted nets           ==
+============================================
+
+>>> No over promoted nets.
+
+End of check_routability
+rtapiOptAttrInterf: set attribute check_routability_called=1778237393 

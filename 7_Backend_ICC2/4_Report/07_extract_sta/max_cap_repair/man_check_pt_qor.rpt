@@ -1,0 +1,368 @@
+2.  Synopsys Commands                                        Command Reference
+                                 check_pt_qor
+
+NAME
+       check_pt_qor
+              Checks PrimeTime QoR such as timing and power.
+
+SYNTAX
+       status check_pt_qor
+              -reset
+
+       status check_pt_qor
+              -report_script file_name
+
+       status check_pt_qor
+              [-type  global_timing | summary | max_delay | min_delay
+                      | max_transition | max_capacitance | power | noise]
+              [-pba_mode none | path | exhaustive]
+              [-group group_name]
+
+              [-from from_list
+                 | -rise_from rise_from_list
+                 | -fall_from fall_from_list]
+              [-to to_list
+                 | -rise_to rise_to_list
+                 | -fall_to fall_to_list]
+              [-through through_list]
+              [-rise_through rise_through_list]
+              [-fall_through fall_through_list]
+              [-exclude exclude_list
+                 | -rise_exclude rise_exclude_list
+                 | -fall_exclude fall_exclude_list]
+              [-nworst paths_per_endpoint]
+              [-max_paths max_path_count]
+              [-unique_pins]
+              [-slack_greater_than minimum_slack]
+              [-slack_lesser_than  maximum_slack]
+              [-include_hierarchical_pins]
+              [-start_end_pair]
+              [-path_type format]
+              [-input_pins]
+              [-nets]
+              [-nosplit]
+              [-transition_time]
+              [-capacitance]
+              [-significant_digits digits]
+              [-crosstalk_delta]
+              [-derate]
+              [-variation]
+              [-exceptions dominant | overridden | all]
+              [-voltage]
+              [-verbose]
+              [-save_session directory_name]
+
+   Data Types
+       file_name                 string
+       directory_name            string
+       from_list                 list
+       rise_from_list            list
+       fall_from_list            list
+       to_list                   list
+       rise_to_list              list
+       fall_to_list              list
+       through_list              list
+       rise_through_list         list
+       fall_through_list         list
+       exclude_list              list
+       rise_exclude_list         list
+       fall_exclude_list         list
+       paths_per_endpoint        integer
+       max_path_count            integer
+       group_name                list
+       minimum_slack             float
+       maximum_slack             float
+       format                    string
+       digits                    integer
+
+ARGUMENTS
+       -reset Specifies to terminate current PrimeTime session.
+
+       -report_script file_name
+              Specifies  a  TCL  script  file to customize the reporting. when
+              -report_script is specified, the -type and related  options  are
+              all ignored.
+
+       -type global_timing | scenario_timing | summary | max_delay | min_delay
+       | max_transition | max_capacitance | power
+              Specifies  the  type  of QoR to check. The global_timing type is
+              similar to  reporting  global  timing  in  PrimeTime.  The  sce-
+              nario_timing  will report merged QoR and QoR for every scenario.
+              The summary type  is  similar  to  reporting  QoR  summary.  The
+              max_delay  and  min_delay types are similar to the report_timing
+              command reporting. The max_transition and max_capacitance  types
+              are  similar  to  the  report_constraint  command reporting. The
+              power type is similar to reporting power.
+
+       -pba_mode none | path | exhaustive
+              Specifies one of the following path-based timing analysis modes:
+
+              o none (the default) - Disables path-based analysis and  enables
+                ordinary graph-based analysis. This is the fastest mode.
+              o  path  - Performs path-based analysis on paths after they have
+                been gathered by graph-based analysis, producing more accurate
+                timing results for those paths. To control the ordering of the
+                paths (either by original graph-based  slack  or  recalculated
+                path-based  slack),  set  the  pba_path_mode_sort_by_gba_slack
+                variable.
+              o exhaustive - Performs an  exhaustive  path-based  analysis  to
+                determine  the  truly worst-case paths in the design.  This is
+                the most accurate and most computation-intensive mode.
+
+       -group group_name
+              Specifies a group of timing paths for timing and nets  or  cells
+              for power.
+
+   Options only available for the max_delay and min_delay types
+       -from from_list
+              Reports  only  paths that start from the specified list of pins,
+              ports, nets, or cell instances; or from startpoints  clocked  by
+              the named clocks. Valid startpoints are clock pins of sequential
+              devices and input pins of the design.
+
+       -rise_from rise_from_list
+              Same as the -from option, except that the path must start with a
+              rising transition.
+
+       -fall_from fall_from_list
+              Same  as  the -rise_from option, except that the path must start
+              with a falling transition.
+
+       -to to_list
+              Reports only paths that end  at  the  specified  list  of  pins,
+              ports,  nets,  or cell instances; or at endpoints clocked by the
+              named clocks. Valid endpoints are data input pins of  sequential
+              devices and output pins of the design.
+
+       -rise_to rise_to_list
+              Same  as the -to option, except that the path data must end with
+              a rising transition.
+
+       -fall_to fall_to_list
+              Same as the -rise_to option, except that the path data must  end
+              with a falling transition.
+
+       -through through_list
+              Reports  only  paths  in  which  the data goes through the named
+              pins, ports, cell instances, or nets. You can  use  this  option
+              multiple times in a command.
+
+       -rise_through rise_through_list
+              Same  as  the  -through  option,  except that it applies only to
+              paths with a rising transition at the specified objects.
+
+       -fall_through fall_through_list
+              Same as the -through option, except  that  it  applies  only  to
+              paths with a falling transition at the specified objects.
+
+       -exclude exclude_list
+              Excludes  all  paths in which the data goes from, through, or to
+              the specified list of pins, ports, nets, or cell instances.
+
+       -rise_exclude rise_exclude_list
+              Same as the -exclude option, but applies only to rising  transi-
+              tions at the named pins, ports, nets, or cell instances.
+
+       -fall_exclude fall_exclude_list
+              Same  as the -exclude option, but applies only to rising transi-
+              tions at the named objects.
+
+       -nworst paths_per_endpoint
+              Reports up to the specified number of worst paths per  endpoint.
+              The  default is 1. A larger value results in a larger report and
+              more runtime.
+
+       -max_paths max_path_count
+              Reports up to the specified maximum total number of paths  among
+              all path groups. The default is equal to the -nworst setting, or
+              1 if the -nworst option is not used.
+
+       -unique_pins
+              Reports only the single worst  timing  path  through  any  given
+              sequence  of  pins.  No  other  paths  are reported for the same
+              sequence of pins from startpoint to endpoint.  For  example,  if
+              the  worst  path starts with a rising edge at the first pin of a
+              pin sequence, then paths starting with a falling  edge  are  not
+              reported for that sequence of pins.
+
+       -slack_greater_than minimum_slack
+              Reports  only  paths with slack greater than the specified mini-
+              mum_slack value; these paths have a negative slack  better  than
+              the  specified  minimum_slack value (or a positive slack that is
+              farther from causing a violation). This option is intended to be
+              used with the -slack_lesser_than option to report paths within a
+              specific range of slack.
+
+       -slack_lesser_than maximum_slack
+              Reports only paths with slack  less  than  the  specified  maxi-
+              mum_slack  value;  these  paths have a negative slack worse than
+              the specified maximum_slack value (or a positive slack  that  is
+              closer to causing a violation).
+
+       -include_hierarchical_pins
+              Causes  the timing path report to show points for the hierarchi-
+              cal pins crossed, as well as all leaf  pins  in  the  path.  The
+              hierarchical  pins  are  shown  only for documentation purposes;
+              they are reported as having zero incremental delay  and  do  not
+              affect the timing results.
+
+       -start_end_pair
+              Reports  the worst path for each startpoint-endpoint pair in the
+              design, including all  violating  startpoint-endpoint  pairs  by
+              default,  or all startpoint-endpoint pairs with slack worse than
+              the value specified by the  -slack_lesser_than  option  if  that
+              option is used.
+
+       -path_type format
+              Specifies  the types of path information displayed in the timing
+              report, using one of the following format keywords:
+
+              o summary -- Displays the path startpoint,  path  endpoint,  and
+                slack.
+              o  end -- Displays the path endpoint, path delay, required time,
+                and slack.
+              o short -- Displays a report like the default  full  report  but
+                omits  the intermediate points between the startpoint and end-
+                point.
+              o full (the default) -- Displays the full data  path,  including
+                all  intermediate  points and their incremental and cumulative
+                delay, together with the  launch  and  capture  clock  arrival
+                times, data required time, and slack.
+              o  full_clock -- Displays a full report with the addition of the
+                clock path points from the clock source to the launch and cap-
+                ture points.
+              o  full_clock_expanded  -- Displays a full_clock report with the
+                addition of the clock path points between  the  primary  clock
+                source  and  its  related  generated  clock source point. This
+                report is different from a full_clock  report  only  when  the
+                clock is a generated clock.
+
+       -input_pins
+              Shows  cell input pins as well as cell output pins in the timing
+              path.  As a result, the report shows  the  incremental  net  and
+              cell  delays  separately at each point, instead of combined.  By
+              default, the report shows only the cell output pins.
+
+       -nets  Shows nets in the timing path. By default, the report  does  not
+              show nets.
+
+       -nosplit
+              Prevents  line  splitting.  This  can  useful  for  scripts that
+              extract information from the report. By default, the report gen-
+              erates  a new line when the text cannot fit in the alloted space
+              in a column.
+
+       -transition_time
+              Shows the transition time (slew) in the  path  report  for  each
+              driver  pin  and  load  pin,  appearing  as an additional column
+              labeled "Trans".
+
+       -capacitance
+              Shows the total capacitance in the path  report  for  each  net,
+              appearing as an additional column labeled "Cap".
+
+       -significant_digits digits
+              Specifies the number of digits after the decimal point displayed
+              for time values in the generated report.
+
+       -crosstalk_delta
+              Reports crosstalk delta delay values at cell  input  pins  in  a
+              column  labeled "Delta". The -input_pins option is automatically
+              selected.  The delta values are computed during crosstalk signal
+              integrity analysis.
+
+       -derate
+              Shows derating factors in a column labeled "Derate".
+
+       -variation
+              Includes  parametric on-chip variation (POCV) information in the
+              report in columns labeled "Mean" and "Sensit" if  POCV  analysis
+              is enabled in PrimeTime.
+
+       -exceptions dominant | overridden | all
+              Reports  user-specified timing exceptions that are satisfied per
+              timing path being reported.
+
+              Specifying dominant reports the dominant timing exception in the
+              path.   It  can be one of the following: false path, minimum and
+              maximum delays, and multicycle paths.
+
+              Specifying overridden reports all  the  timing  exceptions  that
+              were overridden by the dominant timing exception.
+
+       -voltage
+              Reports  the operating voltage for each path element in a column
+              labeled "Voltage", allowing you to debug voltage levels in  mul-
+              tivoltage designs.
+
+   Options only available for the noise type
+       -verbose
+              Reports  noise  details such as aggressor bump height, width and
+              slack.  This option works only with the noise type.
+
+       -save_session
+              Specifies the directory to save PrimeTime session.
+
+DESCRIPTION
+       When your design is optimized with PrimeTime ECO using  the  fix_pt_eco
+       command,  you may want to check QoR in PrimeTime timing values. Use the
+       check_pt_qor command to view PrimeTime timing values.  The check_pt_qor
+       command checks PrimeTime's timing, DRC, and power, and shows their val-
+       ues. By default, the command reports top level timing summary with set-
+       up  and hold WNS, TNS, and violation count. It is as same as specifying
+       the -type global_timing. When the summary type is specified,  the  com-
+       mand reports QoR summary including setup, hold, max transition, and max
+       capacitance violations. When the max_transition or max_capacitance type
+       is  specified,  the command reports pins with negative slacks. When the
+       max_delay or min_delay type is specified, the command reports the  tim-
+       ing path with its slack values.
+
+       When you specify the power type, the command shows leakage, dynamic and
+       total powers in all scenarios.
+
+       If you want to customize the reporing, specifify -report_script,  which
+       is mutually exclusive with -type.
+
+       If  you  need to terminate PrimeTime, specify the -reset option. If the
+       -reset option is specified, other options are ignored.
+
+EXAMPLES
+       Without any options, it shows global setup  and  hold  timing  summary,
+       which is similar to PrimeTime's report_global_timing command.
+
+         prompt> check_pt_qor
+
+       You  can view max or min delay timing path in PrimeTime timing by using
+       the -type max_delay or -type min_delay  option,  which  is  similar  to
+       PrimeTime's report_timing command.
+
+         prompt> check_pt_qor -type max_delay
+
+       You  can  use standard reporting options like -from, -to, -through, etc
+       to specify the timing path that you are interested in.
+
+         prompt> check_pt_qor -type max_delay -from U1/CK -to U2/D
+
+       The example below shows max_transition violations.
+
+         prompt> check_pt_qor -type max_transition
+
+       For QoR summary, use the -type summary  option,  which  is  similar  to
+       PrimeTime's report_qor command.
+
+         prompt> check_pt_qor -type summary
+
+       For  PrimeTime  PX  power  reporting, the -type power option is used as
+       shown below.
+
+         prompt> check_pt_qor -type power
+
+SEE ALSO
+       set_pt_options (2)
+       report_pt_options (2)
+       set_starrc_options (2)
+       report_starrc_options (2)
+       eco_opt (2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

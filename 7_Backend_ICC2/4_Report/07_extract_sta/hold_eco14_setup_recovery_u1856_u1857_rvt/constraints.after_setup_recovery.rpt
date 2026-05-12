@@ -1,0 +1,111 @@
+****************************************
+Report : constraint
+        -all_violators
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Sun May 10 12:19:31 2026
+****************************************
+
+   late_timing
+   -----------
+
+Information: Deserialized np data
+INFO: timer data loaded from /tmp/cv32e40p_synth_wrap_hold_eco14_setup_recovery_u1856_u1857_rvt_3539900_560545204.timdat
+Information: The RC mode used is DR for design 'cv32e40p_synth_wrap'. (NEX-022)
+Extracting design: cv32e40p_synth_wrap_hold_eco14_setup_recovery_u1856_u1857_rvt 
+Information: coupling capacitance is lumped to ground. (NEX-030)
+Information: 18476 nets are successfully extracted. (NEX-028)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+No paths.
+
+   early_timing
+   -----------
+
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+No paths.
+
+   Mode: default Corner: default
+   Scenario: default
+   max_transition                                                              
+                             Required        Actual                            
+   Net                      Transition     Transition        Slack  Violation  
+  ---------------------------------------------------------------------------
+   u_core/core_i/id_stage_i/n2721
+                                0.09           0.09           0.00  (MET)      
+
+  ---------------------------------------------------------------------------
+   Number of max_transition violation(s): 0
+
+   Mode: default Corner: default
+   Scenario: default
+   max_capacitance                                                             
+                             Required        Actual                            
+   Net                      Capacitance    Capacitance       Slack  Violation  
+  ---------------------------------------------------------------------------
+   u_core/core_i/cs_registers_i/n423
+                               16.00          17.78          -1.78  (VIOLATED) 
+     PIN : u_core/core_i/cs_registers_i/U83/Y
+                               16.00          17.78          -1.78  (VIOLATED) 
+
+   u_core/core_i/n1628         16.00          17.37          -1.37  (VIOLATED) 
+     PIN : u_core/core_i/U2357/Y
+                               16.00          17.37          -1.37  (VIOLATED) 
+
+   u_core/core_i/cs_registers_i/n624
+                               32.00          32.65          -0.65  (VIOLATED) 
+     PIN : u_core/core_i/cs_registers_i/U177/Y
+                               32.00          32.65          -0.65  (VIOLATED) 
+
+   u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q[22]
+                                8.00           8.64          -0.64  (VIOLATED) 
+     PIN : u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q_reg[22]/Q
+                                8.00           8.64          -0.64  (VIOLATED) 
+
+   u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q[0]
+                                8.00           8.59          -0.59  (VIOLATED) 
+     PIN : u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q_reg[0]/Q
+                                8.00           8.59          -0.59  (VIOLATED) 
+
+   u_core/core_i/n1487         16.00          16.34          -0.34  (VIOLATED) 
+     PIN : u_core/core_i/U2346/Y
+                               16.00          16.34          -0.34  (VIOLATED) 
+
+   u_core/core_i/id_stage_i/alu_operand_a[10]
+                                8.00           8.26          -0.26  (VIOLATED) 
+     PIN : u_core/core_i/id_stage_i/U2931/Y
+                                8.00           8.26          -0.26  (VIOLATED) 
+
+   u_core/core_i/ex_stage_i/mult_i/int_op_a_msu[5]
+                                8.00           8.24          -0.24  (VIOLATED) 
+     PIN : u_core/core_i/id_stage_i/mult_operand_a_ex_o_reg[5]/Q
+                                8.00           8.24          -0.24  (VIOLATED) 
+
+   u_core/core_i/ZBUF_54_111
+                               16.00          16.21          -0.21  (VIOLATED) 
+     PIN : u_core/core_i/ZBUF_54_inst_2148/Y
+                               16.00          16.21          -0.21  (VIOLATED) 
+
+   u_core/core_i/dftopt23       8.00           8.01          -0.01  (VIOLATED) 
+     PIN : u_core/core_i/id_stage_i/register_file_i/mem_reg[10][5]/Q
+                                8.00           8.01          -0.01  (VIOLATED) 
+
+  ---------------------------------------------------------------------------
+   Number of max_capacitance violation(s): 10
+
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of min_capacitance violation(s): 0
+
+  Mode: default
+  Corner: default
+  Scenario: default
+
+  ---------------------------------------------------------------------------
+   Number of min_pulse_width violation(s): 0
+   Total number of violation(s): 10
+1

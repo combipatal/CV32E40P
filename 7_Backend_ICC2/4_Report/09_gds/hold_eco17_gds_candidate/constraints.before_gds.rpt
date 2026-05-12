@@ -1,0 +1,91 @@
+****************************************
+Report : constraint
+        -all_violators
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Sun May 10 18:36:21 2026
+****************************************
+
+   late_timing
+   -----------
+
+Information: Timer using 1 threads
+Information: Corner default: no PVT mismatches. (PVT-032)
+Information: The stitching and editing of coupling caps is turned OFF for design 'cv32e40p_icc2_lib:cv32e40p_synth_wrap_hold_eco17_gds_candidate.design'. (TIM-125)
+Information: Design cv32e40p_synth_wrap_hold_eco17_gds_candidate has 18486 nets, 0 global routed, 18484 detail routed. (NEX-024)
+Information: The RC mode used is DR for design 'cv32e40p_synth_wrap'. (NEX-022)
+---extraction options---
+Corner: default
+ late_cap_scale                : 1
+ late_res_scale                : 1
+ early_cap_scale               : 1
+ early_res_scale               : 1
+Global options:
+ reference_direction       : use_from_tluplus
+ real_metalfill_extraction : none
+ virtual_shield_extraction : true
+---app options---
+ host.max_cores                   : 1
+ extract.connect_open           : true
+ extract.enable_coupling_cap    : false
+Extracting design: cv32e40p_synth_wrap_hold_eco17_gds_candidate 
+Information: coupling capacitance is lumped to ground. (NEX-030)
+Information: 18484 nets are successfully extracted. (NEX-028)
+Warning: Advanced receiver model has not been enabled for detailed routed design. (TIM-204)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Information: Net estimation statistics: timing graph nets = 18484, routed nets = 18484, across physical hierarchy nets = 0, parasitics cached nets = 18484, delay annotated nets = 0, parasitics annotated nets = 0, multi-voltage nets = 0. (TIM-112)
+************************************************************
+Timer Settings:
+Delay Calculation Style:                   auto
+Signal Integrity Analysis:                 disabled
+Timing Window Analysis:                    disabled
+Advanced Waveform Propagation:             disabled
+Variation Type:                            fixed_derate
+Clock Reconvergence Pessimism Removal:     disabled
+Advanced Receiver Model:                   disabled
+LLE:                                       disabled
+ML Acceleration:                           off
+Smart Arc Optimization:                    disabled
+************************************************************
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+No paths.
+
+   early_timing
+   -----------
+
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+No paths.
+
+   Mode: default Corner: default
+   Scenario: default
+   max_transition                                                              
+                             Required        Actual                            
+   Net                      Transition     Transition        Slack  Violation  
+  ---------------------------------------------------------------------------
+   u_core/core_i/id_stage_i/n2721
+                                0.09           0.09           0.00  (MET)      
+
+  ---------------------------------------------------------------------------
+   Number of max_transition violation(s): 0
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of max_capacitance violation(s): 0
+
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of min_capacitance violation(s): 0
+
+  Mode: default
+  Corner: default
+  Scenario: default
+
+  ---------------------------------------------------------------------------
+   Number of min_pulse_width violation(s): 0
+   Total number of violation(s): 0
+1

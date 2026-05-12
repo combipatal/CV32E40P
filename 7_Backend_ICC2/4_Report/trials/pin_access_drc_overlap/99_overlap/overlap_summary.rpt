@@ -1,0 +1,79 @@
+Pin access / DRC overlap summary
+
+blocked_point_count=305
+drc_marker_count=400
+overlap_bucket50_count=21
+
+Nearest DRC radius counts:
+  <=2um: 13
+  <=5um: 23
+  <=10um: 51
+  <=25um: 193
+  <=50um: 289
+
+Nearest DRC type counts:
+  Off-grid: 123
+  Needs fat contact: 112
+  Diff net spacing: 54
+  Short: 16
+
+Nearest DRC layer counts:
+  M1 (11)-M2 (13): 112
+  VIA1 (12): 96
+  M1 (11): 70
+  M2 (13): 27
+
+Blocked points by ref/pin:
+  SDFFARX1_RVT/RSTB: 117
+  SDFFARX1_RVT/SE: 69
+  SDFFARX1_RVT/CLK: 52
+  SDFFARX1_RVT/Q: 21
+  SDFFARX1_RVT/SI: 18
+  MUX41X1_HVT/S0: 15
+  SDFFARX1_RVT/QN: 7
+  MUX41X1_HVT/A1: 3
+  MUX41X1_HVT/S1: 3
+
+Top blocked access buckets:
+  250-300,050-100: blocked_points=21, drc_markers=5
+  150-200,050-100: blocked_points=20, drc_markers=0
+  250-300,000-050: blocked_points=20, drc_markers=0
+  150-200,000-050: blocked_points=17, drc_markers=0
+  100-150,200-250: blocked_points=17, drc_markers=17
+  250-300,200-250: blocked_points=17, drc_markers=13
+  150-200,150-200: blocked_points=16, drc_markers=0
+  150-200,200-250: blocked_points=15, drc_markers=34
+  050-100,100-150: blocked_points=11, drc_markers=0
+  100-150,150-200: blocked_points=10, drc_markers=4
+  100-150,000-050: blocked_points=10, drc_markers=0
+  250-300,150-200: blocked_points=10, drc_markers=9
+  000-050,300-350: blocked_points=9, drc_markers=0
+  250-300,250-300: blocked_points=9, drc_markers=25
+  200-250,050-100: blocked_points=7, drc_markers=4
+  200-250,150-200: blocked_points=7, drc_markers=6
+  050-100,250-300: blocked_points=7, drc_markers=4
+  050-100,300-350: blocked_points=7, drc_markers=0
+  300-350,200-250: blocked_points=7, drc_markers=1
+  300-350,000-050: blocked_points=7, drc_markers=0
+
+Top DRC buckets:
+  200-250,250-300: drc_markers=50, blocked_points=2
+  200-250,200-250: drc_markers=49, blocked_points=0
+  150-200,200-250: drc_markers=34, blocked_points=15
+  100-150,050-100: drc_markers=32, blocked_points=6
+  250-300,250-300: drc_markers=25, blocked_points=9
+  250-300,100-150: drc_markers=22, blocked_points=5
+  100-150,250-300: drc_markers=21, blocked_points=2
+  150-200,250-300: drc_markers=18, blocked_points=0
+  100-150,200-250: drc_markers=17, blocked_points=17
+  000-050,250-300: drc_markers=16, blocked_points=6
+  000-050,000-050: drc_markers=13, blocked_points=0
+  250-300,200-250: drc_markers=13, blocked_points=17
+  000-050,150-200: drc_markers=12, blocked_points=0
+  050-100,150-200: drc_markers=10, blocked_points=1
+  250-300,150-200: drc_markers=9, blocked_points=10
+  200-250,000-050: drc_markers=8, blocked_points=3
+  000-050,050-100: drc_markers=8, blocked_points=2
+  200-250,150-200: drc_markers=6, blocked_points=7
+  000-050,100-150: drc_markers=5, blocked_points=0
+  100-150,300-350: drc_markers=5, blocked_points=0

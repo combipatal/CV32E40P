@@ -1,0 +1,69 @@
+2.  Synopsys Commands                                        Command Reference
+                                report_lib_pins
+
+NAME
+       report_lib_pins
+              Reports information about lib_pin objects
+
+SYNTAX
+       status report_lib_pins
+              -objects objects]
+              [-columns column_specs]
+
+   Data Types
+       objects           list
+       column_specs      list
+
+ARGUMENTS
+       -objects objects
+              Specifies  the  objects  to  include in the report.  Each object
+              will be printed as a  separate  row.   For  this  command,  each
+              object must be of class "lib_pin".
+
+       -columns column_specs
+              Specifies the columns to include in the report, their order, and
+              optionally column width and number  of  significant  digits  for
+              each  column.   Each  entry is a column spec, which can take the
+              following forms.  If just a column name is  specified,  such  as
+              "full_name",  it  will  use report-specific default column width
+              and significant digits.  A column spec  such  as  "full_name:10"
+              means  to  use  a  column  width  of  10.  A column spec such as
+              "length:10.4" means to use a column width of 10 and  4  signifi-
+              cant digits.  The significant digits information only applies to
+              floating point values.  If any column spec is "all",  all  valid
+              columns will be included for this report.
+
+              The  following column names are valid for this report: direction
+              disable_timing full_name function is_async_pin is_clock_pin
+               is_data_pin      is_pad      is_preset_pin       is_three_state
+              is_three_state_enable_pin
+               is_three_state_output_pin  name  pin_number port_type rail_name
+              signal_type
+               three_state_function
+
+              If -columns is not specified, the report will  use  the  current
+              columns  specification which is either the tool default for this
+              report, or the user-specified value  from  set_report_configura-
+              tion.
+
+DESCRIPTION
+       This  command  prints  a  tabular  report with information on a list of
+       lib_pin objects.
+
+EXAMPLES
+       The following example prints a  report  for  all  lib_pins  in  library
+       "tech_lib", using the default report configuration.
+
+         prompt> report_lib_pins -objects [get_lib_pins tech_lib/*/*]
+
+       This  example  reports  on  all  lib_pins  matching "XOR*/Y" in library
+       "tech_lib", with a specific column configuration.
+
+         prompt> report_lib_pins -objects [get_lib_pins tech_lib/XOR*/Y] \
+          -columns {name:10 direction function}
+
+SEE ALSO
+       set_report_configuration(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

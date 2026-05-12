@@ -1,0 +1,43 @@
+****************************************
+Report : clock timing
+        -type summary
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Sun May 10 01:46:16 2026
+****************************************
+
+  Mode: default
+  Clock: clk_i
+                                                                                 Corner
+---------------------------------------------------------------------------------------------------
+  Maximum setup launch latency:
+      u_core/core_i/id_stage_i/branch_in_ex_o_reg/CLK          0.37       rp-+    default
+
+  Minimum setup capture latency:
+      u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK
+                                                               0.04       rp-+    default
+
+  Minimum hold launch latency:
+      u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK
+                                                               0.04       rp-+    default
+
+  Maximum hold capture latency:
+      u_core/core_i/id_stage_i/branch_in_ex_o_reg/CLK          0.37       rp-+    default
+
+  Maximum active transition:
+      u_core/core_i/id_stage_i/register_file_i/mem_reg[30][2]/CLK
+                                                               0.09       rp-+    default
+
+  Minimum active transition:
+      u_core/core_i/cs_registers_i/dcsr_q_reg[stepie]/CLK      0.02       rp-+    default
+
+  Maximum setup skew:
+      u_core/core_i/id_stage_i/branch_in_ex_o_reg/CLK                     rp-+    default
+      u_core/core_i/sleep_unit_i/core_busy_q_reg/CLK           0.33       rp-+    default
+
+  Maximum hold skew:
+      u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK           rp-+    default
+      u_core/core_i/id_stage_i/branch_in_ex_o_reg/CLK          0.33       rp-+    default
+
+
+1

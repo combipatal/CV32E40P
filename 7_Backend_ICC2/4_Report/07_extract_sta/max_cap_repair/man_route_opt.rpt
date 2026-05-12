@@ -1,0 +1,26 @@
+2.  Synopsys Commands                                        Command Reference
+                                   route_opt
+
+NAME
+       route_opt
+              Optimizes the current routed design.
+
+SYNTAX
+       route_opt
+
+DESCRIPTION
+       This command optimizes the current routed design for timing, electrical
+       DRC violations, area, and power. It performs legalization and ECO rout-
+       ing on the optimized design. By default, power optimization, concurrent
+       clock and data optimization, are not performed by  this  command.  How-
+       ever,  the  command  performs cross-talk reduction, if Signal Integrity
+       (SI) is enabled in the design.  Use application  options  in  the  "SEE
+       ALSO" section to enable them.
+
+SEE ALSO
+       route_auto(2)
+       route_opt.flow.enable_ccd(3)
+       route_opt.flow.enable_power(3)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

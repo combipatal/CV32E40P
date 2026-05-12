@@ -1,0 +1,63 @@
+A2 access / route DRC grid mismatch analysis
+
+match_tsv: 7_Backend_ICC2/4_Report/trials/route_combo_no012_a2_pin_swap/99_pin_access_after_pin_swap/drc_to_pin_access_coordinate_match.tsv
+matched_marker_count: 97
+track_start: 0.088
+track_pitch: 0.152
+
+Matched DRC by type/layer:
+  Off-grid | VIA1 (12): 50
+  Off-grid | M2 (13): 47
+
+Track delta means:
+  marker_dx_mean: -0.016052
+  marker_dy_mean: 0.000000
+  access_dx_mean: 0.000000
+  access_dy_mean: -0.016041
+
+Marker center delta to nearest track, X:
+  -0.027: 56
+  -0.002: 37
+  0.027: 2
+  -0.025: 1
+  0.000: 1
+
+Marker center delta to nearest track, Y:
+  0.000: 96
+  -0.000: 1
+
+Reported access delta to nearest track, X:
+  0.000: 95
+  -0.000: 2
+
+Reported access delta to nearest track, Y:
+  0.000: 53
+  -0.035: 36
+  -0.037: 8
+
+Most repeated matched instances:
+  u_core/core_i/U5633 | A2: 2
+  u_core/core_i/id_stage_i/U2688 | A2: 2
+  u_core/core_i/id_stage_i/U3375 | A2: 2
+  u_core/core_i/id_stage_i/U1195 | A2: 2
+  u_core/core_i/id_stage_i/U3540 | A2: 2
+  u_core/core_i/id_stage_i/U1193 | A2: 2
+  u_core/core_i/id_stage_i/U2475 | A2: 2
+  u_core/core_i/id_stage_i/U204 | A2: 2
+  u_core/core_i/id_stage_i/U1198 | A2: 2
+  u_core/core_i/id_stage_i/U1700 | A2: 2
+  u_core/core_i/id_stage_i/U1200 | A2: 2
+  u_core/core_i/id_stage_i/U1190 | A2: 2
+  u_core/core_i/U5127 | A2: 2
+  u_core/core_i/U5112 | A2: 2
+  u_core/core_i/cs_registers_i/U110 | A2: 2
+  u_core/core_i/id_stage_i/U582 | A2: 2
+  u_core/core_i/id_stage_i/U577 | A2: 2
+  u_core/core_i/id_stage_i/U394 | A2: 2
+  u_core/core_i/id_stage_i/U392 | A2: 2
+  u_core/core_i/id_stage_i/U1160 | A2: 2
+
+Interpretation:
+  report_cell_pin_access가 만든 A2 access point와 check_routes marker가 같은 좌표 근처에 있다.
+  하지만 access point와 실제 DRC marker의 track delta 축이 다르다.
+  이것은 단순 blocked access보다 pin access snapping / via generation / route check grid mismatch 쪽 증거다.

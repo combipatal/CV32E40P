@@ -1,0 +1,114 @@
+2.  Synopsys Commands                                        Command Reference
+                                  open_block
+
+NAME
+       open_block
+              Opens  an  existing  saved block for editing or viewing and sets
+              that block as the current block.
+
+SYNTAX
+       collection open_block
+              [-edit | -read | -check]
+              [-not_as_current]
+              [-ref_libs_for_edit]
+              [block_name]
+
+   Data Types
+       block_name    string
+
+ARGUMENTS
+       -edit  Opens the block in edit (read/write) mode, allowing you to  mod-
+              ify  and  save the block. This is the default mode for opening a
+              block in a design library. To open a block  in  edit  mode,  you
+              must  have  write  permission  for  the directory containing the
+              block and library, and the block must not be already locked  for
+              editing by another user.
+
+       -read  Opens  the block in read-only mode, allowing you to view but not
+              modify or save the block.
+
+       -check Checks for existence of the block in memory. Returns  the  block
+              if  it  is already in memory, or returns an error message other-
+              wise.  Mutually exclusive with -read and -edit.
+
+       -ref_libs_for_edit
+              Opens lower-level design libraries (those appearing in the  ref-
+              erence library list) in edit mode so that lower-level blocks can
+              be modified.  Reference  libraries  containing  lib_cell  blocks
+              remain  in  read-only  mode, even when this option is used. This
+              option can only be used when  opening  a  block  in  edit  mode,
+              either  by  using the default open mode or explicitly with -edit
+              option.
+
+       -not_as_current
+              An optional argument to open a block without  setting  it  as  a
+              current block.
+
+       block  A  collection  of  one  block or name of the block to open, with
+              optional library, label, and view names specified.  The  default
+              names are the current library, no label, and the design view.
+
+DESCRIPTION
+       This  command  opens an existing saved block for editing or viewing and
+       sets that block as the current block.  The block is opened in edit mode
+       by  default  or  when  the -edit option is used. The block is opened in
+       read-only mode when the -read option is used. With the  -check  option,
+       the  command returns the block as a collection if it is already in mem-
+       ory, or an error message otherwise.
+
+       By default, when you open a block in edit mode, when the block is in an
+       open  read-only  library, the command promotes the library to edit mode
+       so that you can edit the block in the library. To prevent  this  action
+       and  protect  the  library  from  being  accidentally modified, set the
+       design.edit_read_only_libs application option to false.
+
+       An implementation tool can open library cell blocks in  cell  libraries
+       only  in  read-only  mode. To edit library cell blocks, use the library
+       manager tool (lm_shell).
+
+       The open_block command increments the "open count" for a block  (unless
+       you  are  using  the  -check  option).  The  open  count can affect the
+       read/write status of the block. For example, if you open a block  using
+       -edit  and  the  again  using -read, the read/write status of the block
+       remains in "edit" mode due to the status of the earlier open  operation
+       (earlier open count).
+
+       Furthermore  user  may choose to open a block without setting the block
+       as current block by using -not_as_current option.
+
+EXAMPLES
+       The following example opens the existing block "Top" from  the  library
+       "MyDesigns":
+
+         prompt> open_block -edit MyDesigns:Top
+         {"MyDesigns:Top.design"}
+
+       The  following  example  opens the timing view of lib_cell AN2 from the
+       library MyLibCells:
+
+         prompt> open_block -read MyLibCells:AN2.timing
+         {"MyLibCells:AN2.timing"}
+
+       The following example opens the existing block "Top" from  the  library
+       "MyDesigns" but not set the block as current block.
+
+         prompt> open_block -edit MyDesigns:Top -not_as_current
+         {"MyDesigns:Top.design"}
+
+SEE ALSO
+       create_block(2)
+       close_blocks(2)
+       copy_block(2)
+       move_block(2)
+       remove_blocks(2)
+       reopen_block(2)
+       save_block(2)
+       open_lib(2)
+       get_blocks(2)
+       current_block(2)
+       get_designs(2)
+       current_design(2)
+       design.edit_read_only_libs(3)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

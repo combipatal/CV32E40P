@@ -1,0 +1,47 @@
+3.  Attributes and Variables                                 Command Reference
+                    route.common.via_on_grid_by_layer_name
+
+NAME
+       route.common.via_on_grid_by_layer_name
+              Controls  whether  vias and their associated via enclosures must
+              be routed on-grid. This option controls the  same  functionality
+              as the onGrid attribute for a via layer in the technology file.
+
+TYPE
+       list
+
+DEFAULT
+       ""
+
+DESCRIPTION
+       If  you use this option, the tool ignores all onGrid attributes defined
+       in the technology file (both for metal  layers  and  via  layers).  The
+       default  setting  for any unspecified onGrid attribute is false; there-
+       fore, on-grid routing is required only for  the  via  layers  specified
+       with a setting of true in this option and metal layers specified with a
+       setting of true in the route.common.wire_on_grid_by_layer_name  option.
+       You  can  set this option only when the block is open. This option con-
+       trols only onGrid attributes; it has no impact if the  technology  file
+       defines onWireTrack attributes.
+
+       Use the following sytnax to specify the setting for each layer:
+
+       {routing_layer true|false}
+
+       You  must  specify  the  routing layers by using the layer names in the
+       technology file.
+
+EXAMPLES
+       The following example sets  the  route.common.via_on_grid_by_layer_name
+       application option to true for the V3 and V4 cut layers.
+
+         prompt> set_app_options    -name route.common.via_on_grid_by_layer_name    -value {{V3 true} {V4 true}}
+
+SEE ALSO
+       get_app_option_value(2)
+       get_app_options(2)
+       report_app_options(2)
+       set_app_option(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

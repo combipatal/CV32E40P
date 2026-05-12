@@ -1,0 +1,54 @@
+****************************************
+Report : constraint
+        -all_violators
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Sun May 10 09:22:17 2026
+****************************************
+
+   late_timing
+   -----------
+
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+No paths.
+
+   early_timing
+   -----------
+
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+u_core/core_i/cs_registers_i/dcsr_q_reg[cause][8]/D (SDFFARX1_RVT)
+                                   0.30 f         0.30           0.00    -0.00   clk_i    default
+
+   Mode: default Corner: default
+   Scenario: default
+   max_transition                                                              
+                             Required        Actual                            
+   Net                      Transition     Transition        Slack  Violation  
+  ---------------------------------------------------------------------------
+   u_core/core_i/id_stage_i/n2721
+                                0.09           0.09           0.00  (MET)      
+
+  ---------------------------------------------------------------------------
+   Number of max_transition violation(s): 0
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of max_capacitance violation(s): 0
+
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of min_capacitance violation(s): 0
+
+  Mode: default
+  Corner: default
+  Scenario: default
+
+  ---------------------------------------------------------------------------
+   Number of min_pulse_width violation(s): 0
+   Total number of violation(s): 0
+1

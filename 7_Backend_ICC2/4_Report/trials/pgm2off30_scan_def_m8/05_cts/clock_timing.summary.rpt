@@ -1,0 +1,47 @@
+****************************************
+Report : clock timing
+        -type summary
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Fri May  8 21:40:04 2026
+****************************************
+
+  Mode: default
+  Clock: clk_i
+                                                                                 Corner
+---------------------------------------------------------------------------------------------------
+  Maximum setup launch latency:
+      u_core/core_i/id_stage_i/register_file_i/mem_reg[26][15]/CLK
+                                                               0.37       rp-+    default
+
+  Minimum setup capture latency:
+      u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK
+                                                               0.05       rp-+    default
+
+  Minimum hold launch latency:
+      u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK
+                                                               0.05       rp-+    default
+
+  Maximum hold capture latency:
+      u_core/core_i/id_stage_i/register_file_i/mem_reg[26][15]/CLK
+                                                               0.37       rp-+    default
+
+  Maximum active transition:
+      u_core/core_i/id_stage_i/register_file_i/mem_reg[11][0]/CLK
+                                                               0.09       rp-+    default
+
+  Minimum active transition:
+      u_core/core_i/ex_stage_i/alu_i/alu_div_i/CompInv_SP_reg/CLK
+                                                               0.03       rp-+    default
+
+  Maximum setup skew:
+      u_core/core_i/if_stage_i/instr_rdata_id_o_reg[22]/CLK               rp-+    default
+      u_core/core_i/sleep_unit_i/core_busy_q_reg/CLK           0.29       rp-+    default
+
+  Maximum hold skew:
+      u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK           rp-+    default
+      u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/trans_addr_q_reg[11]/CLK
+                                                               0.29       rp-+    default
+
+
+1

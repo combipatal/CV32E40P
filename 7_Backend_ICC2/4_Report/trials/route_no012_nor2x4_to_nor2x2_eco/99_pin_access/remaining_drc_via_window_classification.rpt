@@ -1,0 +1,41 @@
+DRC matched pin classification by LEF via-window
+
+match_tsv: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+marker_context: 7_Backend_ICC2/4_Report/trials/route_no012_nor2x4_to_nor2x2_eco/99_marker_context_all/marker_context.rpt
+tech_file: /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+hvt_lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+contact: VIA12SQ_C
+required_center_margin_on_M1: x=0.0550 y=0.0300
+matched_marker_rows: 55
+unique_access_points: 54
+
+Missing inputs:
+  none
+
+By marker row class:
+     45 or_nor_a2_legal_track_edge_snapping
+     10 legal_window_no_default_track_center
+
+By unique access point class:
+     45 or_nor_a2_legal_track_edge_snapping
+      9 legal_window_no_default_track_center
+
+By ref/pin/class marker rows:
+     43 NOR2X2_HVT/A2 or_nor_a2_legal_track_edge_snapping
+     10 OR2X4_HVT/A2 legal_window_no_default_track_center
+      2 NOR2X4_HVT/A2 or_nor_a2_legal_track_edge_snapping
+
+By ref/pin/class unique access points:
+     43 NOR2X2_HVT/A2 or_nor_a2_legal_track_edge_snapping
+      9 OR2X4_HVT/A2 legal_window_no_default_track_center
+      2 NOR2X4_HVT/A2 or_nor_a2_legal_track_edge_snapping
+
+By error layer and class:
+     45 Off-grid VIA1 (12) or_nor_a2_legal_track_edge_snapping
+      9 Off-grid VIA1 (12) legal_window_no_default_track_center
+      1 Off-grid M2 (13) legal_window_no_default_track_center
+
+Interpretation:
+  blocked_access_no_via_window is a true LEF pin-window problem for default VIA12SQ_C.
+  legal_window_no_default_track_center is a track-grid mismatch problem.
+  or_nor_a2_legal_track_edge_snapping has legal track centers, so remaining DRC likely comes from edge access plus generated VIA1/M2 snapping/check-grid behavior.

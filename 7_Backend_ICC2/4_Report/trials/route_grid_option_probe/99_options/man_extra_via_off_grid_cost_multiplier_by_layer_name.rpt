@@ -1,0 +1,50 @@
+3.  Attributes and Variables                                 Command Reference
+         route.common.extra_via_off_grid_cost_multiplier_by_layer_name
+
+NAME
+       route.common.extra_via_off_grid_cost_multiplier_by_layer_name
+              Specifies  the  cost  multiplier for vias that are off grid with
+              respect to the specified metal layers.
+
+TYPE
+       list
+
+DEFAULT
+       ""
+
+DESCRIPTION
+       This application option specifies the cost multiplier  for  vias.   You
+       can specify this option only when the top-level block is open.
+
+       The format to specify the cost multiplier for a via layer is
+         {layer multiplier}
+
+       You  must  specify the via layers by using the layer names in the tech-
+       nology file.
+
+       The multiplier must be a float value between 0.0 and 20.0.  It  affects
+       the via cost on the specified layer as follows:
+         viaCost = baseViaCost * (1 + multiplier)
+
+       If  you  do  not  specify the multiplier for a layer, the tool uses the
+       default of 0.0.
+
+EXAMPLE
+       If the technology file defines the VIA12 via layer between the  M1  and
+       M2  metal  layers  and  the VIA23 via layer between the M2 and M3 metal
+       layers, the following example sets the extra off-grid via  cost  multi-
+       plier  on  the VIA12 and VIA23 layers to 0.5. Note that you specify the
+       metal layer, but the multiplier is set on the adjacent via layers.
+
+         prompt> set_app_options \
+            -name route.common.extra_via_off_grid_cost_multiplier_by_layer_name \
+            -value {{M2 0.5}}
+
+SEE ALSO
+       get_app_option_value(2)
+       get_app_options(2)
+       report_app_options(2)
+       set_app_option(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

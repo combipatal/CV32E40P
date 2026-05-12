@@ -1,0 +1,61 @@
+****************************************
+Report : constraint
+        -all_violators
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Sun May 10 11:30:26 2026
+****************************************
+
+   late_timing
+   -----------
+
+Information: Deserialized np data
+INFO: timer data loaded from /tmp/cv32e40p_synth_wrap_ss_setup_eco7_fadd_rvt_trial_3486546_549533254.timdat
+Information: The RC mode used is DR for design 'cv32e40p_synth_wrap'. (NEX-022)
+Extracting design: cv32e40p_synth_wrap_ss_setup_eco7_fadd_rvt_trial 
+Information: coupling capacitance is lumped to ground. (NEX-030)
+Information: 18183 nets are successfully extracted. (NEX-028)
+Information: Update timing completed net estimation for all the timing graph nets (TIM-111)
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+No paths.
+
+   early_timing
+   -----------
+
+Endpoint                         Path Delay     Path Required       CRP    Slack Group    Scenario
+----------------------------------------------------------------------------------------------------------
+u_core/core_i/cs_registers_i/dcsr_q_reg[cause][8]/D (SDFFARX1_RVT)
+                                   0.30 f         0.30           0.00    -0.00   clk_i    default
+
+   Mode: default Corner: default
+   Scenario: default
+   max_transition                                                              
+                             Required        Actual                            
+   Net                      Transition     Transition        Slack  Violation  
+  ---------------------------------------------------------------------------
+   u_core/core_i/id_stage_i/n2721
+                                0.09           0.09           0.00  (MET)      
+
+  ---------------------------------------------------------------------------
+   Number of max_transition violation(s): 0
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of max_capacitance violation(s): 0
+
+
+   Mode: default Corner: default
+   Scenario: default
+  ---------------------------------------------------------------------------
+   Number of min_capacitance violation(s): 0
+
+  Mode: default
+  Corner: default
+  Scenario: default
+
+  ---------------------------------------------------------------------------
+   Number of min_pulse_width violation(s): 0
+   Total number of violation(s): 0
+1

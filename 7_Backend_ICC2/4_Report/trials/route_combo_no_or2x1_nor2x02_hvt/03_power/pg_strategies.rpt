@@ -1,0 +1,115 @@
+#------------------------------------------#
+name: stdcell_rail_strategy
+region: 
+	Region: core area
+	Coordinate: {{20.0000 20.0000} {20.0000 305.9120} {306.6720 305.9120} {306.6720 20.0000} }
+
+Pattern Expression :
+	pattern: stdcell_rail_pattern
+	nets: VDD VSS
+	parameters: 
+	offset: undefined undefined
+	offset start: boundary
+
+Instantiated Pattern :
+Pattern Name: stdcell_rail_pattern
+Type: Standard Cell Rail Pattern
+Rail Width: undefined undefined 
+Rail Layers: M1 
+Rail Shift: undefined undefined 
+Rail Masks: no_mask no_mask 
+Rail pin DRC option: false
+Mark as follow pin option: false
+Parameters: 
+
+
+Extension: 
+
+Blockage: 
+#------------------------------------------#
+name: core_ring_strategy
+region: 
+	Region: core area
+	Coordinate: {{20.0000 20.0000} {20.0000 305.9120} {306.6720 305.9120} {306.6720 20.0000} }
+
+Pattern Expression :
+	pattern: core_ring_pattern
+	nets: VDD VSS
+	parameters: 
+	offset: 5.0000 5.0000
+	offset start: boundary
+	skip_sides: 
+	side_offset: 
+	merge: undefined undefined
+	fill_gap: undefined
+
+Instantiated Pattern :
+Pattern Name: core_ring_pattern
+Type: Ring Pattern
+Symbolic Nets: VDD VSS 
+Ring Width:
+	{side: horizontal}{width: 2}
+	{side: vertical}{width: 2}
+Ring Layer:
+	{side: horizontal}{layer: M7}
+	{side: vertical}{layer: M8}
+Ring Spacing:
+	{side: horizontal}{spacing: 1}
+	{side: vertical}{spacing: 1}
+Corner Bridge: true
+Via Rules: 
+	{intersection: all} {via_master : {default}}
+Track Alignment: no alignment
+Parameters: 
+
+
+Extension: 
+	Nets: 
+	Layers: 	StopLayers: 
+	Sides: 
+	Direction: LRTB
+	Stop: design boundary and generate pin
+
+
+Blockage: 
+#------------------------------------------#
+name: core_mesh_strategy
+region: 
+	Region: core area
+	Coordinate: {{20.0000 20.0000} {20.0000 305.9120} {306.6720 305.9120} {306.6720 20.0000} }
+
+Pattern Expression :
+	pattern: core_mesh_pattern
+	nets: VDD VSS
+	parameters: 
+	offset: undefined undefined
+	offset start: boundary
+	pitch: undefined undefined
+	repeat: undefined undefined
+
+Instantiated Pattern :
+Pattern Name: core_mesh_pattern
+Type: Mesh Pattern
+Parameters: 
+Layers: 
+{ {vertical_layer : M2} {width : {0.4 }} {spacing : interleaving} {trim : true} {track_alignment : none}   {pitch : 40} {offset : 20} } 
+{ {vertical_layer : M8} {width : {1 }} {spacing : interleaving} {trim : true} {track_alignment : none}   {pitch : 40} {offset : 20} } 
+{ {horizontal_layer : M7} {width : {1 }} {spacing : interleaving} {trim : true} {track_alignment : none}   {pitch : 40} {offset : 28} } 
+Via Rules: 
+{intersection: all} {via_master : {default}}
+
+
+Extension: 
+	Nets: 
+	Layers: 	StopLayers: 
+	Sides: 
+	Direction: LRTB
+	Stop: inner-most ring
+
+
+Blockage: 
+	Nets: VDD
+	Layers: M2
+	PG regions: hotspot_pg_m2_blockage
+
+#------------------------------------------#

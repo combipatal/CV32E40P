@@ -1,0 +1,31 @@
+****************************************
+Report : constraint
+	-all_violators
+	-path slack_only
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP5-3
+Date   : Sun May 10 11:21:10 2026
+****************************************
+
+
+
+   min_delay/hold ('clk_i' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/D    -0.02  (VIOLATED)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/D    -0.02  (VIOLATED)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/D    -0.02  (VIOLATED)
+   u_core/core_i/if_stage_i/prefetch_buffer_i/prefetch_controller_i/trans_addr_q_reg[29]/D
+                                                             -0.01  (VIOLATED)
+   u_core/core_i/cs_registers_i/dcsr_q_reg[cause][8]/D        0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/regfile_waddr_lsu_reg[0]/D        0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/ex_stage_i/regfile_waddr_lsu_reg[1]/D        0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][1]/D     0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][1]/D     0.00  (VIOLATED: increase significant digits)
+   u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][1]/D     0.00  (VIOLATED: increase significant digits)
+
+
+
+
+1

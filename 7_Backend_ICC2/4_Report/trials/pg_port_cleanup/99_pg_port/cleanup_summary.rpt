@@ -1,0 +1,42 @@
+Before cleanup
+Port VDD count=1
+  net=VDD
+  direction=in
+  port_type=power
+  physical_status=unplaced
+  terminal_count=0
+Port VSS count=1
+  net=VSS
+  direction=in
+  port_type=ground
+  physical_status=unplaced
+  terminal_count=0
+Port VDD_1 count=1
+  net=VDD
+  direction=inout
+  port_type=power
+  physical_status=placed
+  terminal_count=8
+Port VSS_1 count=1
+  net=VSS
+  direction=inout
+  port_type=ground
+  physical_status=placed
+  terminal_count=8
+
+After cleanup
+Port VDD count=0
+Port VSS count=0
+Port VDD_1 count=1
+  net=VDD
+  direction=inout
+  port_type=power
+  physical_status=placed
+  terminal_count=8
+Port VSS_1 count=1
+  net=VSS
+  direction=inout
+  port_type=ground
+  physical_status=placed
+  terminal_count=8
+

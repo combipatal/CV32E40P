@@ -1,0 +1,92 @@
+SDFFARX1_RVT blocked access / route DRC overlap summary
+
+blocked_report=/DATA/home/edu135/CV32E40P/7_Backend_ICC2/4_Report/trials/pin_access_blocked_detail/99_pin_access/blocked_access.by_ref_cell_pin.rpt
+drc_report=/DATA/home/edu135/CV32E40P/7_Backend_ICC2/4_Report/06_route/drc_detail/drc.detailed.rpt
+hotspot_bbox=(215.0, 195.0, 265.0, 265.0)
+
+sdffarx1_blocked_point_count=284
+route_drc_marker_count=398
+hotspot_drc_marker_count=123
+sdffarx1_blocked_points_inside_hotspot=17
+sdffarx1_points_with_nearest_drc_inside_hotspot=17
+
+Nearest DRC radius counts, all SDFFARX1 points:
+  <=1um: 9
+  <=2um: 17
+  <=5um: 58
+  <=10um: 105
+  <=25um: 213
+  <=50um: 284
+
+Nearest DRC radius counts, SDFFARX1 points inside hotspot:
+  <=1um: 0
+  <=2um: 0
+  <=5um: 14
+  <=10um: 14
+  <=25um: 17
+  <=50um: 17
+
+Blocked points by pin:
+  RSTB: 117
+  SE: 69
+  CLK: 52
+  Q: 21
+  SI: 18
+  QN: 7
+
+Hotspot blocked points by pin:
+  RSTB: 15
+  QN: 2
+
+Nearest DRC type counts:
+  Diff net spacing: 102
+  Off-grid: 98
+  Needs fat contact: 79
+  Short: 5
+
+Nearest DRC layer counts:
+  M1 (11): 114
+  M1 (11)-M2 (13): 79
+  M2 (13): 51
+  VIA1 (12): 40
+
+Top SDFFARX1 blocked buckets:
+  100-120,040-060: 9
+  100-120,200-220: 9
+  240-260,040-060: 9
+  240-260,020-040: 9
+  240-260,240-260: 9
+  180-200,060-080: 7
+  140-160,060-080: 7
+  300-320,220-240: 7
+  160-180,040-060: 6
+  140-160,020-040: 6
+  140-160,160-180: 6
+  080-100,200-220: 6
+  240-260,080-100: 6
+  280-300,240-260: 6
+  300-320,020-040: 6
+  180-200,020-040: 5
+  220-240,140-160: 5
+  120-140,200-220: 5
+  160-180,200-220: 5
+  080-100,100-120: 4
+
+SDFFARX1 hotspot blocked points:
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][26] RSTB point=(260.4640,195.7075) nearest=Off-grid VIA1 (12) dist=19.4745um
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][26] RSTB point=(260.4640,195.7120) nearest=Off-grid VIA1 (12) dist=19.4728um
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][26] RSTB point=(260.4640,195.7097) nearest=Off-grid VIA1 (12) dist=19.4736um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[3] RSTB point=(259.5520,252.2560) nearest=Needs fat contact M1 (11)-M2 (13) dist=2.9513um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[3] RSTB point=(259.5520,252.2605) nearest=Needs fat contact M1 (11)-M2 (13) dist=2.9550um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[3] RSTB point=(259.5520,252.2582) nearest=Needs fat contact M1 (11)-M2 (13) dist=2.9531um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[17] RSTB point=(259.5520,245.8675) nearest=Needs fat contact M1 (11)-M2 (13) dist=3.2350um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[17] RSTB point=(259.5520,245.8720) nearest=Needs fat contact M1 (11)-M2 (13) dist=3.2316um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[17] RSTB point=(259.5520,245.8697) nearest=Needs fat contact M1 (11)-M2 (13) dist=3.2333um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[14] QN point=(259.7040,236.9040) nearest=Diff net spacing M1 (11) dist=2.8172um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[16] QN point=(259.7040,237.8160) nearest=Off-grid VIA1 (12) dist=2.9777um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[9] RSTB point=(259.5520,252.5555) nearest=Needs fat contact M1 (11)-M2 (13) dist=3.2026um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[9] RSTB point=(259.5520,252.5600) nearest=Needs fat contact M1 (11)-M2 (13) dist=3.2064um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[9] RSTB point=(259.5520,252.5577) nearest=Needs fat contact M1 (11)-M2 (13) dist=3.2045um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[10] RSTB point=(260.4640,248.9120) nearest=Needs fat contact M1 (11)-M2 (13) dist=2.7402um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[10] RSTB point=(260.4640,248.9165) nearest=Needs fat contact M1 (11)-M2 (13) dist=2.7387um
+  u_core/core_i/if_stage_i/instr_rdata_id_o_reg[10] RSTB point=(260.4640,248.9142) nearest=Needs fat contact M1 (11)-M2 (13) dist=2.7395um

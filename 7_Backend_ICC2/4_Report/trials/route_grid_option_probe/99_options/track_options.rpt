@@ -1,0 +1,47 @@
+****************************************
+Report : app_option
+Design : NO_DESIGN
+Version: W-2024.09-SP2
+Date   : Sat May  9 09:52:37 2026
+****************************************
+Name                                                                                     Type                       Value      User-value   User-default System-default Scope      Status     Source
+---------------------------------------------------------------------------------------- -------------------------- ---------- ------------ ------------ -------------- ---------- ---------- ----------
+ecolm.freeze_silicon.psc_overwrite_auto_derived_first_track_offset                       bool                       false      --           --           false          global     normal     --
+ecolm.freeze_silicon.psc_track_mask                                                      string                     --         --           --           --             global     normal     --
+ecolm.freeze_silicon.psc_track_offset                                                    double                     -1         --           --           -1             global     normal     --
+opt.common.track_no_new_cells                                                            bool                       false      --           --           false          global     normal     --
+place.legalize.allow_touch_track_for_access_check                                        bool                       --         --           --           true           block      normal     --
+place.legalize.enable_advanced_track_capacity_check                                      bool                       --         --           --           false          block      normal     --
+place.legalize.enable_multi_cell_track_capacity_check                                    bool                       --         --           --           false          block      normal     --
+place.legalize.enable_track_capacity_check                                               bool                       --         --           --           false          block      normal     --
+place.legalize.num_tracks_for_access_check                                               integer                    --         --           --           1              block      normal     --
+place.legalize.support_off_track_via_region                                              bool                       --         --           --           false          block      normal     --
+plan.flow.track_pattern_support_prf_based_initialize_floorplan_for_site_def              bool                       false      --           --           false          global     normal     --
+plan.macro.pin_shape_track_match_threshold                                               list_of {string typed_value} -|- --         --           --           {layerName 0m} block      normal     --
+plan.pgroute.always_align_track_color_layers                                             list_of string             --         --           --           all            block      normal     --
+plan.pgroute.optimize_track_alignment                                                    bool                       --         --           --           true           block      normal     --
+route.auto_via_ladder.auto_stagger_for_em_via_ladder_max_number_stagger_tracks_per_level integer                    --         --           --           15             block      normal     --
+route.auto_via_ladder.auto_stagger_max_number_stagger_tracks_per_level                   integer                    --         --           --           9              block      normal     --
+route.auto_via_ladder.default_width_ndr_promotable_on_nonreserved_tracks                 bool                       --         --           --           true           block      normal     --
+route.auto_via_ladder.generate_center_track_on_off_grid_pattern_must_join_pin_shapes     bool                       --         --           --           false          block      normal     --
+route.auto_via_ladder.generate_track_width_by_layer_name                                 list_of {string float}     --         --           --           --             block      normal     --
+route.auto_via_ladder.pattern_must_join_max_number_stagger_tracks                        list_of integer            --         --           --           --             block      normal     --
+route.common.track_auto_fill                                                             bool                       --         --           --           true           block      normal     --
+route.detail.generate_extra_off_grid_pin_tracks                                          bool                       --         --           --           false          block      normal     --
+route.detail.generate_off_grid_feed_through_tracks                                       enum                       --         --           --           low            block      normal     --
+route.global.custom_track_modeling_enhancement                                           bool                       --         --           --           false          block      normal     --
+route.global.macro_area_track_utilization                                                integer                    --         --           --           0              block      normal     --
+route.global.macro_boundary_track_utilization                                            integer                    --         --           --           100            block      normal     --
+route.global.macro_corner_track_utilization                                              integer                    --         --           --           100            block      normal     --
+route.global.voltage_area_corner_track_utilization                                       integer                    --         --           --           100            block      normal     --
+route.track.allow_wire_outside_gcell                                                     bool                       --         --           --           true           block      normal     --
+route.track.crosstalk_driven                                                             bool                       --         --           --           false          block      normal     --
+route.track.timing_driven                                                                bool                       --         --           --           false          block      normal     --
+rtl_opt.conditioning.enable_constraint_name_tracking                                     bool                       --         --           --           true           block      normal     --
+shell.common.track_subprocess_memory                                                     bool                       true       --           --           true           global     normal     --
+signoff.color_macro.track_color_preference                                               list_of {string string}    --         --           --           --             global     normal     --
+signoff.color_macro.track_offset                                                         list_of {string double}    --         --           --           --             global     normal     --
+---------------------------------------------------------------------------------------- -------------------------- ---------- ------------ ------------ -------------- ---------- ---------- ----------
+
+There are additional internal differences.
+1

@@ -1,0 +1,48 @@
+3.  Attributes and Variables                                 Command Reference
+                    route.common.wire_on_grid_by_layer_name
+
+NAME
+       route.common.wire_on_grid_by_layer_name
+              Controls  whether wires must be routed on-grid. This option con-
+              trols the same functionality as the onGrid attribute for a metal
+              layer in the technology file.
+
+TYPE
+       list
+
+DEFAULT
+       ""
+
+DESCRIPTION
+       If  you use this option, the tool ignores all onGrid attributes defined
+       in the technology file (both for metal  layers  and  via  layers).  The
+       default  setting for any unspecified onGrid attributes is false; there-
+       fore, on-grid routing is required only for the metal  layers  specified
+       with  a  setting of true in this option and via layers specified with a
+       setting of true in the -via_on_grid_by_layer_name option. You can spec-
+       ify  this option only when the block is open. This option is to control
+       onGrid attributes only. It has no impact if onWireTrack is  defined  in
+       the technology file.
+
+       Use the following format to specify the setting for each layer:
+         {routing_layer true|false}
+
+       You  must  specify  the  routing layers by using the layer names in the
+       technology file.
+
+EXAMPLES
+       The following example sets the  route.common.wire_on_grid_by_layer_name
+       application option to true for the M3 and M4 metal layers.
+
+         prompt> set_app_options \
+            -name route.common.wire_on_grid_by_layer_name \
+            -value {{M3 true} {M4 true}}
+
+SEE ALSO
+       get_app_option_value(2)
+       get_app_options(2)
+       report_app_options(2)
+       set_app_options(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

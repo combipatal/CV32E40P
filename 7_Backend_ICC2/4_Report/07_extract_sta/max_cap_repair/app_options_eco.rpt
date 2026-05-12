@@ -1,0 +1,74 @@
+****************************************
+Report : app_option
+Design : NO_DESIGN
+Version: W-2024.09-SP2
+Date   : Sun May 10 09:10:55 2026
+****************************************
+Name                                                               Type        Value       User-value   User-default System-default Scope      Status     Source
+------------------------------------------------------------------ ----------- ----------- ------------ ------------ -------------- ---------- ---------- ----------
+clock_opt.flow.enable_clock_power_recovery                         string      --          --           --           auto           block      normal     --
+cts.optimize.enable_area_recovery_in_local_skew                    bool        --          --           --           true           block      normal     --
+custom.route.shield_second_net                                     string      --          --           --           --             block      normal     --
+design.eco_freeze_silicon_mode                                     bool        --          --           --           false          block      normal     --
+design.eco_restrictions                                            bool        --          --           --           false          block      normal     --
+design.enable_recovery_save                                        bool        false       --           --           false          global     normal     --
+design.recovery_save_dir_path                                      string      --          --           --           --             global     normal     --
+eco.add_buffer_on_route.min_distance_buffer_to_load                float       --          --           --           -1             block      normal     --
+eco.freeze_silicon.enable_multi_threads                            bool        true        --           --           true           global     normal     --
+eco.freeze_silicon.not_spare_cell_aware                            bool        false       --           --           false          global     normal     --
+eco.freeze_silicon.pfs_map_spare_cells_only                        bool        false       --           --           false          global     normal     --
+eco.functional.diff_ignore_tie_changes                             bool        --          --           --           false          block      normal     --
+eco.functional.diff_preprocess_for_verilog                         bool        --          --           --           false          block      normal     --
+eco.post_silicon_debug.bs_via_check_window_size                    float float 45 45       --           --           45 45          global     normal     --
+eco.post_silicon_debug.bs_via_percent_goal                         float       80          --           --           80             global     normal     --
+eco.post_silicon_debug.fib_logic_cell_prefix                       string      fib_logic_  --           --           fib_logic_     global     normal     --
+eco.post_silicon_debug.fib_tie_cell_prefix                         string      fib_tie_lo_ --           --           fib_tie_lo_    global     normal     --
+eco.post_silicon_debug.fs_fib_check_window_size                    float float 50 50       --           --           50 50          global     normal     --
+eco.post_silicon_debug.fs_fib_min_placeable_area_percent           float       60          --           --           60             global     normal     --
+eco.post_silicon_debug.fs_fib_percent_goal                         float       80          --           --           80             global     normal     --
+eco.post_silicon_debug.power_elevation_check_window_size           float float 200 200     --           --           200 200        global     normal     --
+eco.post_silicon_debug.power_elevation_max_route_length            float       5           --           --           5              global     normal     --
+eco.post_silicon_debug.power_elevation_min_placeable_area_percent  float       60          --           --           60             global     normal     --
+eco.post_silicon_debug.power_elevation_percent_goal                float       80          --           --           80             global     normal     --
+eco.post_silicon_debug.signal_elevation_max_route_length           float       5           --           --           5              global     normal     --
+eco.remove_buffer.keep_rtl_net                                     bool        --          --           --           false          block      normal     --
+ecolm.freeze_silicon.psc_overwrite_auto_derived_first_track_offset bool        false       --           --           false          global     normal     --
+ecolm.freeze_silicon.psc_track_mask                                string      --          --           --           --             global     normal     --
+ecolm.freeze_silicon.psc_track_offset                              double      -1          --           --           -1             global     normal     --
+file.verilog.reconstruct_multi_dimension_bus                       bool        false       --           --           false          global     normal     --
+flip_chip.route.secondary_routing_layer_cost                       enum        --          --           --           medium         block      normal     --
+flip_chip.route.secondary_shielding_net                            string      --          --           --           --             block      normal     --
+lib.workspace.enable_secondary_pg_marking                          bool        true        --           --           true           global     normal     --
+link.allow_blasted_bus_reconstruction                              enum        ref         --           --           ref            global     normal     --
+mv.pg.minimum_horizontal_secondary_pg_placement_va_region_size     double      --          --           --           0              block      normal     --
+mv.pg.minimum_vertical_secondary_pg_placement_va_region_size       double      --          --           --           0              block      normal     --
+mv.pg.secondary_pg_placement_lateral_margin_only                   bool        --          --           --           false          block      normal     --
+mv.upf.enable_pg_pin_reconnection                                  bool        --          --           --           false          block      normal     --
+mv.upf.upf_allow_non_constant_net_reconnect                        bool        --          --           --           true           block      normal     --
+opt.common.small_region_area_recovery                              bool        --          --           --           false          block      normal     --
+rail.display_eco_shapes                                            bool        false       --           --           false          global     normal     --
+route.auto_via_ladder.update_on_route_eco_nets_only                bool        --          --           --           false          block      normal     --
+route.common.eco_fix_drc_in_changed_area_only                      bool        --          --           --           false          block      normal     --
+route.common.eco_route_concurrent_redundant_via_effort_level       enum        --          --           --           low            block      normal     --
+route.common.eco_route_concurrent_redundant_via_mode               enum        --          --           --           off            block      normal     --
+route.common.eco_route_fix_existing_drc                            bool        --          --           --           true           block      normal     --
+route.common.number_of_secondary_pg_pin_connections                integer     --          --           --           0              block      normal     --
+route.common.post_eco_route_fix_soft_violations                    bool        --          --           --           false          block      normal     --
+route.common.separate_tie_off_from_secondary_pg                    bool        --          --           --           false          block      normal     --
+route.detail.eco_max_number_of_iterations                          integer     --          --           --           -1             block      normal     --
+route.detail.eco_route_special_design_rule_fixing_stage            enum        --          --           --           late_routing   block      normal     --
+route.detail.eco_route_use_soft_spacing_for_timing_optimization    bool        --          --           --           true           block      normal     --
+route.detail.topology_eco_effort_level                             enum        --          --           --           off            block      normal     --
+route.global.eco_honor_target_dly                                  bool        --          --           --           false          block      normal     --
+route_opt.flow.enable_clock_power_recovery                         string      --          --           --           auto           block      normal     --
+signoff.check_drc.auto_eco_threshold_value                         integer     --          --           --           20             block      normal     --
+signoff.create_metal_fill.auto_eco_threshold_value                 integer     --          --           --           20             block      normal     --
+tbcs.record.enable                                                 bool        false       --           --           false          global     normal     --
+time.clock_reconvergence_pessimism                                 enum        --          --           --           normal         block      normal     --
+time.disable_recovery_removal_checks                               bool        false       --           --           false          global     normal     --
+time.remove_clock_reconvergence_pessimism                          bool        --          --           --           false          block      normal     --
+top_level.concurrent_top_block_eco_routing_for_tho                 bool        false       --           --           false          global     normal     --
+------------------------------------------------------------------ ----------- ----------- ------------ ------------ -------------- ---------- ---------- ----------
+
+There are additional internal differences.
+1

@@ -1,0 +1,155 @@
+Information: The command 'check_legality' cleared the undo history. (UNDO-016)
+Information: Setting bounds and VA for block 'cv32e40p_synth_wrap'...
+Information: Setting up voltage area 'DEFAULT_VA'.
+Information: checking lib cells power/ground pins
+Information: Lib cells of site unit have their ground pins at bottom 
+
+Information: Legalizer threading is enabled with high effort (LGL-130)
+
+Information: Setting up cell instances...
+Information: All fillers in the reference libraries will be considered during legalization/check legality
+Information: Initializing site map 'unit' at {20 20} {306.976 305.912}.
+Information: Init siteMap unit with 1888 sites x 171 rows
+Adding rule engine Basic Rules version 1.0.0...
+Adding rule engine VT Implant Rules version 1.0.0...
+Adding rule engine OD Rules version 1.0.0...
+Adding rule engine TPO Rules version 1.0.0...
+Information: place.legalize.enable_pin_extension_auto_for_pin_access is false.
+Information: place.legalize.enable_pin_extension_for_pin_access is false.
+Adding rule engine Pin Access Rules version 1.0.0...
+Adding rule engine Span Rules version 1.0.0...
+Adding rule engine Index Rules version 1.0.0...
+Adding rule engine Color Rules version 1.0.0...
+Adding rule engine Inbound Rules version 1.0.0...
+Adding rule engine PG DRC Rules version 1.0.0...
+Adding rule engine Exp Rules version 1.0.0...
+Adding rule engine Under PG Rules version 1.0.0...
+Adding rule engine Chipfin Rules version 1.0.0...
+Adding rule engine Density Rules version 1.0.0...
+Adding rule engine User Rules version 1.0.0...
+Adding rule engine Back Side Rules version 1.0.0...
+Adding rule engine NP-Well Rules version 1.0.0...
+Adding rule engine Route-aware Pin Access Rules version 1.0.0...
+Adding rule engine Safety Register Rules version 1.0.0...
+Adding rule engine Soft Rules version 1.0.0...
+2D rule auto detection will enable the following rules:
+spacing_rule
+pg_drc
+Information: Apply spacing rule on full inbound edge (place.legalize.apply_spacing_rule_full_inbound_edge): no
+Information: Use base site row as spacing rule sub row (for uni-row only) (place.legalize.use_base_site_row_as_spacing_rule_sub_row): no
+Information: Initializing CTS constraints...
+Constructing pin color alignment legality info...
+Information: Reading Vertical abutment prohibit pattern from app option (place.legalize.vertical_abutment_forbidden_pairs)...
+	Format 1: label1-label2
+	Format 2: label1-label2-minConsecutivePairs
+	Format 3: label1-label2-minVertDist-maxVertDist
+	Format 4: label1-label2-minVertDist-maxVertDist-minConsecutivePairs
+Information: App option (place.legalize.vertical_abutment_forbidden_pairs) is empty.
+Information: Reading Vertical abutment prohibit pattern from PRF...
+Information: Is mixed-row flow: no
+Initializing PG drc check engine...
+NPLDRC: Using a 8x8 grid for PG structure analysis
+NPLDRC: Filter  0.00% (0/4096) blocked grids
+Warning: Routing direction of metal layer CO is neither "horizontal" nor "vertical".  PDC checks will not be performed on this layer. (PDC-003)
+Scanning PG objects...
+PG hash cached 2 nets; 15 viaBoxes; 0 viaMatrixRefs; 0 patterns; 0 extensions.
+PG scanned 215 shapes (172 on M1); 1800 vias (1204 on M1); 0 via matrix (0 on CO); 0 shape pattern (0 on CO); 186 under straps (172 on M1); 0 staples; 0 tall vias; 172 base straps.
+PG scan complete.  Hash key = d176257813c36a69
+Information: Analyzing PG structure for 10 layers using 1 cores. (NPLDRC-001)
+Layer M1: 172 straps, 344 other, 0 preroute
+Layer M1: 4 secDefs  516 sectors (0 empty)
+Layer M2: 1218 straps, 1204 other, 0 preroute
+Layer M2: 8 secDefs  2422 sectors (0 empty)
+Layer M3: 0 straps, 91 other, 0 preroute
+Layer M3: 2 secDefs  91 sectors (0 empty)
+Layer M4: 0 straps, 91 other, 0 preroute
+Layer M4: 2 secDefs  91 sectors (0 empty)
+Layer M5: 0 straps, 91 other, 0 preroute
+Layer M5: 2 secDefs  91 sectors (0 empty)
+Layer M6: 0 straps, 91 other, 0 preroute
+Layer M6: 2 secDefs  91 sectors (0 empty)
+Layer M7: 104 straps, 91 other, 0 preroute
+Layer M7: 8 secDefs  195 sectors (0 empty)
+Layer M8: 105 straps, 91 other, 0 preroute
+Layer M8: 8 secDefs  196 sectors (0 empty)
+Layer M9: 0 straps, 0 other, 0 preroute
+Layer M9: 0 secDefs  0 sectors (0 empty)
+Layer MRDL: 0 straps, 0 other, 0 preroute
+Layer MRDL: 0 secDefs  0 sectors (0 empty)
+
+Warning: Cannot save PG structure analysis in block 'cv32e40p_icc2_lib:cv32e40p_synth_wrap.design' for reuse.  Later runs must recompute PG data. (PDC-017)
+
+NPLDRC Sector Array Stats:
+Num Sectors:  3693
+Num SecDefs:    36
+
+Connection checks for layer M2: blocked_pin pin_access_default track_none pin_extend0
+Connection checks for layer M3: blocked_pin pin_access_default track_none pin_extend1
+Connection checks for layer M4: blocked_pin pin_access_default track_none pin_extend1
+Connection checks for layer M5: blocked_pin pin_access_default track_none pin_extend1
+
+NPLDRC app_option (user set) values:
+---------------------------------------
+
+place.legalize.alternative_edrc_data_model				false
+place.legalize.support_off_track_via_region				true
+
+---------------------------------------
+
+---------------------------------------
+Information: NPLDRC is created for block cv32e40p_synth_wrap
+Information: Extracting M1 PG straps
+Information: Constructing cell pin extension data for fast PG check.
+Information: Constructing PG-Via/VIB/VINS layer info (VIA1/M2)...
+Information: PG-Via Abut check extension is 0
+Information: PG-Via(pg_via_abut) design rule for layer VIA1 and VIA1 not found
+Information: VIB(vib_abut) design rule for layer M2 and VIA1 not found
+Information: VINS(vins_abut) design rule for layer M2 and VIA1 not found
+Information: Enabling hard placement rule spacing_rule...
+Information: Enabling hard placement rule pg_drc...
+
+Checking rule Overlap rule...
+
+Checking rule Spacing Rule...
+
+Checking rule Cell On Site Rule...
+
+Checking rule Cell On Legal Orientation Rule...
+
+Checking rule Check PG DRC rules...
+Checking 1409 of 14083 cells...
+Checking 2818 of 14083 cells...
+Checking 4227 of 14083 cells...
+Checking 5635 of 14083 cells...
+Checking 7043 of 14083 cells...
+Checking 8451 of 14083 cells...
+Checking 9859 of 14083 cells...
+Checking 11267 of 14083 cells...
+Checking 12675 of 14083 cells...
+Checking 14083 of 14083 cells...
+================= 2D Rule Check Legality Report ===================
+                                    Violating  Cells               
+Legality Rules                 Moveable AppFixed UserFixed   Total 
+-------------------------------------------------------------------
+overlap                               0        0        0        0
+spacing_rule                          0        0        0        0
+cell_on_site                          0        0        0        0
+legal_orient                          0        0        0        0
+pg_drc                                0        0        0        0
+-------------------------------------------------------------------
+Total Violations                      0        0        0        0
+===================================================================
+Information: Dynamic Rule Ordering (DRO): true
+Warning: Cannot save Place cache to block 'cv32e40p_icc2_lib:cv32e40p_synth_wrap.design' for reuse.  Later runs must recompute cache data. (PDC-018)
+Warning: Cannot save Access cache to block 'cv32e40p_icc2_lib:cv32e40p_synth_wrap.design' for reuse.  Later runs must recompute cache data. (PDC-018)
+Warning: Cannot save Pin Status cache to block 'cv32e40p_icc2_lib:cv32e40p_synth_wrap.design' for reuse.  Later runs must recompute cache data. (PDC-018)
+Warning: Cannot save ViaLadder cache to block 'cv32e40p_icc2_lib:cv32e40p_synth_wrap.design' for reuse.  Later runs must recompute cache data. (PDC-018)
+Warning: Cannot save Backside Placement cache to block 'cv32e40p_icc2_lib:cv32e40p_synth_wrap.design' for reuse.  Later runs must recompute cache data. (PDC-018)
+NPLDRC Wic Cache: unique cache elements 39620
+NPLDRC Wic Cache: hit rate   0.2% (39620 / 39692)
+NPLDRC: Processed 64 libCells; 64 unique
+NPLDRC Place Cache: unique cache elements 1754
+NPLDRC Place Cache: hit rate  87.5%  (1754 / 14083)
+NPLDRC Access Cache: unique cache elements 1754
+NPLDRC Access Cache: hit rate  87.5%  (1754 / 14083)
+1

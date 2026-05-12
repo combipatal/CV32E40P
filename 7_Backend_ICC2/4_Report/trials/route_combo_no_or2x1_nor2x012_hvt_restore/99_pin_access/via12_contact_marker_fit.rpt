@@ -1,0 +1,28 @@
+VIA12 contact-code to A2 marker geometry fit
+
+tech_file: /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+marker_geometry: 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/a2_marker_shape_geometry.rpt
+pitch: 0.152
+
+VIA12 contact codes from tech file:
+  VIA12BAR: default=False excluded_for_signal=True cut=0.050x0.100 upper=0.110x0.110 lower=0.110x0.110
+  VIA12BAR_C: default=False excluded_for_signal=True cut=0.050x0.100 upper=0.060x0.160 lower=0.110x0.110
+  VIA12LG: default=False excluded_for_signal=False cut=0.100x0.100 upper=0.160x0.110 lower=0.160x0.110
+  VIA12LG_C: default=False excluded_for_signal=False cut=0.100x0.100 upper=0.160x0.110 lower=0.160x0.110
+  VIA12SQ: default=False excluded_for_signal=False cut=0.050x0.050 upper=0.110x0.060 lower=0.110x0.060
+  VIA12SQ_C: default=True excluded_for_signal=False cut=0.050x0.050 upper=0.060x0.110 lower=0.110x0.060
+
+Observed marker bbox fit:
+  VIA1 marker 0.050x0.202 count=52 best_fit=VIA12BAR_C.upper expected=0.060x0.160 error=0.052000
+  M2 marker 0.110x0.212 count=31 best_fit=VIA12SQ.lower_plus_pitch_y expected=0.110x0.212 error=0.000000
+  M2 marker 0.060x0.262 count=20 best_fit=VIA12SQ_C.upper_plus_pitch_y expected=0.060x0.262 error=0.000000
+
+Fit count summary:
+  VIA12BAR_C.upper: 52
+  VIA12SQ.lower_plus_pitch_y: 31
+  VIA12SQ_C.upper_plus_pitch_y: 20
+
+Interpretation:
+  M2 off-grid marker bboxes match VIA12 contact-code metal dimensions plus one routing pitch.
+  The default contact VIA12SQ_C is asymmetric between lower M1 and upper M2 enclosure.
+  This supports a generated VIA1/M2 patch or route/check grid snapping cause, not a placement-only cause.

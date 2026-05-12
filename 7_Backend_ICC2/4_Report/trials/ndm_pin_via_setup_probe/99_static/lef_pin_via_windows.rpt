@@ -1,0 +1,91 @@
+LEF pin via-center window analysis
+
+tech_file: /DATA/home/edu135/lib/SAED32_EDK/tech/milkyway/saed32nm_1p9m_mw.tf
+contact: VIA12SQ_C
+contact_detail: lower=M1 upper=M2 cut=0.0500x0.0500 lower_enc=0.0300x0.0050 upper_enc=0.0050x0.0300 default=True excluded_for_signal=False
+required_center_margin_on_M1: x=0.0550 y=0.0300
+m1_track_grid: start=0.0880 pitch=0.1520
+
+Target hvt:NOR2X4_HVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 1.9760 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(0.4890 0.5530 0.6630 0.7330) size=0.1740x0.1800 center_window=(0.5440 0.5830 0.6080 0.7030) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=True
+    track_hits: x=0.5440 y=0.6960
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+Target hvt:OR2X4_HVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 1.6720 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(0.5030 0.6310 0.6640 0.8150) size=0.1610x0.1840 center_window=(0.5580 0.6610 0.6090 0.7850) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=False
+    track_hits: x=none y=0.6960
+  verdict: PIN_HAS_LEGAL_WINDOW_BUT_NO_DEFAULT_TRACK_CENTER
+
+Target hvt:NOR2X0_HVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 1.5200 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(0.4890 0.5530 0.6630 0.7330) size=0.1740x0.1800 center_window=(0.5440 0.5830 0.6080 0.7030) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=True
+    track_hits: x=0.5440 y=0.6960
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+Target hvt:NOR2X1_HVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 1.5200 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(0.4890 0.5530 0.6630 0.7330) size=0.1740x0.1800 center_window=(0.5440 0.5830 0.6080 0.7030) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=True
+    track_hits: x=0.5440 y=0.6960
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+Target hvt:NOR2X2_HVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 1.6720 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(0.4890 0.5530 0.6630 0.7330) size=0.1740x0.1800 center_window=(0.5440 0.5830 0.6080 0.7030) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=True
+    track_hits: x=0.5440 y=0.6960
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+Target hvt:OR2X1_HVT/A1
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 1.2160 x 1.6720
+  m1_shape_count: 2
+  shape_1: rect=(0.2490 0.8570 0.4050 0.9670) size=0.1560x0.1100 center_window=(0.3040 0.8870 0.3500 0.9370) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=False
+  shape_2: rect=(0.3550 0.6420 0.4050 0.8570) size=0.0500x0.2150 center_window=(0.4100 0.6720 0.3500 0.8270) status=NO_WINDOW_X m1_track_center=False
+    track_hits: x=none y=0.6960
+  verdict: PIN_HAS_LEGAL_WINDOW_BUT_NO_DEFAULT_TRACK_CENTER
+
+Target hvt:MUX41X2_HVT/S0
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 3.6480 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(2.1620 1.4440 2.7080 1.4940) size=0.5460x0.0500 center_window=(2.2170 1.4740 2.6530 1.4640) status=NO_WINDOW_Y m1_track_center=False
+    track_hits: x=2.3680,2.5200 y=none
+  verdict: PIN_HAS_NO_LEGAL_VIA1_CENTER_WINDOW
+
+Target hvt:RDFFNSRX1_HVT/CLK
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+  macro_size: 12.1600 x 1.6720
+  m1_shape_count: 3
+  shape_1: rect=(0.7950 1.5670 1.0290 1.5760) size=0.2340x0.0090 center_window=(0.8500 1.5970 0.9740 1.5460) status=NO_WINDOW_Y m1_track_center=False
+  shape_2: rect=(0.9830 1.4090 1.0330 1.5260) size=0.0500x0.1170 center_window=(1.0380 1.4390 0.9780 1.4960) status=NO_WINDOW_X m1_track_center=False
+    track_hits: x=none y=1.4560
+  shape_3: rect=(0.7950 1.5260 1.0330 1.5670) size=0.2380x0.0410 center_window=(0.8500 1.5560 0.9780 1.5370) status=NO_WINDOW_Y m1_track_center=False
+  verdict: PIN_HAS_NO_LEGAL_VIA1_CENTER_WINDOW
+
+Target rvt:NOR2X4_RVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_rvt/lef/saed32nm_rvt_1p9m.lef
+  status: MISSING_MACRO
+
+Target lvt:NOR2X4_LVT/A2
+  lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_lvt/lef/saed32nm_lvt_1p9m.lef
+  macro_size: 1.9760 x 1.6720
+  m1_shape_count: 1
+  shape_1: rect=(0.4890 0.5530 0.6630 0.7330) size=0.1740x0.1800 center_window=(0.5440 0.5830 0.6080 0.7030) status=HAS_LEGAL_CENTER_WINDOW m1_track_center=True
+    track_hits: x=0.5440 y=0.6960
+  verdict: PIN_HAS_LEGAL_VIA1_TRACK_CENTER
+
+Interpretation:
+  PIN_HAS_NO_LEGAL_VIA1_CENTER_WINDOW means the LEF M1 pin rectangle is too narrow for the default VIA12SQ_C M1 enclosure.
+  PIN_HAS_LEGAL_WINDOW_BUT_NO_DEFAULT_TRACK_CENTER means geometry permits a via, but the default M1 track grid does not land inside the legal window.
+  PIN_HAS_LEGAL_VIA1_TRACK_CENTER means the raw LEF pin rectangle is probably not the only cause; focus on access snapping, via policy, or local obstructions.

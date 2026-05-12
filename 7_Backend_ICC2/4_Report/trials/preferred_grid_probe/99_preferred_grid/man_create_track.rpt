@@ -1,0 +1,410 @@
+2.  Synopsys Commands                                        Command Reference
+                                 create_track
+
+NAME
+       create_track
+              Creates the tracks for a routing or poly layer.
+
+SYNTAX
+       collection create_track
+              -layer layer
+              [-space track_pitch]
+              [-count number_of_tracks]
+              [-coord offset]
+              [-width wire_width]
+              [-dir X | Y]
+              [-bbox boundary_spec]
+              [-reserved_for_width]
+              [-cell cell]
+              [-end_grid_low_offset offset]
+              [-end_grid_high_offset offset]
+              [-end_grid_low_steps list_of_offsets]
+              [-end_grid_high_steps list_of_offsets]
+              [-end_grid_relative_to core_area | block_boundary]
+              [-row_end_grid_low_steps site_def_and_offsets]
+              [-row_end_grid_high_steps site_def_and_offsets]
+              [-mask_pattern mask_one | mask_two]
+              [-relative_to core_area | block_boundary]
+              [-offset offset]
+              [-routing_guide_width width]
+              [-routing_guide_offset offset]
+              [-routing_guide_prefix prefix]
+              [-allow_large_via_cuts allow_cut_pattern]
+
+   Data Types
+       layer                  string
+       track_pitch            float
+       number_of_tracks       integer
+       offset                 float
+       wire_width             float
+       boundary_spec          list
+       cell                   collection
+       list_of_offsets        list
+       site_def_and_offsets   list
+       offset                 float
+       width                  float
+       offset                 float
+       prefix                 string
+       allow_cut_pattern      bool list
+
+ARGUMENTS
+       -layer layer
+              Specifies the layer for which to create the tracks.
+
+              You  can  specify  the layer name, layer number, or a collection
+              that contains one layer object.
+
+       -space track_pitch
+              Specifies the pitch distance between each track. i
+
+              The pitch is the center-to-center distance between  two  routing
+              wires (the router places routes on top of each track). The value
+              specified  here  is  reported  in  the  Pitch  column   of   the
+              report_tracks report.
+
+              By  default,  the distance is the same as the routing pitch from
+              the physical library. The unit for the pitch distance is  speci-
+              fied in the technology file; usually it is microns.
+
+       -count number_of_tracks
+              Specifies the number of tracks to create.
+
+              By  default,  the tool fills the entire die area with tracks. If
+              you specify the -bbox  option,  the  tool  fills  the  specified
+              bounding box with tracks.
+
+       -coord start_x_or_y
+              Specifies the location of the first track.
+
+              The x- and y-coordinates depend on the values specified with the
+              -dir option. The units for the coordinates are specified in  the
+              technology file; usually it is microns.
+
+              By  default,  the track is located at half of the space distance
+              inside of the die area.
+
+              If this is given with -bbox option  then  value  of  the  option
+              should  be greater than lower left of -bbox option value. Other-
+              wise start value will be ignored.
+
+       -width wire_width
+              Specifies the associated wire  width  attribute  for  rule-based
+              wire tracks.
+
+              By  default,  wire  tracks  have  no width attribute and have no
+              usage constraint.  Wire tracks with a  width  attribute  can  be
+              used  only  by  shapes  whose  width  matches  the track's width
+              attribute.
+
+       -dir X | Y
+              Specifies the stepping direction in which the tracks are placed.
+
+              The -dir X option creates vertical tracks by stepping along  the
+              x-axis.  The -dir Y option creates horizontal tracks by stepping
+              along the y-axis.
+
+              By default, the stepping direction is derived from  the  routing
+              direction of the layer. The stepping direction is X if the rout-
+              ing direction is vertical. The stepping direction is  Y  if  the
+              routing direction is horizontal.
+
+       -bbox boundary_spec
+              Specifies the bounding boxes within which to create tracks.
+
+              The  bounding  box  must fit the tracks of a given track object.
+              For horizontal tracks, the first and last tracks must lie on the
+              bottom  and top edges of the box. For vertical tracks, the first
+              and last tracks must lie on left and right edges of the box.
+
+              You can specify the bounding boxes directly by specifying a list
+              of  bounding  boxes  or  you  can  specify polygons or geometric
+              objects, which are decomposed into one or more bounding boxes.
+
+              To specify a list of bounding boxes, use the following syntax to
+              specify  the  lower-left and upper-right corners of the bounding
+              boxes:
+                { {{llx lly} {urx ury}} ... }
+
+              To specify a list of polygons, use the following syntax to spec-
+              ify        the        vertices        of        the        poly-
+              gons:../../../../doc/nwtn/man/man2/create_track.2
+                { {{x y} {x y} {x y} {x y} ...} ... }
+
+              The unit for the coordinates are  specified  in  the  technology
+              file; usually it is microns.
+
+              Polygons can also be specified as the combined area of a hetero-
+              geneous collection of objects with physical  geometry,  such  as
+              poly_rects,   geo_masks,  shapes,  layers,  and  other  physical
+              objects. For poly_rects, geo_masks, shapes,  or  other  physical
+              objects,  the  resulting area includes the areas of each object.
+              In the case of layers, the resulting area includes the  area  of
+              every shape on the layer.
+
+              This option is mutually exclusive with -relative_to option.
+
+       -reserved_for_width
+              Specifies that the created tracks are reserved tracks.  Reserved
+              tracks can be used only by nets with a nondefault rule.
+
+              This option must be used with the -width option.
+
+       -cell cell
+              Specifies the physical cell in which to add the tracks.
+
+              The tracks are created in the cell's reference block  using  the
+              coordinate  system of the cell's top block. The cell must refer-
+              ence a block, not a library cell, unless you run this command in
+              the  library  manager.  The  library  manager  can create tracks
+              within library cells.
+
+              By default, the tracks are created in the current block.
+
+       -end_grid_low_offset offset
+              Specifies the offset from the left or bottom edge to the  start-
+              ing point of the first grid rectangle.
+
+       -end_grid_high_offset offset
+              Specifies  the offset from the left or bottom edge to the ending
+              point of the first grid rectangle.
+
+       -end_grid_low_steps list_of_offsets
+              Specifies a list of steps to use when creating  subsequent  grid
+              points. Each offset in the list is the distance between the pre-
+              vious starting grid point and the current starting grid point.
+
+       -end_grid_high_steps list_of_offsets
+              Specifies a list of steps to use when creating  subsequent  grid
+              points. Each offset in the list is the distance between the pre-
+              vious ending grid point and the current ending grid point.
+
+       -end_grid_relative_to core_area | block_boundary
+              Specifies that subsequent grid points need to  be  created  with
+              respect  to core area bounding box or lower left of block bound-
+              ing  box.  This  option  will  also  update  values  of  options
+              -end_grid_low_offset  and -end_grid_high_offset as both of these
+              options represent absolute value  so  providing  -end_grid_rela-
+              tive_to option will recalculate them.
+
+       -row_end_grid_low_steps site_def_and_offsets
+              Specifies  a  list  of low steps to use when creating subsequent
+              grid points for site_rows that use a particular  site_def.  Each
+              list  should  include  two  elements {site_def_name list_of_off-
+              sets}. The site_def_name is the name of the site_def used by the
+              site_row. The list_of_offsets is the distance between the previ-
+              ous starting grid point and the current starting grid point  for
+              the  site_row.  This  option  may be specified multiple times to
+              define low steps for other site_defs. However only  one  set  of
+              low steps can be defined for each site_def.
+
+       -row_end_grid_high_steps site_def_and_offsets
+              Specifies  a  list of high steps to use when creating subsequent
+              grid points for site_rows that use a particular  site_def.  Each
+              list  should  include  two  elements {site_def_name list_of_off-
+              sets}. The site_def_name is the name of the site_def used by the
+              site_row. The list_of_offsets is the distance between the previ-
+              ous ending grid point and the current ending grid point for  the
+              site_row.  This option may be specified multiple times to define
+              high steps for other site_defs. However only  one  set  of  high
+              steps can be defined for each site_def.
+
+       -mask_pattern mask_one | mask_two
+              Specifies the mask pattern for the created track.
+
+       -relative_to core_area | block_boundary
+              Specifies  the alignment of track line. Based on the option, one
+              of the track line will be aligned to lower boundary of core area
+              bounding  box  or  block  bounding box.  Although tracks will be
+              created in complete block boundary.   This  option  is  mutually
+              exclusive with -coord and -bbox option.
+
+       -offset start_x_or_y
+              Specifies  the  offset  of track line with respect to value pro-
+              vided in -relative_to option.  First track line after  start  of
+              core  area  or block boundary bounding box will be on a distance
+              of value provided as part of the option. This option can be used
+              only with -relative_to option.
+
+       -routing_guide_width width
+              Specifies  the  width of the routing guide to create around each
+              track.  This option requires the use of the  -routing_guide_off-
+              set option.
+
+       -routing_guide_offset offset
+              Specifies  the offset from the track that the routing guide will
+              be created.  If the track is vertical, then the offset is in the
+              X  direction. If the track is horizontal, the offset is in the Y
+              direction.   This  option  requires  the  use  of   the   -rout-
+              ing_guide_width option.
+
+       -routing_guide_prefix prefix
+              Specifies  the prefix to use for each routing guide created with
+              this command.  The default prefix is RG.  This  option  requires
+              the  use  of  the -routing_guide_width and -routing_guide_offset
+              options.
+
+       -allow_large_via_cuts allow_cut_pattern
+              Specifies a boolean pattern to designate individual wire  tracks
+              as suitable for large via cuts. The pattern is repeated over the
+              number of wire tracks represented by the track object. For exam-
+              ple, a pattern of "1 0" means that every other wire track start-
+              ing with the first is marked as allowing large via cuts. This is
+              an optional option.
+
+DESCRIPTION
+       This  command  creates a group of tracks on the floorplan so the router
+       can use them to perform detail routing.  You  must  specify  a  routing
+       layer  for  the  tracks. The tracks can be saved in the Design Exchange
+       Format (DEF) file or the design database file.
+
+       By default, this command creates a single track object. If the geometry
+       specified  by the -bbox option decomposes into multiple rectangles, the
+       tool creates one track object per rectangle. The command returns a col-
+       lection that contains the created track objects.
+
+       The  -end_grid_low_offset,  -end_grid_high_offset, -end_grid_low_steps,
+       and -end_grid_high_steps options specify a nonuniform grid  of  allowed
+       endpoints  for  wires. The low grid applies to left or bottom edges for
+       horizontal or vertical tracks respectively. The high  grid  applies  to
+       right or top edges.
+
+       Wires  can  pass over these endpoints. If a wire terminates, the end of
+       the wire must be on the grid. Grid points  can  be  left  untouched  or
+       uncovered by a wire.
+
+       For example, the following options describe a nonuniform grid:
+         -end_grid_low_offset 0
+         -end_grid_high_offset 2
+         -end_grid_low_steps {3,2}
+         -end_grid_high_steps {4,3}
+
+       And form the following grid points:
+         Low grid points are  x = 0, 3, 5, 8, 10, 13, 15
+         High grid points are x = 2, 6, 9, 13, 16, 20, 23
+
+       In this example, a wire can have a left edge at x = 10 and a right edge
+       at x = 23. Another wire can have a left edge at x = 0 and a right  edge
+       at  x  =  6.   These points form an abstract, nonuniform grid that con-
+       strains the router and specifies where wires can start and end.
+
+       To specify a row-based nonuniform grid,  the  -end_grid_low_offset  and
+       -end_grid_high_offset     options     can     be    used    with    the
+       -row_end_grid_low_steps  and  -row_end_grid_high_steps  options.   This
+       works  similarly  to  the  -end_grid_low_steps and -end_grid_high_steps
+       options except that each list of steps applies only  to  the  site_rows
+       that  use  the  specified site_def. This command uses these options and
+       the existing site_row pattern in the block to generate the  appropriate
+       end_grid_low_steps and end_grid_high_steps for the track.
+
+       For example, the following options describe a row-based nonuniform grid
+       on a block having site_rows that alternate  between  site_def  'unit10'
+       and  'unit12'  (i.e., first row uses site_def 'unit10', second row uses
+       site_def 'unit12', etc). Site_def 'unit10' has a height of 10. Site_def
+       'unit12' has a height of 12.
+         -end_grid_low_offset 0
+         -end_grid_high_offset 2
+         -row_end_grid_low_steps {unit10 {3 2}}
+         -row_end_grid_high_steps {unit10 (3 2}}
+         -row_end_grid_low_steps {unit12 {3}}
+         -row_end_grid_high_steps {unit12 (3}}
+
+       The tool automatically generates the below end_grid_low_steps and
+       end_grid_high_steps for the track based on the block's site_row pattern.
+         Track end_grid_low_steps = { 3 2 3 2 3 3 3 3 }
+         Track end_grid_high_stpes = { 3 2 3 2 3 3 3 3 }
+
+       This forms the following grid points for the track:
+         Low grid points are x = 0, 3, 5, 8, 10, 13, 16, 19, 22
+         High grid points are x = 2, 5, 7, 10, 12, 15, 18, 21, 24
+
+       The  -routing_guide_width and -routing_guide_offset options allow spec-
+       ify a routing guide to be generated around each track. The  values  are
+       dependent on the direction of the tracks.
+
+   Multicorner-Multimode Support
+       This command has no dependency on scenario-specific information.
+
+EXAMPLES
+       The  following  example creates routing tracks for the M3 routing layer
+       on the floorplan and reports the newly created routing tracks.
+
+         prompt> create_track -layer M3
+         Warning: Direction is not specified. Using the layer preferred
+         direction. (NDMUI-125)
+         Warning: Count value is not specified. Covering the bounding box of
+         track, depending on its space value. (NDMUI-136)
+         Warning: Coordinate value is not specified. Using coordinate that is
+         half of the space distance inside of the die area. (NDMUI-122)
+         Warning: Space is not specified. Using pitch. (NDMUI-124)
+         {TRACK_28}
+
+         prompt> report_tracks -layer M3
+         Layer          Direction     Start         Tracks    Pitch       Attr
+         ------------------------------------------------------------------------
+         M3             Y             0.152         7333      0.304       default
+         1
+
+       The following example creates tracks within a rectilinear bounding box.
+       The  tool  decomposes  the bounding box into two rectangles and creates
+       two track objects.
+
+         prompt> create_track -layer M3 \
+            -bbox {{0 0} {20 0} {20 20} {10 20} {10 10} {0 10}}
+
+         prompt> report_tracks -layer M3
+         Layer          Direction     Start         Tracks    Pitch       Attr
+         ------------------------------------------------------------------------
+         M3             Y             10.032        33        0.304       default
+         M3             Y             0.000         33        0.304       default
+         1
+
+         prompt> get_tracks -filter "layer_name==M3"
+         {TRACK_0 TRACK_1}
+
+       The following example uses the  -end_grid_*  options  to  specify  grid
+       points.
+
+         prompt> create_track -layer M3 -coord 0.96 -space 0.32 -dir Y \
+            -width 0.32 -end_grid_low_offset 0.32 -end_grid_high_offset 0.96 \
+            -end_grid_low_steps { 1.6 1.6 1.6 1.6 } \
+            -end_grid_high_steps { 1.6 1.6 1.6 1.6 }
+
+         prompt> report_tracks -layer M3
+         Layer          Direction     Start         Tracks    Pitch
+              Attr                              Edge_alignment
+         Low_offset     High_offset    Low_steps           High_steps
+         -------------------------------------------------------------------------
+         M3             Y             0.960         6966      0.320
+              non-reserved, width=0.320
+         0.320          0.960          1.600,1.600,1.600,1.600
+                                                           1.600,1.600,1.600,1.600
+         1
+
+       The   following   example  uses  the  -end_grid_*  options  along  with
+       -end_grid_relative_to to specify grid points.
+
+         prompt> get_attribute [get_core_area ] bbox
+         {10.5600 21.1200} {78.2000 79.9600}
+
+         prompt> create_track -layer M1 -dir Y -mask_pattern mask_one \
+            -end_grid_high_steps {3 2 1} -end_grid_low_steps {1.5 2.5 4} \
+            -end_grid_high_offset 4 -end_grid_low_offset 5 -end_grid_relative_to core_area
+
+         prompt> report_tracks -layer M1
+         Layer          Direction     Start         Tracks    Pitch
+              Attr     Mask_pattern                    Edge_alignment
+         Low_offset     High_offset    Low_steps           High_steps
+         -------------------------------------------------------------------------
+         M1             Y             0.140         478       0.280
+              default    mask_one
+         7.560          2.560          1.500,2.500,4.000
+                                                           3.000,2.000,1.000
+         1
+
+SEE ALSO
+       get_tracks(2)
+       remove_tracks(2)
+       report_tracks(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

@@ -1,0 +1,1712 @@
+****************************************
+Report : timing
+        -path_type full
+        -delay_type max
+        -max_paths 20
+        -report_by design
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Fri May  8 13:21:30 2026
+****************************************
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: instr_addr_o[3] (output port clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: **reg2out_default**
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2196/Y (NAND3X0_HVT)
+                                                   0.84      2.77 f
+  u_core/core_i/cs_registers_i/U2233/Y (AO21X1_HVT)
+                                                   0.12      2.88 f
+  u_core/core_i/cs_registers_i/U2234/Y (AO22X1_HVT)
+                                                   0.28      3.16 f
+  u_core/core_i/id_stage_i/U151/Y (AO22X1_HVT)     0.19      3.35 f
+  u_core/core_i/id_stage_i/U152/Y (INVX1_HVT)      0.04      3.39 r
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.16      3.55 f
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.06      3.61 r
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.12      3.74 f
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.04      3.77 r
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.14      3.91 f
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.09      3.99 r
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.07      4.06 f
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      4.14 f
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      4.21 f
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      4.27 f
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.06      4.34 f
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.08      4.42 r
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.13      4.54 f
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      4.62 f
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      4.68 f
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.06      4.74 f
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.09      4.83 r
+  u_core/core_i/id_stage_i/U177/Y (OR2X1_HVT)      0.11      4.94 r
+  u_core/core_i/id_stage_i/U178/Y (AO21X1_HVT)     0.08      5.02 r
+  u_core/core_i/id_stage_i/U3188/Y (NAND4X0_HVT)   0.09      5.12 f
+  u_core/core_i/id_stage_i/U3189/Y (INVX1_HVT)     0.03      5.15 r
+  u_core/core_i/id_stage_i/U3191/Y (NAND4X0_HVT)   0.80      5.95 f
+  u_core/core_i/U2487/Y (NBUFFX4_HVT)              0.19      6.15 f
+  u_core/core_i/U2492/Y (INVX1_HVT)                0.43      6.58 r
+  u_core/core_i/U4419/Y (NOR2X0_HVT)               0.19      6.78 f
+  u_core/core_i/U4421/Y (NAND3X0_HVT)              0.12      6.89 r
+  u_core/core_i/U2537/Y (INVX1_HVT)                0.71      7.60 f
+  u_core/core_i/U4805/Y (OA221X1_HVT)              0.22      7.83 f
+  u_core/core_i/U4809/Y (NOR4X1_HVT)               0.14      7.97 r
+  u_core/core_i/U4810/Y (AND2X1_HVT)               0.06      8.03 r
+  u_core/core_i/U4812/Y (AND2X1_HVT)               0.09      8.11 r
+  u_core/core_i/U5491/Y (NAND2X0_HVT)              0.10      8.21 f
+  u_core/core_i/U5492/Y (AO22X1_HVT)               0.20      8.41 f
+  instr_addr_o[3] (out)                            0.00      8.41 f
+  data arrival time                                          8.41
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  clock uncertainty                               -0.10      9.90
+  output external delay                           -1.00      8.90
+  data required time                                         8.90
+  ------------------------------------------------------------------------
+  data required time                                         8.90
+  data arrival time                                         -8.41
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.49
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: instr_addr_o[7] (output port clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: **reg2out_default**
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2196/Y (NAND3X0_HVT)
+                                                   0.84      2.77 f
+  u_core/core_i/cs_registers_i/U2233/Y (AO21X1_HVT)
+                                                   0.12      2.88 f
+  u_core/core_i/cs_registers_i/U2234/Y (AO22X1_HVT)
+                                                   0.28      3.16 f
+  u_core/core_i/id_stage_i/U151/Y (AO22X1_HVT)     0.19      3.35 f
+  u_core/core_i/id_stage_i/U152/Y (INVX1_HVT)      0.04      3.39 r
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.16      3.55 f
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.06      3.61 r
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.12      3.74 f
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.04      3.77 r
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.14      3.91 f
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.09      3.99 r
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.07      4.06 f
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      4.14 f
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      4.21 f
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      4.27 f
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.06      4.34 f
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.08      4.42 r
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.13      4.54 f
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      4.62 f
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      4.68 f
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.06      4.74 f
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.09      4.83 r
+  u_core/core_i/id_stage_i/U177/Y (OR2X1_HVT)      0.11      4.94 r
+  u_core/core_i/id_stage_i/U178/Y (AO21X1_HVT)     0.08      5.02 r
+  u_core/core_i/id_stage_i/U3188/Y (NAND4X0_HVT)   0.09      5.12 f
+  u_core/core_i/id_stage_i/U3189/Y (INVX1_HVT)     0.03      5.15 r
+  u_core/core_i/id_stage_i/U3191/Y (NAND4X0_HVT)   0.80      5.95 f
+  u_core/core_i/U2487/Y (NBUFFX4_HVT)              0.19      6.15 f
+  u_core/core_i/U2492/Y (INVX1_HVT)                0.43      6.58 r
+  u_core/core_i/U4419/Y (NOR2X0_HVT)               0.19      6.78 f
+  u_core/core_i/U4421/Y (NAND3X0_HVT)              0.12      6.89 r
+  u_core/core_i/U2537/Y (INVX1_HVT)                0.71      7.60 f
+  u_core/core_i/U4752/Y (AO22X1_HVT)               0.25      7.85 f
+  u_core/core_i/U4753/Y (OR2X2_HVT)                0.07      7.92 f
+  u_core/core_i/U4754/Y (AO21X1_HVT)               0.05      7.98 f
+  u_core/core_i/U4755/Y (OR2X2_HVT)                0.05      8.03 f
+  u_core/core_i/U4756/Y (AO21X2_HVT)               0.08      8.11 f
+  u_core/core_i/U5515/Y (AO221X1_HVT)              0.08      8.19 f
+  u_core/core_i/U5516/Y (AO22X1_HVT)               0.21      8.40 f
+  instr_addr_o[7] (out)                            0.01      8.40 f
+  data arrival time                                          8.40
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  clock uncertainty                               -0.10      9.90
+  output external delay                           -1.00      8.90
+  data required time                                         8.90
+  ------------------------------------------------------------------------
+  data required time                                         8.90
+  data arrival time                                         -8.40
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.50
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/clk_gate_mult_operator_ex_o_reg/latch (rising clock gating-check end-point clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2195/Y (AND4X1_HVT)
+                                                   0.35      2.28 r
+  u_core/core_i/cs_registers_i/U2230/Y (AO22X1_HVT)
+                                                   0.31      2.59 r
+  u_core/core_i/id_stage_i/U150/Y (NAND2X0_HVT)    0.22      2.80 f
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.11      2.91 r
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.07      2.98 f
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.06      3.04 r
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.05      3.08 f
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.06      3.14 r
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.08      3.22 f
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.06      3.28 r
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      3.36 r
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      3.43 r
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      3.50 r
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.07      3.57 r
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.10      3.67 f
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.05      3.72 r
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      3.80 r
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      3.86 r
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.07      3.93 r
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.27      4.19 f
+  u_core/core_i/id_stage_i/U205/Y (INVX1_HVT)      0.05      4.24 r
+  u_core/core_i/id_stage_i/U2312/Y (AO21X1_HVT)    0.18      4.42 r
+  u_core/core_i/id_stage_i/U2331/Y (NAND3X0_HVT)   0.57      4.99 f
+  u_core/core_i/id_stage_i/U2332/Y (NAND2X0_HVT)   0.18      5.17 r
+  u_core/core_i/id_stage_i/U2349/Y (NAND4X0_HVT)   1.08      6.26 f
+  u_core/core_i/id_stage_i/U2350/Y (INVX1_HVT)     0.85      7.11 r
+  u_core/core_i/id_stage_i/U2359/Y (NAND2X0_HVT)   0.36      7.47 f
+  u_core/core_i/id_stage_i/U2360/Y (INVX1_HVT)     0.42      7.89 r
+  u_core/core_i/id_stage_i/U2363/Y (AND2X2_HVT)    0.22      8.12 r
+  u_core/core_i/id_stage_i/U209/Y (NBUFFX4_HVT)    0.10      8.22 r
+  u_core/core_i/id_stage_i/U3062/Y (AND2X1_HVT)    0.19      8.41 r
+  u_core/core_i/id_stage_i/U3066/Y (NAND3X0_HVT)   0.61      9.02 f
+  u_core/core_i/id_stage_i/U3081/Y (INVX1_HVT)     0.18      9.19 r
+  u_core/core_i/id_stage_i/clk_gate_mult_operator_ex_o_reg/latch/EN (CGLPPRX2_RVT)
+                                                   0.00      9.19 r
+  data arrival time                                          9.19
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                     -0.11      9.89
+  u_core/core_i/id_stage_i/clk_gate_mult_operator_ex_o_reg/latch/CLK (CGLPPRX2_RVT)
+                                                   0.00      9.89 r
+  clock uncertainty                               -0.10      9.79
+  library setup time                              -0.03      9.76
+  data required time                                         9.76
+  ------------------------------------------------------------------------
+  data required time                                         9.76
+  data arrival time                                         -9.19
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.57
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/clk_gate_mult_operand_c_ex_o_reg/latch (rising clock gating-check end-point clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2195/Y (AND4X1_HVT)
+                                                   0.35      2.28 r
+  u_core/core_i/cs_registers_i/U2230/Y (AO22X1_HVT)
+                                                   0.31      2.59 r
+  u_core/core_i/id_stage_i/U150/Y (NAND2X0_HVT)    0.22      2.80 f
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.11      2.91 r
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.07      2.98 f
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.06      3.04 r
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.05      3.08 f
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.06      3.14 r
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.08      3.22 f
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.06      3.28 r
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      3.36 r
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      3.43 r
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      3.50 r
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.07      3.57 r
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.10      3.67 f
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.05      3.72 r
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      3.80 r
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      3.86 r
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.07      3.93 r
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.27      4.19 f
+  u_core/core_i/id_stage_i/U205/Y (INVX1_HVT)      0.05      4.24 r
+  u_core/core_i/id_stage_i/U2312/Y (AO21X1_HVT)    0.18      4.42 r
+  u_core/core_i/id_stage_i/U2331/Y (NAND3X0_HVT)   0.57      4.99 f
+  u_core/core_i/id_stage_i/U2332/Y (NAND2X0_HVT)   0.18      5.17 r
+  u_core/core_i/id_stage_i/U2349/Y (NAND4X0_HVT)   1.08      6.26 f
+  u_core/core_i/id_stage_i/U2350/Y (INVX1_HVT)     0.85      7.11 r
+  u_core/core_i/id_stage_i/U2359/Y (NAND2X0_HVT)   0.36      7.47 f
+  u_core/core_i/id_stage_i/U2360/Y (INVX1_HVT)     0.42      7.89 r
+  u_core/core_i/id_stage_i/U2363/Y (AND2X2_HVT)    0.22      8.12 r
+  u_core/core_i/id_stage_i/U209/Y (NBUFFX4_HVT)    0.10      8.22 r
+  u_core/core_i/id_stage_i/U3062/Y (AND2X1_HVT)    0.19      8.41 r
+  u_core/core_i/id_stage_i/U3066/Y (NAND3X0_HVT)   0.61      9.02 f
+  u_core/core_i/id_stage_i/U3067/Y (NAND2X0_HVT)   0.19      9.21 r
+  u_core/core_i/id_stage_i/clk_gate_mult_operand_c_ex_o_reg/latch/EN (CGLPPRX2_RVT)
+                                                   0.00      9.21 r
+  data arrival time                                          9.21
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                     -0.08      9.92
+  u_core/core_i/id_stage_i/clk_gate_mult_operand_c_ex_o_reg/latch/CLK (CGLPPRX2_RVT)
+                                                   0.00      9.92 r
+  clock uncertainty                               -0.10      9.82
+  library setup time                              -0.04      9.78
+  data required time                                         9.78
+  ------------------------------------------------------------------------
+  data required time                                         9.78
+  data arrival time                                         -9.21
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.57
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/mult_en_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2195/Y (AND4X1_HVT)
+                                                   0.35      2.28 r
+  u_core/core_i/cs_registers_i/U2230/Y (AO22X1_HVT)
+                                                   0.31      2.59 r
+  u_core/core_i/id_stage_i/U150/Y (NAND2X0_HVT)    0.22      2.80 f
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.11      2.91 r
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.07      2.98 f
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.06      3.04 r
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.05      3.08 f
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.06      3.14 r
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.08      3.22 f
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.06      3.28 r
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      3.36 r
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      3.43 r
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      3.50 r
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.07      3.57 r
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.10      3.67 f
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.05      3.72 r
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      3.80 r
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      3.86 r
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.07      3.93 r
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.27      4.19 f
+  u_core/core_i/id_stage_i/U205/Y (INVX1_HVT)      0.05      4.24 r
+  u_core/core_i/id_stage_i/U2312/Y (AO21X1_HVT)    0.18      4.42 r
+  u_core/core_i/id_stage_i/U2331/Y (NAND3X0_HVT)   0.57      4.99 f
+  u_core/core_i/id_stage_i/U2332/Y (NAND2X0_HVT)   0.18      5.17 r
+  u_core/core_i/id_stage_i/U2349/Y (NAND4X0_HVT)   1.08      6.26 f
+  u_core/core_i/id_stage_i/U2350/Y (INVX1_HVT)     0.85      7.11 r
+  u_core/core_i/id_stage_i/U2359/Y (NAND2X0_HVT)   0.36      7.47 f
+  u_core/core_i/id_stage_i/U2360/Y (INVX1_HVT)     0.42      7.89 r
+  u_core/core_i/id_stage_i/U2363/Y (AND2X2_HVT)    0.22      8.12 r
+  u_core/core_i/id_stage_i/U209/Y (NBUFFX4_HVT)    0.10      8.22 r
+  u_core/core_i/id_stage_i/U3062/Y (AND2X1_HVT)    0.19      8.41 r
+  u_core/core_i/id_stage_i/U3066/Y (NAND3X0_HVT)   0.61      9.02 f
+  u_core/core_i/id_stage_i/U3081/Y (INVX1_HVT)     0.18      9.19 r
+  u_core/core_i/id_stage_i/mult_en_ex_o_reg/D (SDFFARX1_RVT)
+                                                   0.00      9.19 r
+  data arrival time                                          9.19
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/mult_en_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.11      9.79
+  data required time                                         9.79
+  ------------------------------------------------------------------------
+  data required time                                         9.79
+  data arrival time                                         -9.19
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.60
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/alu_operand_b_ex_o_reg[30] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/S (FADDX1_HVT)               0.09      7.48 f
+  u_core/core_i/U3887/Y (AOI22X1_HVT)              0.11      7.59 r
+  u_core/core_i/U3888/Y (AND2X1_HVT)               0.07      7.65 r
+  u_core/core_i/U3890/Y (AND2X1_HVT)               0.05      7.71 r
+  u_core/core_i/U3891/Y (AND2X1_HVT)               0.08      7.79 r
+  u_core/core_i/U3893/Y (AND2X1_HVT)               0.07      7.85 r
+  u_core/core_i/U3894/Y (OA221X1_HVT)              0.09      7.94 r
+  u_core/core_i/U3900/Y (NAND4X0_HVT)              0.31      8.26 f
+  u_core/core_i/U3901/Y (OA22X1_HVT)               0.23      8.49 f
+  u_core/core_i/id_stage_i/U248/Y (NBUFFX4_HVT)    0.13      8.62 f
+  u_core/core_i/id_stage_i/U2545/Y (AO222X1_HVT)   0.14      8.76 f
+  u_core/core_i/id_stage_i/U2546/Y (AO22X1_HVT)    0.11      8.87 f
+  u_core/core_i/id_stage_i/U2547/Y (OR2X1_HVT)     0.06      8.93 f
+  u_core/core_i/id_stage_i/U2548/Y (AO21X1_HVT)    0.07      9.01 f
+  u_core/core_i/id_stage_i/U2960/Y (AND2X1_HVT)    0.16      9.17 f
+  u_core/core_i/id_stage_i/alu_operand_b_ex_o_reg[30]/D (SDFFARX1_RVT)
+                                                   0.00      9.17 f
+  data arrival time                                          9.17
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/alu_operand_b_ex_o_reg[30]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.11      9.79
+  data required time                                         9.79
+  ------------------------------------------------------------------------
+  data required time                                         9.79
+  data arrival time                                         -9.17
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.62
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/register_file_i/mem_reg[13][23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3277/Y (INVX1_HVT)                0.05      8.12 r
+  u_core/core_i/U3279/Y (NAND2X0_HVT)              0.14      8.26 f
+  u_core/core_i/U3347/Y (OA22X1_HVT)               0.23      8.50 f
+  u_core/core_i/id_stage_i/U241/Y (NBUFFX2_HVT)    0.32      8.82 f
+  u_core/core_i/id_stage_i/U4089/Y (AO22X1_HVT)    0.31      9.13 f
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[13][23]/D (SDFFARX1_RVT)
+                                                   0.00      9.14 f
+  data arrival time                                          9.14
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[13][23]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.12      9.78
+  data required time                                         9.78
+  ------------------------------------------------------------------------
+  data required time                                         9.78
+  data arrival time                                         -9.14
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.64
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/register_file_i/mem_reg[10][23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3277/Y (INVX1_HVT)                0.05      8.12 r
+  u_core/core_i/U3279/Y (NAND2X0_HVT)              0.14      8.26 f
+  u_core/core_i/U3347/Y (OA22X1_HVT)               0.23      8.50 f
+  u_core/core_i/id_stage_i/U241/Y (NBUFFX2_HVT)    0.32      8.82 f
+  u_core/core_i/id_stage_i/U4215/Y (AO22X1_HVT)    0.30      9.12 f
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[10][23]/D (SDFFARX1_RVT)
+                                                   0.00      9.13 f
+  data arrival time                                          9.13
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[10][23]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.12      9.78
+  data required time                                         9.78
+  ------------------------------------------------------------------------
+  data required time                                         9.78
+  data arrival time                                         -9.13
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.65
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/alu_operand_b_ex_o_reg[26] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U2959/Y (OR2X1_HVT)                0.16      8.23 f
+  u_core/core_i/U3570/Y (OA22X1_HVT)               0.17      8.40 f
+  u_core/core_i/id_stage_i/U261/Y (NBUFFX2_HVT)    0.24      8.64 f
+  u_core/core_i/id_stage_i/U2692/Y (AO222X1_HVT)   0.19      8.83 f
+  u_core/core_i/id_stage_i/U2694/Y (AO222X1_HVT)   0.13      8.96 f
+  u_core/core_i/id_stage_i/U2956/Y (AND2X1_HVT)    0.16      9.12 f
+  u_core/core_i/id_stage_i/alu_operand_b_ex_o_reg[26]/D (SDFFARX1_RVT)
+                                                   0.00      9.12 f
+  data arrival time                                          9.12
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/alu_operand_b_ex_o_reg[26]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.11      9.79
+  data required time                                         9.79
+  ------------------------------------------------------------------------
+  data required time                                         9.79
+  data arrival time                                         -9.12
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.66
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: instr_addr_o[8] (output port clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: **reg2out_default**
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2196/Y (NAND3X0_HVT)
+                                                   0.84      2.77 f
+  u_core/core_i/cs_registers_i/U2233/Y (AO21X1_HVT)
+                                                   0.12      2.88 f
+  u_core/core_i/cs_registers_i/U2234/Y (AO22X1_HVT)
+                                                   0.28      3.16 f
+  u_core/core_i/id_stage_i/U151/Y (AO22X1_HVT)     0.19      3.35 f
+  u_core/core_i/id_stage_i/U152/Y (INVX1_HVT)      0.04      3.39 r
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.16      3.55 f
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.06      3.61 r
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.12      3.74 f
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.04      3.77 r
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.14      3.91 f
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.09      3.99 r
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.07      4.06 f
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      4.14 f
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      4.21 f
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      4.27 f
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.06      4.34 f
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.08      4.42 r
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.13      4.54 f
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      4.62 f
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      4.68 f
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.06      4.74 f
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.09      4.83 r
+  u_core/core_i/id_stage_i/U177/Y (OR2X1_HVT)      0.11      4.94 r
+  u_core/core_i/id_stage_i/U178/Y (AO21X1_HVT)     0.08      5.02 r
+  u_core/core_i/id_stage_i/U3188/Y (NAND4X0_HVT)   0.09      5.12 f
+  u_core/core_i/id_stage_i/U3189/Y (INVX1_HVT)     0.03      5.15 r
+  u_core/core_i/id_stage_i/U3191/Y (NAND4X0_HVT)   0.80      5.95 f
+  u_core/core_i/U2487/Y (NBUFFX4_HVT)              0.19      6.15 f
+  u_core/core_i/U2492/Y (INVX1_HVT)                0.43      6.58 r
+  u_core/core_i/U4419/Y (NOR2X0_HVT)               0.19      6.78 f
+  u_core/core_i/U4421/Y (NAND3X0_HVT)              0.12      6.89 r
+  u_core/core_i/U2537/Y (INVX1_HVT)                0.71      7.60 f
+  u_core/core_i/U4735/Y (AND2X1_HVT)               0.15      7.75 f
+  u_core/core_i/U4737/Y (AND2X1_HVT)               0.07      7.83 f
+  u_core/core_i/U4743/Y (OR3X2_HVT)                0.09      7.91 f
+  u_core/core_i/U2844/Y (INVX1_HVT)                0.05      7.96 r
+  u_core/core_i/U5521/Y (NAND3X0_HVT)              0.14      8.09 f
+  u_core/core_i/U5522/Y (AO22X1_HVT)               0.13      8.23 f
+  instr_addr_o[8] (out)                            0.00      8.23 f
+  data arrival time                                          8.23
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  clock uncertainty                               -0.10      9.90
+  output external delay                           -1.00      8.90
+  data required time                                         8.90
+  ------------------------------------------------------------------------
+  data required time                                         8.90
+  data arrival time                                         -8.23
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.67
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/mult_operand_c_ex_o_reg[23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3277/Y (INVX1_HVT)                0.05      8.12 r
+  u_core/core_i/U3279/Y (NAND2X0_HVT)              0.14      8.26 f
+  u_core/core_i/U3347/Y (OA22X1_HVT)               0.23      8.50 f
+  u_core/core_i/id_stage_i/U241/Y (NBUFFX2_HVT)    0.32      8.82 f
+  u_core/core_i/id_stage_i/U2066/Y (AO222X1_HVT)   0.22      9.05 f
+  u_core/core_i/id_stage_i/U2394/Y (AO22X1_HVT)    0.10      9.15 f
+  u_core/core_i/id_stage_i/mult_operand_c_ex_o_reg[23]/D (SDFFARX1_RVT)
+                                                   0.00      9.15 f
+  data arrival time                                          9.15
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/mult_operand_c_ex_o_reg[23]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.08      9.82
+  data required time                                         9.82
+  ------------------------------------------------------------------------
+  data required time                                         9.82
+  data arrival time                                         -9.15
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.68
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/register_file_i/mem_reg[10][20] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3079/Y (OR2X1_HVT)                0.17      8.24 f
+  u_core/core_i/U3138/Y (OA22X1_HVT)               0.21      8.45 f
+  u_core/core_i/id_stage_i/U268/Y (NBUFFX2_HVT)    0.33      8.78 f
+  u_core/core_i/id_stage_i/U4212/Y (AO22X1_HVT)    0.31      9.10 f
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[10][20]/D (SDFFARX1_RVT)
+                                                   0.00      9.10 f
+  data arrival time                                          9.10
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[10][20]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.12      9.78
+  data required time                                         9.78
+  ------------------------------------------------------------------------
+  data required time                                         9.78
+  data arrival time                                         -9.10
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.68
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/register_file_i/mem_reg[15][23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3277/Y (INVX1_HVT)                0.05      8.12 r
+  u_core/core_i/U3279/Y (NAND2X0_HVT)              0.14      8.26 f
+  u_core/core_i/U3347/Y (OA22X1_HVT)               0.23      8.50 f
+  u_core/core_i/id_stage_i/U241/Y (NBUFFX2_HVT)    0.32      8.82 f
+  u_core/core_i/id_stage_i/U4005/Y (AO22X1_HVT)    0.28      9.10 f
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[15][23]/D (SDFFARX1_RVT)
+                                                   0.00      9.10 f
+  data arrival time                                          9.10
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[15][23]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.11      9.79
+  data required time                                         9.79
+  ------------------------------------------------------------------------
+  data required time                                         9.79
+  data arrival time                                         -9.10
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.69
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/register_file_i/mem_reg[9][23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3277/Y (INVX1_HVT)                0.05      8.12 r
+  u_core/core_i/U3279/Y (NAND2X0_HVT)              0.14      8.26 f
+  u_core/core_i/U3347/Y (OA22X1_HVT)               0.23      8.50 f
+  u_core/core_i/id_stage_i/U241/Y (NBUFFX2_HVT)    0.32      8.82 f
+  u_core/core_i/id_stage_i/U4257/Y (AO22X1_HVT)    0.28      9.10 f
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[9][23]/D (SDFFARX1_RVT)
+                                                   0.00      9.10 f
+  data arrival time                                          9.10
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[9][23]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.11      9.79
+  data required time                                         9.79
+  ------------------------------------------------------------------------
+  data required time                                         9.79
+  data arrival time                                         -9.10
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.69
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: instr_addr_o[10] (output port clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: **reg2out_default**
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2196/Y (NAND3X0_HVT)
+                                                   0.84      2.77 f
+  u_core/core_i/cs_registers_i/U2233/Y (AO21X1_HVT)
+                                                   0.12      2.88 f
+  u_core/core_i/cs_registers_i/U2234/Y (AO22X1_HVT)
+                                                   0.28      3.16 f
+  u_core/core_i/id_stage_i/U151/Y (AO22X1_HVT)     0.19      3.35 f
+  u_core/core_i/id_stage_i/U152/Y (INVX1_HVT)      0.04      3.39 r
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.16      3.55 f
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.06      3.61 r
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.12      3.74 f
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.04      3.77 r
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.14      3.91 f
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.09      3.99 r
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.07      4.06 f
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      4.14 f
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      4.21 f
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      4.27 f
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.06      4.34 f
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.08      4.42 r
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.13      4.54 f
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      4.62 f
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      4.68 f
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.06      4.74 f
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.09      4.83 r
+  u_core/core_i/id_stage_i/U177/Y (OR2X1_HVT)      0.11      4.94 r
+  u_core/core_i/id_stage_i/U178/Y (AO21X1_HVT)     0.08      5.02 r
+  u_core/core_i/id_stage_i/U3188/Y (NAND4X0_HVT)   0.09      5.12 f
+  u_core/core_i/id_stage_i/U3189/Y (INVX1_HVT)     0.03      5.15 r
+  u_core/core_i/id_stage_i/U3191/Y (NAND4X0_HVT)   0.80      5.95 f
+  u_core/core_i/U2487/Y (NBUFFX4_HVT)              0.19      6.15 f
+  u_core/core_i/U2492/Y (INVX1_HVT)                0.43      6.58 r
+  u_core/core_i/U4419/Y (NOR2X0_HVT)               0.19      6.78 f
+  u_core/core_i/U4421/Y (NAND3X0_HVT)              0.12      6.89 r
+  u_core/core_i/U2537/Y (INVX1_HVT)                0.71      7.60 f
+  u_core/core_i/U4712/Y (AND2X1_HVT)               0.16      7.76 f
+  u_core/core_i/U4714/Y (AND2X1_HVT)               0.08      7.84 f
+  u_core/core_i/U4720/Y (NOR3X2_HVT)               0.12      7.96 r
+  u_core/core_i/U5533/Y (NAND3X0_HVT)              0.13      8.08 f
+  u_core/core_i/U5534/Y (AO22X1_HVT)               0.12      8.20 f
+  instr_addr_o[10] (out)                           0.00      8.20 f
+  data arrival time                                          8.20
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  clock uncertainty                               -0.10      9.90
+  output external delay                           -1.00      8.90
+  data required time                                         8.90
+  ------------------------------------------------------------------------
+  data required time                                         8.90
+  data arrival time                                         -8.20
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.70
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: instr_addr_o[6] (output port clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: **reg2out_default**
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2196/Y (NAND3X0_HVT)
+                                                   0.84      2.77 f
+  u_core/core_i/cs_registers_i/U2233/Y (AO21X1_HVT)
+                                                   0.12      2.88 f
+  u_core/core_i/cs_registers_i/U2234/Y (AO22X1_HVT)
+                                                   0.28      3.16 f
+  u_core/core_i/id_stage_i/U151/Y (AO22X1_HVT)     0.19      3.35 f
+  u_core/core_i/id_stage_i/U152/Y (INVX1_HVT)      0.04      3.39 r
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.16      3.55 f
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.06      3.61 r
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.12      3.74 f
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.04      3.77 r
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.14      3.91 f
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.09      3.99 r
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.07      4.06 f
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      4.14 f
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      4.21 f
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      4.27 f
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.06      4.34 f
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.08      4.42 r
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.13      4.54 f
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      4.62 f
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      4.68 f
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.06      4.74 f
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.09      4.83 r
+  u_core/core_i/id_stage_i/U177/Y (OR2X1_HVT)      0.11      4.94 r
+  u_core/core_i/id_stage_i/U178/Y (AO21X1_HVT)     0.08      5.02 r
+  u_core/core_i/id_stage_i/U3188/Y (NAND4X0_HVT)   0.09      5.12 f
+  u_core/core_i/id_stage_i/U3189/Y (INVX1_HVT)     0.03      5.15 r
+  u_core/core_i/id_stage_i/U3191/Y (NAND4X0_HVT)   0.80      5.95 f
+  u_core/core_i/U2487/Y (NBUFFX4_HVT)              0.19      6.15 f
+  u_core/core_i/U2492/Y (INVX1_HVT)                0.43      6.58 r
+  u_core/core_i/U4419/Y (NOR2X0_HVT)               0.19      6.78 f
+  u_core/core_i/U4421/Y (NAND3X0_HVT)              0.12      6.89 r
+  u_core/core_i/U2537/Y (INVX1_HVT)                0.71      7.60 f
+  u_core/core_i/U4760/Y (AND2X1_HVT)               0.16      7.76 f
+  u_core/core_i/U4762/Y (AND2X1_HVT)               0.08      7.84 f
+  u_core/core_i/U4771/Y (OR3X2_HVT)                0.10      7.94 f
+  u_core/core_i/U5508/Y (OR3X1_HVT)                0.08      8.02 f
+  u_core/core_i/U5509/Y (AO22X1_HVT)               0.18      8.19 f
+  instr_addr_o[6] (out)                            0.00      8.20 f
+  data arrival time                                          8.20
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  clock uncertainty                               -0.10      9.90
+  output external delay                           -1.00      8.90
+  data required time                                         8.90
+  ------------------------------------------------------------------------
+  data required time                                         8.90
+  data arrival time                                         -8.20
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.70
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/mult_operand_c_ex_o_reg[17] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U2901/Y (OR2X1_HVT)                0.17      8.24 f
+  u_core/core_i/U2956/Y (OA22X1_HVT)               0.22      8.46 f
+  u_core/core_i/id_stage_i/U275/Y (NBUFFX2_HVT)    0.33      8.79 f
+  u_core/core_i/id_stage_i/U1910/Y (AO222X1_HVT)   0.22      9.01 f
+  u_core/core_i/id_stage_i/U2388/Y (AO22X1_HVT)    0.11      9.11 f
+  u_core/core_i/id_stage_i/mult_operand_c_ex_o_reg[17]/D (SDFFARX1_RVT)
+                                                   0.00      9.11 f
+  data arrival time                                          9.11
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/mult_operand_c_ex_o_reg[17]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.08      9.82
+  data required time                                         9.82
+  ------------------------------------------------------------------------
+  data required time                                         9.82
+  data arrival time                                         -9.11
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.70
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/alu_operand_a_ex_o_reg[26] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U2959/Y (OR2X1_HVT)                0.16      8.23 f
+  u_core/core_i/U3570/Y (OA22X1_HVT)               0.17      8.40 f
+  u_core/core_i/id_stage_i/U261/Y (NBUFFX2_HVT)    0.24      8.64 f
+  u_core/core_i/id_stage_i/U2692/Y (AO222X1_HVT)   0.19      8.83 f
+  u_core/core_i/id_stage_i/U3049/Y (AO222X1_HVT)   0.12      8.95 f
+  u_core/core_i/id_stage_i/U3050/Y (AO22X1_HVT)    0.13      9.09 f
+  u_core/core_i/id_stage_i/alu_operand_a_ex_o_reg[26]/D (SDFFARX1_RVT)
+                                                   0.00      9.09 f
+  data arrival time                                          9.09
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/alu_operand_a_ex_o_reg[26]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.10      9.80
+  data required time                                         9.80
+  ------------------------------------------------------------------------
+  data required time                                         9.80
+  data arrival time                                         -9.09
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.71
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/csr_access_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: instr_addr_o[14] (output port clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: **reg2out_default**
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/id_stage_i/csr_access_ex_o_reg/Q (SDFFARX1_RVT)
+                                                   0.15      0.15 f
+  u_core/core_i/U312/Y (NBUFFX4_HVT)               0.08      0.23 f
+  u_core/core_i/U5805/Y (AND2X1_HVT)               0.20      0.43 f
+  u_core/core_i/cs_registers_i/U52/Y (INVX1_HVT)   0.38      0.81 r
+  u_core/core_i/cs_registers_i/U130/Y (AND4X1_HVT)
+                                                   0.30      1.11 r
+  u_core/core_i/cs_registers_i/U327/Y (NAND4X0_HVT)
+                                                   0.45      1.56 f
+  u_core/core_i/cs_registers_i/U84/Y (INVX1_HVT)   0.37      1.93 r
+  u_core/core_i/cs_registers_i/U2196/Y (NAND3X0_HVT)
+                                                   0.84      2.77 f
+  u_core/core_i/cs_registers_i/U2233/Y (AO21X1_HVT)
+                                                   0.12      2.88 f
+  u_core/core_i/cs_registers_i/U2234/Y (AO22X1_HVT)
+                                                   0.28      3.16 f
+  u_core/core_i/id_stage_i/U151/Y (AO22X1_HVT)     0.19      3.35 f
+  u_core/core_i/id_stage_i/U152/Y (INVX1_HVT)      0.04      3.39 r
+  u_core/core_i/id_stage_i/U154/Y (NAND3X0_HVT)    0.16      3.55 f
+  u_core/core_i/id_stage_i/U155/Y (INVX1_HVT)      0.06      3.61 r
+  u_core/core_i/id_stage_i/U158/Y (NAND3X0_HVT)    0.12      3.74 f
+  u_core/core_i/id_stage_i/U159/Y (INVX1_HVT)      0.04      3.77 r
+  u_core/core_i/id_stage_i/U161/Y (NAND3X0_HVT)    0.14      3.91 f
+  u_core/core_i/id_stage_i/U162/Y (INVX1_HVT)      0.09      3.99 r
+  u_core/core_i/id_stage_i/U164/Y (NAND2X0_HVT)    0.07      4.06 f
+  u_core/core_i/id_stage_i/U165/Y (AO21X1_HVT)     0.08      4.14 f
+  u_core/core_i/id_stage_i/U166/Y (AO21X1_HVT)     0.07      4.21 f
+  u_core/core_i/id_stage_i/U167/Y (AO21X1_HVT)     0.07      4.27 f
+  u_core/core_i/id_stage_i/U168/Y (AO21X1_HVT)     0.06      4.34 f
+  u_core/core_i/id_stage_i/U169/Y (AOI21X1_HVT)    0.08      4.42 r
+  u_core/core_i/id_stage_i/U172/Y (NAND3X0_HVT)    0.13      4.54 f
+  u_core/core_i/id_stage_i/U173/Y (OR2X1_HVT)      0.08      4.62 f
+  u_core/core_i/id_stage_i/U174/Y (AO21X1_HVT)     0.06      4.68 f
+  u_core/core_i/id_stage_i/U175/Y (AO21X1_HVT)     0.06      4.74 f
+  u_core/core_i/id_stage_i/U176/Y (NAND3X0_HVT)    0.09      4.83 r
+  u_core/core_i/id_stage_i/U177/Y (OR2X1_HVT)      0.11      4.94 r
+  u_core/core_i/id_stage_i/U178/Y (AO21X1_HVT)     0.08      5.02 r
+  u_core/core_i/id_stage_i/U3188/Y (NAND4X0_HVT)   0.09      5.12 f
+  u_core/core_i/id_stage_i/U3189/Y (INVX1_HVT)     0.03      5.15 r
+  u_core/core_i/id_stage_i/U3191/Y (NAND4X0_HVT)   0.80      5.95 f
+  u_core/core_i/U2487/Y (NBUFFX4_HVT)              0.19      6.15 f
+  u_core/core_i/U2492/Y (INVX1_HVT)                0.43      6.58 r
+  u_core/core_i/U4419/Y (NOR2X0_HVT)               0.19      6.78 f
+  u_core/core_i/U4421/Y (NAND3X0_HVT)              0.12      6.89 r
+  u_core/core_i/U2537/Y (INVX1_HVT)                0.71      7.60 f
+  u_core/core_i/U4662/Y (AND2X1_HVT)               0.16      7.76 f
+  u_core/core_i/U4664/Y (AND2X1_HVT)               0.08      7.83 f
+  u_core/core_i/U4670/Y (NOR3X2_HVT)               0.11      7.95 r
+  u_core/core_i/U5557/Y (NAND3X0_HVT)              0.14      8.08 f
+  u_core/core_i/U5558/Y (AO22X1_HVT)               0.11      8.19 f
+  instr_addr_o[14] (out)                           0.00      8.19 f
+  data arrival time                                          8.19
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  clock uncertainty                               -0.10      9.90
+  output external delay                           -1.00      8.90
+  data required time                                         8.90
+  ------------------------------------------------------------------------
+  data required time                                         8.90
+  data arrival time                                         -8.19
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.71
+
+
+
+  Startpoint: u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/id_stage_i/register_file_i/mem_reg[26][23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: max
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (ideal)                      0.00      0.00
+
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.00 r
+  u_core/core_i/ex_stage_i/mult_i/mulh_CS_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.12 r
+  u_core/core_i/U1008/Y (INVX1_HVT)                0.05      0.17 f
+  u_core/core_i/U1009/Y (NAND2X0_HVT)              0.18      0.35 r
+  u_core/core_i/U1010/Y (INVX1_HVT)                0.20      0.55 f
+  u_core/core_i/U1014/Y (NAND2X0_HVT)              0.14      0.69 r
+  u_core/core_i/U1015/Y (NAND2X0_HVT)              0.81      1.50 f
+  u_core/core_i/U1336/Y (INVX2_HVT)                0.26      1.76 r
+  u_core/core_i/U1088/Y (OA22X2_HVT)               0.27      2.03 r
+  u_core/core_i/U1648/Y (INVX1_HVT)                0.37      2.40 f
+  u_core/core_i/U1092/SO (HADDX1_HVT)              0.21      2.61 r
+  u_core/core_i/U1103/Y (NAND2X0_HVT)              0.45      3.06 f
+  u_core/core_i/U1304/Y (OA222X1_HVT)              0.29      3.35 f
+  u_core/core_i/U1305/SO (HADDX1_HVT)              0.13      3.48 f
+  u_core/core_i/U1347/S (FADDX1_HVT)               0.17      3.65 r
+  u_core/core_i/U1899/CO (FADDX1_HVT)              0.14      3.78 r
+  u_core/core_i/U1352/Y (AO222X1_HVT)              0.20      3.98 r
+  u_core/core_i/U1357/Y (AO222X1_HVT)              0.20      4.18 r
+  u_core/core_i/U1362/Y (AO222X1_HVT)              0.20      4.38 r
+  u_core/core_i/U1367/Y (AO222X1_HVT)              0.25      4.63 r
+  u_core/core_i/U1372/Y (AO222X1_HVT)              0.23      4.86 r
+  u_core/core_i/U1377/Y (AO222X1_HVT)              0.20      5.05 r
+  u_core/core_i/U1382/Y (AO222X1_HVT)              0.20      5.25 r
+  u_core/core_i/U1388/Y (AO222X1_HVT)              0.20      5.44 r
+  u_core/core_i/U1394/Y (AO222X1_HVT)              0.19      5.64 r
+  u_core/core_i/U1400/Y (AO222X1_HVT)              0.19      5.83 r
+  u_core/core_i/U1441/Y (AO222X1_HVT)              0.17      6.00 r
+  u_core/core_i/U1615/CO (FADDX2_HVT)              0.13      6.13 r
+  u_core/core_i/U1752/CO (FADDX2_HVT)              0.13      6.26 r
+  u_core/core_i/U1820/CO (FADDX1_HVT)              0.11      6.37 r
+  u_core/core_i/U1821/Y (NBUFFX2_HVT)              0.06      6.43 r
+  u_core/core_i/U1822/Y (INVX1_HVT)                0.05      6.48 f
+  u_core/core_i/U1949/CO (FADDX1_HVT)              0.09      6.57 f
+  u_core/core_i/U2022/CO (FADDX1_HVT)              0.08      6.65 f
+  u_core/core_i/U2097/CO (FADDX2_HVT)              0.08      6.74 f
+  u_core/core_i/U2191/CO (FADDX1_HVT)              0.08      6.82 f
+  u_core/core_i/U2265/CO (FADDX1_HVT)              0.08      6.90 f
+  u_core/core_i/U2336/CO (FADDX1_HVT)              0.08      6.98 f
+  u_core/core_i/U2407/CO (FADDX1_HVT)              0.08      7.06 f
+  u_core/core_i/U2477/CO (FADDX1_HVT)              0.08      7.14 f
+  u_core/core_i/U2549/CO (FADDX1_HVT)              0.08      7.22 f
+  u_core/core_i/U2617/CO (FADDX1_HVT)              0.08      7.30 f
+  u_core/core_i/U2695/CO (FADDX1_HVT)              0.08      7.39 f
+  u_core/core_i/U2759/CO (FADDX1_HVT)              0.08      7.47 f
+  u_core/core_i/U2837/CO (FADDX1_HVT)              0.08      7.55 f
+  u_core/core_i/U2894/CO (FADDX1_HVT)              0.08      7.63 f
+  u_core/core_i/U2897/Y (XOR2X1_HVT)               0.11      7.74 r
+  u_core/core_i/U2898/Y (OA21X1_HVT)               0.09      7.83 r
+  u_core/core_i/U2899/Y (NAND2X0_HVT)              0.24      8.08 f
+  u_core/core_i/U3277/Y (INVX1_HVT)                0.05      8.12 r
+  u_core/core_i/U3279/Y (NAND2X0_HVT)              0.14      8.26 f
+  u_core/core_i/U3347/Y (OA22X1_HVT)               0.23      8.50 f
+  u_core/core_i/id_stage_i/U241/Y (NBUFFX2_HVT)    0.32      8.82 f
+  u_core/core_i/id_stage_i/U3536/Y (AO22X1_HVT)    0.26      9.08 f
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[26][23]/D (SDFFARX1_RVT)
+                                                   0.00      9.08 f
+  data arrival time                                          9.08
+
+  clock clk_i (rise edge)                         10.00     10.00
+  clock network delay (ideal)                      0.00     10.00
+  u_core/core_i/id_stage_i/register_file_i/mem_reg[26][23]/CLK (SDFFARX1_RVT)
+                                                   0.00     10.00 r
+  clock uncertainty                               -0.10      9.90
+  library setup time                              -0.11      9.79
+  data required time                                         9.79
+  ------------------------------------------------------------------------
+  data required time                                         9.79
+  data arrival time                                         -9.08
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.71
+
+
+1

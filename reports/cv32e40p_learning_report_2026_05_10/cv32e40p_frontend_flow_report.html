@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <title>CV32E40P Front-End Flow Learning Report</title>
+  <style>
+    @page { size: A4; margin: 16mm 14mm; }
+    body {
+      font-family: "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+      color: #111827;
+      line-height: 1.55;
+      font-size: 10.5pt;
+      background: #fff;
+    }
+    .page-break { break-before: page; }
+    .major-section { break-before: page; }
+    h1, h2, h3 { break-after: avoid; color: #111827; }
+    h1 { font-size: 22pt; margin: 0 0 8px; }
+    h2 { font-size: 15pt; margin-top: 20px; border-bottom: 1px solid #d1d5db; padding-bottom: 4px; }
+    h3 { font-size: 12pt; margin-top: 15px; }
+    a { color: #1d4ed8; text-decoration: none; }
+    table { width: 100%; border-collapse: collapse; break-inside: avoid; margin: 10px 0 14px; table-layout: fixed; }
+    caption { text-align: left; font-weight: 700; margin: 0 0 5px; color: #374151; }
+    th, td { border: 1px solid #d1d5db; padding: 6px 8px; vertical-align: top; word-break: break-word; }
+    th { background: #f3f4f6; font-weight: 700; }
+    .dense { font-size: 9.2pt; line-height: 1.42; }
+    .script-table { font-size: 8.9pt; line-height: 1.38; }
+    pre {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 8.5pt;
+      line-height: 1.45;
+      break-inside: avoid;
+      margin-top: 4px;
+    }
+    code { font-family: "Consolas", "D2Coding", monospace; }
+    ol.toc { padding-left: 22px; line-height: 1.8; }
+    ol.toc li { margin: 2px 0; }
+    .summary-box { border-left: 4px solid #2563eb; background: #eff6ff; padding: 10px 12px; margin: 12px 0; }
+    .note-box { border-left: 4px solid #6b7280; background: #f9fafb; padding: 10px 12px; margin: 12px 0; }
+    .warn-box { border-left: 4px solid #b45309; background: #fffbeb; padding: 10px 12px; margin: 12px 0; }
+    .gate-box { border-left: 4px solid #047857; background: #ecfdf5; padding: 9px 12px; margin: 12px 0; }
+    .code-title { font-size: 9pt; font-weight: 700; color: #374151; margin-top: 10px; }
+    .small { font-size: 9pt; color: #374151; }
+  </style>
+</head>
+<body>
+  <h1>CV32E40P Front-End Flow Learning Report</h1>
+  <p><strong>부제:</strong> RTL Intake, DC Topographical Synthesis, Formality, DFT, ATPG, PrimeTime STA</p>
+  <p><strong>작성 기준:</strong> 2026-05-10 프로젝트 기록, <code>00_Project_Tracking</code>, Front-End Tcl scripts, STA/DFT/ATPG/Formality reports</p>
+
+  <div class="summary-box">
+    <h2 id="summary">현재 상태 요약</h2>
+    <p>CV32E40P는 OpenHW CV32E40P RTL을 ASIC 구현 flow에 맞게 wrapper, technology RTL, filelist, constraint로 정리한 뒤 Synopsys Front-End flow를 끝까지 통과시킨 학습 프로젝트다. 1차 기준 run은 <code>tt_mvt_10ns_scan1</code>이고, 이후 clean baseline으로 <code>8.5 ns</code> Front-End closure까지 확인했다.</p>
+    <p>Front-End 관점의 핵심 결론은 다음과 같다. 8.5 ns clean mixed-VT flow는 DC topo synthesis, Formality R2N, DFT insertion, Formality N2N, TetraMAX stuck-at ATPG, PrimeTime post-DFT SDF STA까지 완료됐다. known notes는 DFT <code>TEST-505</code>, TetraMAX <code>Z3</code>, backend-defer 성격의 early electrical DRC다.</p>
+  </div>
+
+  <table class="dense">
+    <caption>표 1. Front-End 최종 결과 요약</caption>
+    <tr><th>항목</th><th>최종 Front-End 결과</th><th>해석</th></tr>
+    <tr><td>Source revision</td><td><code>6033d2b1be3295ec774d17ac4cf226faacfdeb08</code></td><td>OpenHW CV32E40P upstream clone 기준 기록</td></tr>
+    <tr><td>Libraries</td><td>SAED32 RVT + LVT + HVT mixed-VT</td><td>초기 합성 기준은 TT 1.05V 25C, mixed-VT 사용</td></tr>
+    <tr><td>10 ns baseline</td><td>post-DFT setup slack +1.48 ns, hold slack +0.03 ns</td><td>첫 complete FE baseline으로 충분한 timing margin 확보</td></tr>
+    <tr><td>8.5 ns closure</td><td>post-DFT setup slack +0.44 ns, hold slack +0.04 ns</td><td>Fmax 학습용 clean FE finish point</td></tr>
+    <tr><td>R2N/N2N</td><td>2243 passing, 0 failing</td><td>RTL-to-netlist와 pre/post-DFT 기능 동일성 확인</td></tr>
+    <tr><td>DFT</td><td>1 muxed scan chain, chain0 length 2130</td><td>TetraMAX가 scan protocol을 추적할 수 있는 구조</td></tr>
+    <tr><td>ATPG 10 ns</td><td>test 98.64%, fault 98.55%, 448 patterns</td><td>stuck-at first-pass 목표 98% 이상</td></tr>
+    <tr><td>ATPG 8.5 ns</td><td>test 98.40%, fault 98.31%, 416 patterns</td><td>8.5 ns에서도 ATPG 품질 유지</td></tr>
+  </table>
+
+  <div class="warn-box">
+    <strong>Claim boundary.</strong> 이 문서는 내부 학습용 Front-End 보고서다. 8.5 ns FE closure는 말할 수 있지만, 이 단계만으로 production signoff, ISA compliance, tapeout readiness, foundry signoff를 주장하지 않는다.
+  </div>
+
+  <h2 id="toc" class="page-break">Table of Contents</h2>
+  <ol class="toc">
+    <li><a href="#goal">프로젝트 목표와 학습 범위</a></li>
+    <li><a href="#intake">Source Intake, Wrapper, Filelist</a></li>
+    <li><a href="#constraints">SDC와 Timing 목표</a></li>
+    <li><a href="#synthesis">DC Topographical Synthesis</a></li>
+    <li><a href="#fm-r2n">Formality R2N</a></li>
+    <li><a href="#dft">DFT Insertion</a></li>
+    <li><a href="#fm-n2n">Formality N2N</a></li>
+    <li><a href="#atpg">TetraMAX Stuck-At ATPG</a></li>
+    <li><a href="#pt-sta">PrimeTime Post-DFT SDF STA</a></li>
+    <li><a href="#handoff">Backend Handoff Package</a></li>
+    <li><a href="#stage-gates">Front-End Stage별 PASS/FAIL 기준</a></li>
+    <li><a href="#script-appendix">주요 Tcl Script Appendix</a></li>
+    <li><a href="#lessons">Front-End에서 배운 점</a></li>
+    <li><a href="#evidence">Evidence Index</a></li>
+    <li><a href="#final-boundary">최종 Claim Boundary</a></li>
+  </ol>
+
+  <h2 id="goal" class="major-section">1. 프로젝트 목표와 학습 범위</h2>
+  <p>CV32E40P를 선택한 이유는 단순한 toy RTL보다 실제 CPU RTL이 갖는 integration 문제를 학습하기 좋기 때문이다. CPU RTL에는 package/filelist ordering, clock gating, debug/CSR 구조, scan insertion, large sequential state, timing constraints, ATPG protocol 같은 실제 구현 flow의 핵심 문제가 포함된다.</p>
+  <p>프로젝트의 첫 목표는 “RTL을 합성했다”가 아니라 “Front-End closure evidence를 만들었다”이다. 따라서 각 stage마다 입력, script, output, report, pass/fail 기준을 남겼고, 결과 판단은 chat이나 terminal 감상이 아니라 report artifact에 연결했다.</p>
+  <table class="dense">
+    <caption>표 2. Front-End 학습 대상 tool과 검증 범위</caption>
+    <tr><th>Tool</th><th>역할</th><th>이 프로젝트에서 확인한 것</th></tr>
+    <tr><td>Design Compiler Graphical</td><td>RTL analyze/elaborate/link, topographical synthesis</td><td>10 ns 및 8.5 ns mixed-VT mapped netlist 생성, SDF/SDC/DDC/VG 산출</td></tr>
+    <tr><td>Formality</td><td>logical equivalence checking</td><td>R2N, N2N 모두 functional mode에서 2243 pass / 0 fail</td></tr>
+    <tr><td>DFT Compiler</td><td>scan insertion</td><td>1 muxed scan chain, SPF 생성, scan cells 2130</td></tr>
+    <tr><td>TetraMAX</td><td>stuck-at ATPG</td><td>SPF 기반 chain tracing, stuck-at coverage 98% 이상</td></tr>
+    <tr><td>PrimeTime</td><td>SDF 기반 STA</td><td>post-DFT SDF setup/hold clean, SDF annotation errors 0</td></tr>
+  </table>
+
+  <h2 id="intake">2. Source Intake, Wrapper, Filelist</h2>
+  <h3>목적</h3>
+  <p>OpenHW upstream manifest에는 simulation-only clock gate와 testbench wrapper가 포함된다. 합성에는 <code>cv32e40p_top</code>을 기준으로 하고, simulation clock gate인 <code>cv32e40p_sim_clock_gate.sv</code>는 제외해야 한다. 합성용 clock gate는 project technology replacement를 사용한다.</p>
+  <h3>입력과 산출물</h3>
+  <table class="dense">
+    <caption>표 3. RTL intake와 project-specific source 구성</caption>
+    <tr><th>구분</th><th>파일</th><th>설명</th></tr>
+    <tr><td>Upstream clone</td><td><code>rtl/cv32e40p/</code></td><td>직접 수정하지 않는 source reference</td></tr>
+    <tr><td>Wrapper RTL</td><td><code>rtl/wrappers/</code></td><td>DFT/test/control port와 top integration용 project wrapper</td></tr>
+    <tr><td>Technology RTL</td><td><code>rtl/tech/</code></td><td>합성용 clock gate replacement</td></tr>
+    <tr><td>DC filelist</td><td><code>filelists/cv32e40p_dc.f</code></td><td>synthesis 대상만 포함, sim/testbench 제외</td></tr>
+    <tr><td>FM reference filelist</td><td><code>filelists/cv32e40p_fm_ref.f</code></td><td>R2N reference용 RTL list</td></tr>
+  </table>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> DC가 읽어야 할 RTL과 제외해야 할 simulation/testbench RTL을 분리했다. 합성 top, wrapper, technology clock gate가 정해졌기 때문에 analyze/elaborate/link 단계로 넘어갈 수 있었다.
+  </div>
+
+  <h2 id="constraints" class="major-section">3. SDC와 Timing 목표</h2>
+  <p>초기 목표는 <code>clk_i = 10 ns</code>로 고정했다. 이후 post-DFT SDF STA slack에서 critical delay를 계산해 8.5 ns trial을 수행했다. 10 ns post-DFT setup slack +1.48 ns는 critical delay가 약 8.52 ns라는 뜻이므로, 8.5 ns는 “무리한 목표”가 아니라 실제 margin을 검증하는 trial이었다.</p>
+  <table class="dense">
+    <caption>표 4. Clock target 선택과 결과</caption>
+    <tr><th>Run</th><th>Clock</th><th>결과</th><th>판단</th></tr>
+    <tr><td><code>tt_mvt_10ns_scan1</code></td><td>10.0 ns</td><td>post-DFT setup slack +1.48 ns</td><td>baseline complete</td></tr>
+    <tr><td><code>tt_mvt_8p5ns_scan1</code></td><td>8.5 ns</td><td>post-DFT setup slack +0.44 ns, hold slack +0.04 ns</td><td>clean FE finish point</td></tr>
+  </table>
+  <div class="code-title">Code 1. 대표 SDC intent</div>
+  <pre><code>create_clock -name clk_i -period 8.5 [get_ports clk_i]
+set_clock_uncertainty ...
+set_input_delay / set_output_delay ...
+set_case_analysis for functional/test constants where needed</code></pre>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> 10 ns baseline과 8.5 ns trial의 clock period, IO delay, test-mode constant가 명확해졌다. synthesis와 STA가 같은 timing intent를 공유할 수 있으므로 DC topo compile로 진행했다.
+  </div>
+
+  <h2 id="synthesis">4. DC Topographical Synthesis</h2>
+  <h3>목적</h3>
+  <p>DC Graphical/topographical synthesis는 pure wireload 기반 합성보다 backend-friendly한 early physical estimate를 사용한다. 이 프로젝트에서는 <code>run_compile_10ns_topo.tcl</code>와 <code>run_compile_8p5ns_topo.tcl</code>가 핵심 script다.</p>
+  <table class="dense">
+    <caption>표 5. DC topo synthesis 입력과 산출물</caption>
+    <tr><th>항목</th><th>내용</th></tr>
+    <tr><td>주요 script</td><td><code>2_Synthesis/0_Script/run_compile_10ns_topo.tcl</code>, <code>2_Synthesis/0_Script/run_compile_8p5ns_topo.tcl</code></td></tr>
+    <tr><td>주요 library</td><td><code>saed32rvt_tt1p05v25c.db</code>, <code>saed32lvt_tt1p05v25c.db</code>, <code>saed32hvt_tt1p05v25c.db</code></td></tr>
+    <tr><td>주요 command</td><td><code>analyze</code>, <code>elaborate</code>, <code>link</code>, <code>compile_ultra -topographical</code>, <code>write_sdf</code>, <code>write_sdc</code>, <code>write_svf</code></td></tr>
+    <tr><td>주요 output</td><td><code>.ddc</code>, <code>.vg</code>, <code>.sdc</code>, <code>.sdf</code>, <code>.svf</code></td></tr>
+    <tr><td>확인 report</td><td>timing, area, power, check_design, qor</td></tr>
+  </table>
+  <table class="dense">
+    <caption>표 6. DC topo synthesis 결과</caption>
+    <tr><th>Stage</th><th>Clock</th><th>WNS</th><th>TNS</th><th>Area</th><th>해석</th></tr>
+    <tr><td>pre-DFT topo/SDF</td><td>10 ns</td><td>+1.61 ns</td><td>0.00</td><td>45313.37</td><td>timing clean, physical electrical DRC note는 backend로 분리</td></tr>
+    <tr><td>pre-DFT topo</td><td>8.5 ns</td><td>+0.41 ns</td><td>0.00</td><td>45394.19</td><td>clean baseline mixed-VT flow</td></tr>
+  </table>
+  <div class="note-box">
+    <strong>max_cap/max_transition residual 판단:</strong> Front-End synthesis 단계의 max_cap/max_transition은 netlist/SDF timing closure와 별개로 physical route/real parasitic에 의존한다. 그래서 FE pass/fail 기준에서는 setup/hold와 equivalence를 우선하고, electrical cleanup은 backend phase에서 분리했다.
+  </div>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> mapped netlist, DDC, SDC, SDF, SVF가 생성됐고 WNS가 양수이며 TNS가 0이었다. unresolved reference나 fatal check_design blocker가 없었기 때문에 RTL-to-netlist Formality로 넘어갈 수 있었다.
+  </div>
+
+  <h2 id="fm-r2n" class="major-section">5. Formality R2N</h2>
+  <p>R2N은 RTL reference와 DC mapped netlist가 같은 기능인지 검증한다. 합성 optimizer가 구조를 크게 바꾸더라도 compare point가 모두 equivalent이면 다음 stage로 넘어갈 수 있다. 이 프로젝트에서는 clock-gating reverse gating을 켰고, functional mode constant를 적용했다.</p>
+  <table class="dense">
+    <caption>표 7. R2N equivalence 결과</caption>
+    <tr><th>항목</th><th>설명</th></tr>
+    <tr><td>Script</td><td><code>2.5_FM_R2N/0_Script/run_fm_r2n_topo.tcl</code>, <code>2.5_FM_R2N/0_Script/run_fm_r2n_8p5ns_topo.tcl</code></td></tr>
+    <tr><td>주요 설정</td><td><code>verification_clock_gate_reverse_gating true</code>, scan/test constants</td></tr>
+    <tr><td>결과</td><td>2243 passing compare points, 0 failing</td></tr>
+  </table>
+  <div class="code-title">Code 2. run_fm_r2n_topo.tcl 핵심 command 흐름</div>
+  <pre><code>read_verilog -r ...
+read_verilog -i ...
+set_constant scan_cg_en_i 0
+set_constant scan_en 0
+set_constant scan_in 0
+match
+verify</code></pre>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> R2N이 2243 passing, 0 failing으로 끝났다. 합성 결과가 RTL 기능과 동등하다는 evidence가 생겼으므로, DFT insertion에서 scan 구조를 추가해도 기준 reference가 명확해졌다.
+  </div>
+
+  <h2 id="dft">6. DFT Insertion</h2>
+  <p>DFT insertion은 functional flop을 scan flop으로 바꾸고 scan chain을 구성하는 단계다. 이 프로젝트에서는 1개 muxed scan chain으로 고정했고, <code>scan_in</code>, <code>scan_out</code>, <code>scan_en</code>, <code>scan_cg_en_i</code>를 기준으로 DFT flow를 만들었다.</p>
+  <table class="dense">
+    <caption>표 8. DFT insertion 결과</caption>
+    <tr><th>항목</th><th>결과</th><th>의미</th></tr>
+    <tr><td>Script</td><td><code>3_DFT/0_Script/run_insert_dft_10ns_topo.tcl</code>, <code>3_DFT/0_Script/run_insert_dft_8p5ns_topo.tcl</code></td><td>post-DFT netlist/SDF/SPF 생성</td></tr>
+    <tr><td>Scan chain</td><td>1 muxed chain</td><td>학습용 first-pass ATPG에 단순하고 추적 가능</td></tr>
+    <tr><td>SPF</td><td>chain0 length 2130</td><td>TetraMAX가 scan chain을 protocol로 이해할 수 있음</td></tr>
+    <tr><td>DFT DRC</td><td>1 <code>TEST-505</code> note</td><td>constant-1 clock-gate 관련 note, blocker로 보지 않음</td></tr>
+  </table>
+  <h3>TEST-505 해석</h3>
+  <p><code>TEST-505</code>는 clock-gate test control이 constant 성격으로 보이는 구조에서 나오는 DFT note다. 이 프로젝트에서는 scan cell count, chain tracing, ATPG coverage가 정상이고 Formality N2N도 통과했기 때문에 first-pass educational flow의 blocker로 보지 않았다. 단, production DFT signoff에서는 clock-gate controllability와 test mode intent를 더 엄밀히 검토해야 한다.</p>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> post-DFT netlist, SPF, SDF가 생성됐고 scan chain 1개와 chain length 2130이 report에 기록됐다. fatal DFT DRC가 없고 known TEST-505 note만 남았으므로, pre/post-DFT functional equivalence 확인으로 넘어갔다.
+  </div>
+
+  <h2 id="fm-n2n" class="major-section">7. Formality N2N</h2>
+  <p>N2N은 pre-DFT netlist와 post-DFT netlist의 functional equivalence를 확인한다. scan insertion은 테스트 구조를 추가하지만, functional mode에서는 원래 동작과 같아야 한다. 따라서 scan/test inputs를 constant로 고정하고 <code>scan_out</code>은 architectural output이 아니므로 don't-verify로 처리했다.</p>
+  <table class="dense">
+    <caption>표 9. N2N equivalence 결과</caption>
+    <tr><th>Run</th><th>Passing</th><th>Failing</th><th>비고</th></tr>
+    <tr><td>10 ns N2N</td><td>2243</td><td>0</td><td>post-DFT topo netlist equivalent</td></tr>
+    <tr><td>8.5 ns N2N</td><td>2243</td><td>0</td><td>8.5 ns pre/post DFT equivalent</td></tr>
+  </table>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> DFT insertion 이후에도 functional mode에서 failing compare point가 0이었다. 따라서 ATPG와 STA는 기능이 깨진 netlist가 아니라 equivalence가 확인된 post-DFT netlist를 대상으로 진행할 수 있었다.
+  </div>
+
+  <h2 id="atpg">8. TetraMAX Stuck-At ATPG</h2>
+  <p>ATPG는 scan 구조가 실제로 test pattern generation에 사용 가능한지 검증한다. 이 프로젝트는 stuck-at model을 first-pass target으로 삼았다. TetraMAX는 SAED32 test model, post-DFT netlist, SPF를 읽고 chain0을 trace했다.</p>
+  <table class="dense">
+    <caption>표 10. Stuck-at ATPG 결과</caption>
+    <tr><th>항목</th><th>10 ns baseline</th><th>8.5 ns clean FE</th><th>해석</th></tr>
+    <tr><td>Scan length</td><td>2130</td><td>2130</td><td>DFT 구조 유지</td></tr>
+    <tr><td>Test coverage</td><td>98.64%</td><td>98.40%</td><td>목표 98% 이상</td></tr>
+    <tr><td>Fault coverage</td><td>98.55%</td><td>98.31%</td><td>stuck-at first-pass 기준 양호</td></tr>
+    <tr><td>Patterns</td><td>448</td><td>416</td><td>internal basic_scan patterns</td></tr>
+  </table>
+  <h3>Z3 warning 해석</h3>
+  <p><code>Z3</code>는 wire contention 가능성 rule이다. 이 프로젝트에서는 6개 Z3 warning을 warning으로 낮추어 first-pass stuck-at ATPG를 진행했다. ATPG coverage와 scan tracing이 정상이라고 해서 Z3가 production signoff에서 무시된다는 뜻은 아니다. 내부 학습 flow에서는 “ATPG를 진행하는 데 blocking fatal은 아니다”로 분류했다.</p>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> SPF chain tracing이 성공했고 stuck-at test/fault coverage가 98% 이상이었다. Z3는 known warning으로 기록했지만 ATPG fatal이 아니었기 때문에 post-DFT timing validation으로 넘어갔다.
+  </div>
+
+  <h2 id="pt-sta" class="major-section">9. PrimeTime Post-DFT SDF STA</h2>
+  <p>PrimeTime SDF STA는 DC/DFT Compiler가 출력한 SDF delay를 gate netlist에 annotate해 setup/hold를 확인한다. Backend routing 이전에는 real SPEF가 없으므로 이 STA는 post-synthesis/post-DFT timing handoff 품질을 보는 단계다.</p>
+  <table class="dense">
+    <caption>표 11. Post-DFT SDF STA 결과</caption>
+    <tr><th>Stage</th><th>Clock</th><th>Setup</th><th>Hold</th><th>판단</th></tr>
+    <tr><td>post-DFT topo/SDF</td><td>10 ns</td><td>WNS +1.48 ns</td><td>hold slack +0.03 ns</td><td>FE baseline clean</td></tr>
+    <tr><td>post-DFT topo/SDF</td><td>8.5 ns</td><td>WNS +0.44 ns</td><td>hold slack +0.04 ns</td><td>FE closure clean</td></tr>
+  </table>
+  <p>SDF annotation errors가 0이라는 점도 중요하다. SDF instance/path mismatch가 있으면 timing report가 clean이어도 신뢰도가 떨어진다. 이 프로젝트는 SDF read 0 errors로 기록했다.</p>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> SDF annotation error가 0이고 setup/hold가 모두 clean이었다. 이로써 Front-End closure artifact가 backend handoff package로 넘어갈 수 있었다.
+  </div>
+
+  <h2 id="handoff">10. Backend Handoff Package</h2>
+  <p>Front-End 결과가 backend로 넘어가기 위해서는 post-DFT logical netlist와 timing constraints, scan DEF/SPF/SDF가 정리되어야 한다. 이 프로젝트는 ICC2가 post-DFT netlist를 physical design으로 열 수 있는지 확인했고, scan DEF도 별도 script로 생성했다.</p>
+  <table class="dense">
+    <caption>표 12. Backend handoff artifact</caption>
+    <tr><th>파일 유형</th><th>목적</th></tr>
+    <tr><td><code>.vg</code></td><td>backend implementation netlist</td></tr>
+    <tr><td><code>.sdc</code></td><td>clock/timing constraint handoff</td></tr>
+    <tr><td><code>.sdf</code></td><td>post-DFT SDF STA와 simulation delay annotation</td></tr>
+    <tr><td><code>.spf</code></td><td>TetraMAX scan protocol chain tracing</td></tr>
+    <tr><td>scan DEF</td><td>ICC2 scan-aware placement/route handoff trial</td></tr>
+  </table>
+  <div class="gate-box">
+    <strong>이 단계에서 다음 단계로 넘어간 이유:</strong> post-DFT netlist와 SDC/SDF/SPF가 정리됐고, FE stage gate가 모두 evidence-backed PASS 또는 PASS_WITH_NOTE로 닫혔다. 그래서 conditional Phase 2인 ICC2 backend를 시작할 수 있었다.
+  </div>
+
+  <h2 id="stage-gates" class="major-section">11. Front-End Stage별 PASS/FAIL 기준</h2>
+  <table class="dense">
+    <caption>표 13. Stage gate 판단 기준</caption>
+    <tr><th>Stage</th><th>PASS 기준</th><th>실제 판단</th><th>다음 단계로 넘어간 근거</th></tr>
+    <tr><td>RTL/filelist</td><td>DC analyze/elaborate/link 가능, sim-only 제외</td><td>PASS</td><td>filelist와 wrapper/top이 synthesis용으로 고정됨</td></tr>
+    <tr><td>DC synthesis</td><td>WNS >= 0, TNS = 0, netlist/DDC/SDC/SDF 생성, unresolved reference 없음</td><td>PASS_WITH_NOTE</td><td>mapped artifact와 SVF가 생성되어 R2N 가능</td></tr>
+    <tr><td>R2N</td><td>Formality Verification SUCCEEDED, failing 0</td><td>PASS</td><td>RTL 기능과 pre-DFT netlist 동등성 확인</td></tr>
+    <tr><td>DFT</td><td>scan inserted, chain count/length recorded, DFT DRC fatal 없음</td><td>PASS_WITH_NOTE</td><td>SPF와 post-DFT netlist가 생성되어 N2N/ATPG 가능</td></tr>
+    <tr><td>N2N</td><td>functional mode equivalence, failing 0</td><td>PASS</td><td>scan insertion이 functional behavior를 깨지 않음</td></tr>
+    <tr><td>ATPG</td><td>SPF chain traced, stuck-at coverage target met</td><td>PASS_WITH_NOTE</td><td>DFT 구조가 ATPG에서 사용 가능함</td></tr>
+    <tr><td>PT SDF STA</td><td>SDF read errors 0, setup/hold violations 없음</td><td>PASS_WITH_NOTE</td><td>post-DFT timing handoff baseline 확보</td></tr>
+  </table>
+
+  <h2 id="script-appendix">12. 주요 Tcl Script Appendix</h2>
+  <p>아래 표는 보고서에 나온 주요 Tcl script가 실제로 무엇을 읽고, 어떤 command가 핵심이며, 어떤 output/report로 PASS를 판단하는지 정리한 것이다. Tcl은 학습용으로 읽기 쉽게 유지하는 것이 목표였기 때문에 과도한 reusable framework보다 직접적인 변수와 명령 흐름을 사용했다.</p>
+  <table class="script-table">
+    <caption>표 14. Front-End Tcl script별 목적, 입력, command, output, PASS 기준</caption>
+    <tr><th>Script</th><th>목적</th><th>입력 파일</th><th>핵심 variable</th><th>핵심 command</th><th>생성 output / 확인 / PASS 기준</th></tr>
+    <tr><td><code>run_compile_10ns_topo.tcl</code></td><td>10 ns mixed-VT topographical synthesis baseline 생성</td><td><code>filelists/cv32e40p_dc.f</code>, 10 ns SDC, TT RVT/LVT/HVT DB, Milkyway/tech setup</td><td><code>TOP</code>, <code>CLOCK_PERIOD=10</code>, <code>target_library</code>, <code>link_library</code>, output/report dirs</td><td><code>analyze</code>, <code>elaborate</code>, <code>link</code>, <code>check_design</code>, <code>compile_ultra -topographical</code>, <code>write_svf</code>, <code>write_sdf</code>, <code>write_sdc</code></td><td>DDC/VG/SDC/SDF/SVF. 확인: timing.rpt, check_design.rpt, qor.rpt. PASS: WNS >= 0, TNS = 0, unresolved reference 없음, mapped netlist 생성</td></tr>
+    <tr><td><code>run_compile_8p5ns_topo.tcl</code></td><td>10 ns 결과를 바탕으로 8.5 ns FE closure 가능성 확인</td><td>동일 RTL/filelist/library, 8.5 ns SDC</td><td><code>CLOCK_PERIOD=8.5</code>, 8p5 output tag, same mixed-VT libraries</td><td><code>analyze</code>, <code>elaborate</code>, <code>link</code>, <code>compile_ultra -topographical</code>, <code>report_timing</code>, <code>write_sdf</code>, <code>write_sdc</code>, <code>write_svf</code></td><td>8p5 DDC/VG/SDC/SDF/SVF. 확인: 8p5 timing/qor/check_design. PASS: setup WNS 양수, TNS 0, output artifact 완성</td></tr>
+    <tr><td><code>run_fm_r2n_topo.tcl</code><br><code>run_fm_r2n_8p5ns_topo.tcl</code></td><td>RTL reference와 pre-DFT mapped netlist equivalence 확인</td><td><code>filelists/cv32e40p_fm_ref.f</code>, DC mapped <code>.vg</code>, SAED32 DB/verilog model</td><td>reference/implementation container, top name, scan/test constants, clock-gate reverse setting</td><td><code>read_verilog -r</code>, <code>read_verilog -i</code>, <code>set_top</code>, <code>set_constant</code>, <code>match</code>, <code>verify</code>, <code>report_passing_points</code></td><td>verify/failing/unmatched/passing reports. PASS: Verification SUCCEEDED, failing 0, unmatched 0 또는 설명 가능</td></tr>
+    <tr><td><code>run_insert_dft_10ns_topo.tcl</code></td><td>10 ns post-DFT netlist와 scan protocol 생성</td><td>pre-DFT DDC/VG, 10 ns constraints, scan port 정의</td><td><code>SCAN_CHAINS=1</code>, <code>scan_in</code>, <code>scan_out</code>, <code>scan_en</code>, <code>scan_cg_en_i</code></td><td><code>set_scan_configuration</code>, <code>create_test_protocol</code>, <code>dft_drc</code>, <code>insert_dft</code>, <code>report_scan_path</code>, <code>write_test_protocol</code>, <code>write_sdf</code></td><td>post-DFT VG/DDC/SDF/SPF. 확인: scan report, dft_drc report, post_dft timing. PASS: scan chain 생성, fatal DFT DRC 없음, chain length 기록</td></tr>
+    <tr><td><code>run_insert_dft_8p5ns_topo.tcl</code></td><td>8.5 ns post-DFT netlist와 SPF 생성</td><td>8.5 ns pre-DFT DDC/VG, 8.5 ns constraints</td><td>8p5 tag, same scan policy, scan/test port constants</td><td><code>set_dft_signal</code>, <code>set_scan_configuration</code>, <code>dft_drc</code>, <code>insert_dft</code>, <code>compile_ultra -incremental</code>, <code>write_test_protocol</code></td><td>8p5 post-DFT VG/DDC/SDF/SPF. PASS: post-DFT setup/hold clean, scan chain 유지, SPF 생성</td></tr>
+    <tr><td><code>run_fm_n2n_topo.tcl</code><br><code>run_fm_n2n_8p5ns_topo.tcl</code></td><td>pre-DFT netlist와 post-DFT netlist functional equivalence 확인</td><td>pre-DFT VG, post-DFT VG, library model</td><td>functional constants, scan-out don't-verify policy, clock-gate reverse setting</td><td><code>read_verilog -r</code>, <code>read_verilog -i</code>, <code>set_constant scan_en 0</code>, <code>set_dont_verify_point scan_out</code>, <code>match</code>, <code>verify</code></td><td>N2N verify/failing/unmatched/passing reports. PASS: failing 0, scan_out 제외 사유 기록</td></tr>
+    <tr><td><code>run_tmax_stuck_at_topo.tcl</code><br><code>run_tmax_stuck_at_8p5ns_topo.tcl</code></td><td>post-DFT netlist/SPF 기반 stuck-at ATPG 수행</td><td>post-DFT VG, SPF, SAED32 test model</td><td>top module, SPF path, test protocol, DRC warning handling</td><td><code>read_netlist</code>, <code>read_cell_library</code>, <code>read_test_protocol</code>, <code>run_drc</code>, <code>set_faults -model stuck</code>, <code>run_atpg</code>, <code>report_summaries</code></td><td>ATPG summary, DRC report, pattern file. PASS: chain trace 성공, coverage target 충족, fatal ATPG DRC 없음</td></tr>
+    <tr><td><code>run_pt_post_dft_10ns_sdf.tcl</code></td><td>10 ns post-DFT SDF STA</td><td>post-DFT VG, SDC, SDF, TT DB</td><td>netlist/SDF path, report prefix, clock period, operating condition</td><td><code>read_verilog</code>, <code>link_design</code>, <code>read_sdc</code>, <code>read_sdf</code>, <code>report_global_timing</code>, <code>report_constraint -all_violators</code></td><td>global_timing, setup/hold timing, constraints, annotated delay reports. PASS: SDF errors 0, setup/hold clean</td></tr>
+    <tr><td><code>run_pt_post_dft_8p5ns_sdf.tcl</code></td><td>8.5 ns post-DFT SDF STA</td><td>8.5 ns post-DFT VG/SDC/SDF, TT DB</td><td>8p5 tag, SDF corner, report prefix</td><td><code>read_verilog</code>, <code>read_sdc</code>, <code>read_sdf</code>, <code>update_timing</code>, <code>report_timing</code>, <code>report_global_timing</code></td><td>8p5 PT reports. PASS: WNS >= 0, hold slack >= 0, SDF annotation error 0</td></tr>
+  </table>
+
+  <h2 id="lessons" class="major-section">13. Front-End에서 배운 점</h2>
+  <ul>
+    <li>upstream manifest를 그대로 implementation flow에 넣으면 simulation-only file 때문에 DC/FM이 깨질 수 있다.</li>
+    <li>R2N/N2N PASS는 다음 stage debug 범위를 크게 줄인다.</li>
+    <li>DFT는 “scan inserted”만 보는 것이 아니라 SPF chain length와 TetraMAX tracing까지 확인해야 한다.</li>
+    <li>ATPG coverage는 test coverage, fault coverage, pattern count, DRC warning을 함께 읽어야 한다.</li>
+    <li>Post-DFT SDF STA가 clean이어도 backend route SPEF STA는 별도 문제다.</li>
+    <li>max_cap/max_transition은 Front-End note로 남기고 backend real parasitic에서 다시 보는 것이 맞다.</li>
+  </ul>
+
+  <h2 id="evidence">14. Evidence Index</h2>
+  <div class="code-title">Code 3. Front-End evidence path list</div>
+  <pre><code>00_Project_Tracking/RUN_MANIFEST.md
+00_Project_Tracking/RESULT_SUMMARY.md
+00_Project_Tracking/RUN_LOG.md
+00_Project_Tracking/PROJECT_STATUS.md
+2_Synthesis/0_Script/run_compile_10ns_topo.tcl
+2_Synthesis/0_Script/run_compile_8p5ns_topo.tcl
+2.5_FM_R2N/0_Script/run_fm_r2n_topo.tcl
+2.5_FM_R2N/0_Script/run_fm_r2n_8p5ns_topo.tcl
+3_DFT/0_Script/run_insert_dft_10ns_topo.tcl
+3_DFT/0_Script/run_insert_dft_8p5ns_topo.tcl
+4_ATPG/0_Script/run_tmax_stuck_at_topo.tcl
+4_ATPG/0_Script/run_tmax_stuck_at_8p5ns_topo.tcl
+5_FM_N2N/0_Script/run_fm_n2n_topo.tcl
+5_FM_N2N/0_Script/run_fm_n2n_8p5ns_topo.tcl
+6_STA/0_Script/run_pt_post_dft_10ns_sdf.tcl
+6_STA/0_Script/run_pt_post_dft_8p5ns_sdf.tcl</code></pre>
+
+  <h2 id="final-boundary">15. 최종 Claim Boundary</h2>
+  <div class="warn-box">
+    이 결과는 ICC2/PrimeTime/Formality 기반 backend까지 이어질 수 있는 educational Front-End closure다. 하지만 foundry deck 기반 signoff DRC, LVS, antenna, IR/EM, metal fill, signoff STA methodology가 포함되지 않았으므로 tapeout-ready 또는 production signoff라고 부르지 않는다.
+  </div>
+</body>
+</html>

@@ -1,0 +1,210 @@
+2.  Synopsys Commands                                        Command Reference
+                                  save_block
+
+NAME
+       save_block
+              Saves a block to its current location or as a new block.
+
+SYNTAX
+       status save_block
+              [-as block_name]
+              [-label label_name]
+              [-force]
+              [-hierarchical]
+              [-verbose]
+              [-compress]
+              [-blocks blocks]
+              [block]
+
+   Data Types
+       block_name  string
+       label_name  string
+       blocks      collection
+       block       string
+
+ARGUMENTS
+       -as block_name
+              Specifies  the  destination block name with optional library and
+              view specifications. The format for block_name is:
+
+              [libName:]blockName[/labelName][.viewName]
+
+              If no library is specified, current_lib is  used.  If  no  block
+              name  is  specified,  current_block  is used. If no view name is
+              specified, the design view is used. If no label name  is  speci-
+              fied,  the  default  label  ""  is  used.  Note  that save_block
+              block_name  -as   block_name   is   equivalent   to   save_block
+              block_name.  It is an error to save to a sub-block referenced by
+              the top block. The source and destination label must be  differ-
+              ent when used with the -hierarchical option; otherwise, it is an
+              error.
+
+              By default, a new block of the specified block_name  is  created
+              and  saved  to disk. This behavior can be changed by setting the
+              "design.morph_on_save_as" application option to  true.  In  this
+              case, the source block and all of its views are renamed into the
+              specified block_name and then saved, instead of making a copy of
+              the source block and saving the copy to disk. The following con-
+              ditions must be met: 1) the destination and source block are  in
+              the same library, and 2) no other blocks in memory reference the
+              source block or any of its views.
+
+       -label label_name
+              Specifies the user label to be used  when  saving  the  block(s)
+              using this command. This command is the safe way to save a block
+              (or a physical hierarchy rooted at a  top  block  when  combined
+              with the -hierarchical option) to a new user label. This is gen-
+              erally used for stages of  flow  progression,  with  user  label
+              names like "placed", "clocked", and "routed" being typical.  The
+              user label names are entirely at the  discretion  of  the  user.
+              Specifying  an  empty  user label name causes the block(s) to be
+              saved to the default, which is to have no user label.
+
+              As with the -as option above, this option is modified by use  of
+              the  "design.morph_on_save_as"  application  option, in the same
+              way.
+
+              This option is exclusive with the -as option.
+
+       -force Overwrites the destination block when the  destination  is  open
+              and modified but not yet saved. This option is used with the -as
+              option.
+
+       -hierarchical
+              Saves the entire physical hierarchy of the specified block. When
+              used  with  the  -as  option and a specific label name, it saves
+              each non library cell reference block and all its views into the
+              specified label. The command follows the hierarchy into the ref-
+              erence  blocks  and  save  the  subblocks  referenced   by   its
+              instances,  stopping when it reaches the leaf-level library cell
+              references. Each  labeled  block  is  created  in-place  in  the
+              library  of the original block, and each of its non library cell
+              instances are updated such that their references  point  to  the
+              new labeled block.
+
+       -verbose
+              Prints out additional debugging and informational messages.
+
+       -compress
+              Saves  design  in compressed format. This can be used along with
+              -hierarchical to save the  entire  physical  hierarchy  in  com-
+              pressed  format.  Once  a block has been saved with "-compress",
+              the "is_compressed" attribute on the block is set to  true.  All
+              future  save_block  on  this  block will be in compressed format
+              even if the "-compress" option isn't specified. If the  "is_com-
+              pressed"  attribute  is later set to false, future save_block on
+              this block will be in uncompressed format.
+
+       -blocks blocks
+              specifies the source block collection which are to  saved.  This
+              option is exclusive with options -as and block. When this option
+              is specified, the blocks corresponding  to  the  collection  are
+              saved.
+
+       block  Specifies  the  source block name with optional library and view
+              specifications. The format is as follows:
+
+              [libName:]blockName[/labelName][.viewName]
+
+              If the library specification is not present, the current_lib  is
+              used.  If  the  label  specification is not present, the default
+              label "" is used. If the view specification is not present, then
+              design  view  is  used.  If  the  option  is not given, the cur-
+              rent_block is used.
+
+DESCRIPTION
+       This command saves the specified  (or  current)  block.  When  the  -as
+       option  is  used,  a  copy of the block is saved to the specified block
+       destination. The destination block can be in a  different  library.  It
+       can also be with a different block name, or with the same block name by
+       different label name. With option -blocks, a collection of  blocks  can
+       be saved.  The command returns 1 if the block is saved and 0 if not. If
+       an illegal name (with a slash) is given for the block, a Tcl  error  is
+       raised.
+
+       Note  that  the  command fails if the block is opened in read-only mode
+       and the -as option is not used. The command fails if the -as option  is
+       used  but  the  destination  block  exists,  but  is open for read-only
+       access, or if the destination block has been modified, but  not  saved,
+       and the -force option is not also used.
+
+       When  no  view  is explicitly specified for both source and destination
+       then all available views of source block  are  saved  into  destination
+       block.
+
+       A  given  source block view can't be saved into a different destination
+       block view, like a design view can't be saved to a frame view. An error
+       is issued while trying to do such operation.
+
+EXAMPLES
+       This  example  saves  the  block Top and all its views as Top2, meaning
+       that it becomes Top2. Note that Top no longer  exists  in  memory,  but
+       remains unchanged on disk.
+
+         prompt> save_block -as Top2 Top
+         1
+
+       This example saves the current block and its particular view.
+
+         prompt> save_block
+         1
+
+       This  example  saves  the block Mid and all its views, which is not the
+       current block:
+
+         prompt> save_block Mid
+         1
+
+       This example does a hierarchical save of Top and all its  views,  which
+       includes Mid and Bot:
+
+         prompt> save_block -hierarchical Top
+         1
+
+       This example saves the entire physical hierarchy of "Top" into a set of
+       "placed" labeled blocks. This will create a labeled  block  from  "top"
+       and  below  in their respective libraries, stopping at the library cell
+       level, for each of Top, Mid, and Bot:
+
+         prompt> save_block Top.design -hierarchical -as Top/placed -verbose
+         Information: Saving 'Top_lib:Top.design' to 'Top_lib:Top/placed.design'
+         Information: Saving 'Top_lib:Mid.design' to 'Top_lib:Mid/placed.design'
+         Information: Saving 'Top_lib:Bot.design' to
+         "Top_lib:Bot/placed.design"
+         1
+
+       This example saves the entire physical hierarchy starting from Mid  and
+       all  its views into a set of "placed2" label blocks. This will create a
+       labeled block from "Mid" and below, for each of Mid, and Bot:
+
+         prompt> save_block Mid -hierarchical -as Mid/placed2 -verbose
+         Information: Saving 'Top_lib:Mid.design' to 'Top_lib:Mid/placed2.design'
+         Information: Saving 'Top_lib:Bot.design' to
+         "Top_lib:Bot/placed2.design"
+         1
+
+       This example saves just the Top and all  its  views  into  a  "placed3"
+       labeled  block.  Note that only the "Top" block is saved as a copy. New
+       label are not created for  the  lower-level  blocks,  and  "Top/placed"
+       still references "Mid" and "Bot" blocks.
+
+         prompt> save_block Top -as Top/placed3 -verbose
+         Information: Saving 'Top_lib:Top.design' to 'Top_lib:Top/placed3.design'
+         Information: Saving 'Top_lib:Top.frame' to 'Top_lib:Top/placed3.frame'
+         1
+
+SEE ALSO
+       close_blocks(2)
+       copy_block(2)
+       current_block(2)
+       current_design(2)
+       get_blocks(2)
+       get_designs(2)
+       move_block(2)
+       open_block(2)
+       open_lib(2)
+       remove_blocks(2)
+       reopen_block(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

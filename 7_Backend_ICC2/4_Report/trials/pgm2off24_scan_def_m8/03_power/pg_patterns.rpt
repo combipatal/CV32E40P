@@ -1,0 +1,39 @@
+#------------------------------------------#
+Pattern Name: core_mesh_pattern
+Type: Mesh Pattern
+Parameters: 
+Layers: 
+{ {vertical_layer : M2} {width : {0.4 }} {spacing : interleaving} {trim : true} {track_alignment : none}   {pitch : 40} {offset : 24} } 
+{ {vertical_layer : M8} {width : {1 }} {spacing : interleaving} {trim : true} {track_alignment : none}   {pitch : 40} {offset : 20} } 
+{ {horizontal_layer : M7} {width : {1 }} {spacing : interleaving} {trim : true} {track_alignment : none}   {pitch : 40} {offset : 28} } 
+Via Rules: 
+{intersection: all} {via_master : {default}}
+#------------------------------------------#
+Pattern Name: core_ring_pattern
+Type: Ring Pattern
+Symbolic Nets: 
+Ring Width:
+	{side: horizontal}{width: 2}
+	{side: vertical}{width: 2}
+Ring Layer:
+	{side: horizontal}{layer: M7}
+	{side: vertical}{layer: M8}
+Ring Spacing:
+	{side: horizontal}{spacing: 1}
+	{side: vertical}{spacing: 1}
+Corner Bridge: true
+Via Rules: 
+	{intersection: all} {via_master : {default}}
+Track Alignment: no alignment
+Parameters: 
+#------------------------------------------#
+Pattern Name: stdcell_rail_pattern
+Type: Standard Cell Rail Pattern
+Rail Width: undefined undefined 
+Rail Layers: M1 
+Rail Shift: undefined undefined 
+Rail Masks: no_mask no_mask 
+Rail pin DRC option: false
+Mark as follow pin option: false
+Parameters: 
+#------------------------------------------#

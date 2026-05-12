@@ -1,0 +1,59 @@
+****************************************
+ Report : check_design
+ Options: { netlist design_mismatch timing }
+ Design : cv32e40p_synth_wrap
+ Version: W-2024.09-SP2
+ Date   : Sat May  9 14:09:18 2026
+****************************************
+
+Running atomic-check 'netlist'
+****************************************
+Report : check_netlist
+        -cells
+        -nets
+        -ports
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Sat May  9 14:09:18 2026
+****************************************
+1
+Running atomic-check 'design_mismatch'
+****************************************
+Report : Data Mismatches
+Version: W-2024.09-SP2
+Date   : Sat May  9 14:09:18 2026
+****************************************
+No mismatches exist on the design.
+1
+Running atomic-check 'timing'
+Information: Timer using 1 threads
+1
+
+  *** EMS Message summary ***
+  ----------------------------------------------------------------------------------------------------
+  Rule         Type   Count      Message
+  ----------------------------------------------------------------------------------------------------
+  DCHK-004     Warn   412        In design '%design', input pin '%object' of hierarchical cell '%...
+  DCHK-005     Warn   412        In design '%design', a pin '%object' on submodule '%parentObject...
+  DCHK-009     Warn   481        In design '%design', '%object' net '%parentObject' driven by %ex...
+  DCHK-010     Warn   1391       In design '%design', '%object' net '%parentObject' has no drivers.
+  DCHK-017     Warn   441        In design '%design', input port '%object' is unloaded.
+  DCHK-020     Warn   198        In design '%design', output port '%object' is connected directly...
+  DCHK-021     Warn   1474       In design '%design', net connected to output port '%object' is n...
+  DCHK-023     Warn   3          In design '%design', output port '%object' is connected directly...
+  DCHK-026     Warn   1278       In design '%design', port '%object' is connected to net '%parent...
+  DCHK-027     Warn   8          In design '%design', port '%object' is connected to net '%parent...
+  DCHK-045     Warn   1433       In design '%design', the output pin '%object' of hierarchical ce...
+  TCK-001      Warn   6465       The reported endpoint '%endpoint' is unconstrained. Reason: '%re...
+  ----------------------------------------------------------------------------------------------------
+  Total 13996 EMS messages : 0 errors, 13996 warnings, 0 info.
+  ----------------------------------------------------------------------------------------------------
+
+  *** Non-EMS message summary *** 
+  ----------------------------------------------------------------------------------------------------
+   Rule         Type   Count      Message
+  ----------------------------------------------------------------------------------------------------
+       PVT-032   Info          1 Corner %s: no PVT mismatches.
+  ----------------------------------------------------------------------------------------------------
+  Total 1 non-EMS messages : 0 errors, 0 warnings, 1 info.
+  ----------------------------------------------------------------------------------------------------

@@ -1,0 +1,59 @@
+****************************************
+Report : clock timing
+        -type latency
+        -launch
+        -nworst 20
+        -hold
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Fri May  8 19:05:02 2026
+****************************************
+
+  Mode: default
+  Clock: clk_i
+
+                                                 --- Latency ---
+  Clock Pin                             Trans   Source   Offset  Network    Total            Corner
+---------------------------------------------------------------------------------------------------
+  u_core/core_i/id_stage_i/controller_i/debug_req_q_reg/CLK
+                                         0.02     0.00       --     0.04     0.04 rp-+      default
+  u_core/core_i/sleep_unit_i/fetch_enable_q_reg/CLK
+                                         0.02     0.00       --     0.04     0.04 rp-+      default
+  u_core/core_i/sleep_unit_i/core_busy_q_reg/CLK
+                                         0.02     0.00       --     0.04     0.04 rp-+      default
+  u_core/core_i/id_stage_i/regfile_alu_we_ex_o_reg/CLK
+                                         0.04     0.00       --     0.16     0.16 rp-+      default
+  u_core/core_i/cs_registers_i/mstatus_q_reg[mpie]/CLK
+                                         0.04     0.00       --     0.16     0.16 rp-+      default
+  u_core/core_i/cs_registers_i/mstatus_q_reg[mie]/CLK
+                                         0.04     0.00       --     0.16     0.16 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/jump_done_q_reg/CLK
+                                         0.04     0.00       --     0.16     0.16 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/debug_req_entry_q_reg/CLK
+                                         0.04     0.00       --     0.16     0.16 rp-+      default
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK
+                                         0.04     0.00       --     0.16     0.16 rp-+      default
+  u_core/core_i/ex_stage_i/regfile_we_lsu_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/if_stage_i/instr_valid_id_o_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/mhpmevent_branch_o_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/id_valid_q_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/illegal_insn_q_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/debug_force_wakeup_q_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/ctrl_fsm_cs_reg[1]/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/ctrl_fsm_cs_reg[2]/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/ctrl_fsm_cs_reg[0]/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/controller_i/ctrl_fsm_cs_reg[3]/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+  u_core/core_i/id_stage_i/mhpmevent_store_o_reg/CLK
+                                         0.04     0.00       --     0.17     0.17 rp-+      default
+---------------------------------------------------------------------------------------------------
+1

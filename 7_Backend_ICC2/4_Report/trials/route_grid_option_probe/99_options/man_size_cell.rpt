@@ -1,0 +1,125 @@
+2.  Synopsys Commands                                        Command Reference
+                                   size_cell
+
+NAME
+       size_cell
+              Rebinds  leaf  cells to a new library cell that has the required
+              drive strength (or other properties).
+
+SYNTAX
+       collection size_cell
+              cell_list
+              -lib_cell lib_cell | lib_cell
+              [-max_distance_to_spare_cell length | -not_spare_cell_aware]
+
+   Data Types
+       cell_list         list
+       lib_cell            collection
+       length              float
+
+ARGUMENTS
+       cell_list
+              Specifies the leaf cell to be rebound.  Each  cell  must  be  in
+              scope (at or below the current instance).
+
+       -lib_cell lib_cell
+              Specifies  the  library cell objects to which the specified cell
+              is to be bound.  In this case, the  object  is  either  a  named
+              library  cell  or a library cell collection.  This is a required
+              opton.  The library cells specified must be  logical  equivalent
+              to the library cell which will be rebound.
+
+       lib_cell
+              This  positional option is exactly equivalent to -lib_cell.  And
+              it is mutual exclusive with -lib_cell.
+
+       -max_distance_to_spare_cell length
+              Specifies the maximum distance between eco cell and  spare  cell
+              in freeze-silicon mode. If option is not specified, command will
+              use the default value (5x site heights). If there  is  no  valid
+              spare  cell  found within this distance, command will not do the
+              cell sizing and report a error message to user.  The resized eco
+              cell  will be placed to overlap the matched spare cell and a new
+              attribute "fs_mapped_cell_name" will be used to record the  map-
+              ping  relationship  in both eco cell and spare cell. The feature
+              of spare cell aware only works in freeze-silicon mode currently.
+              This option is mutually exclusive with -not_spare_cell_aware.
+
+       -not_spare_cell_aware
+              Disable  the feature of spare cell aware in freeze-silicon mode.
+              By default, this option is off. The feature of spare cell  aware
+              only  works  in  freeze-silicon  mode.   This option is mutually
+              exclusive with -max_distance_to_spare_cell.
+
+DESCRIPTION
+       The size_cell command changes the drive strength (or other  properties)
+       of  a  leaf  cell  by  rebinding  it to a new library cell that has the
+       required properties.  Like all  other  netlist  editing  commands,  for
+       size_cell  to succeed, all of its arguments must succeed.  If any argu-
+       ments fail, the netlist remains unchanged.  size_cell returns the  col-
+       lection of cells sized if successful and a NULL string if unsuccessful.
+       Each cell in cell_list must be in scope; that is, at or below the  cur-
+       rent instance.
+
+       The  size_cell  command  also  supports the spare cell aware feature in
+       freeze-silicon mode.
+
+       The lib_cell that is being swapped in must  conform  to  the  following
+       restrictions:
+
+        o  lib_cell  must  be functionally compatible with the current library
+          cell to which the cells in cell_list are bound.
+
+        o lib_cell cannot be the same as the current library cell  of  any  of
+          the cells in cell_list.
+
+        o lib_cell must have the same pin count and pin directions as the cur-
+          rent library cell of the cells in cell_list.  size_cell  will  match
+          lib_cell by its pin numbers.
+
+          The  size_cell  command  is for leaf cells only.  size_cell is opti-
+          mized for incremental timing  and  does  not  cause  a  full  timing
+          update.
+
+          This  command support editing a verilog module in the module aspect,
+          through edit_module.
+
+          This command honors design.eco_freeze_silicon_mode.  When  this  app
+          option  is  true,  cell  to  size  will  be marked as spare cell and
+          renamed by adding _Spare post-fix, while a new cell of the specified
+          lib  cell  will  be created with attribute is_fs_eco_add being true.
+          This new cell will inherit the name and connection of  the  cell  to
+          size.
+
+   Don't touch cells and don't use library cells
+       When  app  option  eco.size_cell.honor_dont_touch is set to true, cells
+       with   dont_touch   attribute   are   skipped.    When    app    option
+       eco.size_cell.honor_dont_use  is  set  to true, size_cell checks if the
+       new library cell has true value in dont_use attriute. size_cell  errors
+       out if the library cell has dont_use attribute set to true.
+
+   Multicorner-Multimode Support
+       This command has no dependency on scenario-specific information.
+
+EXAMPLES
+       In  the  following  example, an attempt to size a cell by a funtionally
+       compatible library cell with the same pin count.
+
+         prompt> size_cell o_reg1 -lib_cell class/FD2P
+         Information: Sizing cell 'o_reg1' with lib cell 'class/FD2P'
+         {o_req1}
+
+       Editing a verilog module in the module aspect:
+         prompt> edit_module h1m {size_cell -lib_cell tcbn90ghvt/BUFFHVTD0 u1}
+
+SEE ALSO
+       get_libs(2)
+       get_lib_cells(2)
+       report_cells(2)
+       set_reference(2)
+       edit_module(2)
+       eco.size_cell.honor_dont_touch(3)
+       eco.size_cell.honor_dont_use(3)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

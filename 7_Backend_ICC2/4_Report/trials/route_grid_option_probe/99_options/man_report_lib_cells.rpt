@@ -1,0 +1,62 @@
+2.  Synopsys Commands                                        Command Reference
+                               report_lib_cells
+
+NAME
+       report_lib_cells
+              Reports information about lib_cell objects
+
+SYNTAX
+       status report_lib_cells
+              -objects objects]
+              [-columns column_specs]
+
+   Data Types
+       objects           list
+       column_specs      list
+
+ARGUMENTS
+       -objects objects
+              Specifies  the  objects  to  include in the report.  Each object
+              will be printed as a  separate  row.   For  this  command,  each
+              object must be of class "lib_cell".
+
+       -columns column_specs
+              Specifies the columns to include in the report, their order, and
+              optionally column width and number  of  significant  digits  for
+              each  column.   Each  entry is a column spec, which can take the
+              following forms.  If just a column name is  specified,  such  as
+              "area",  it  will  use  report-specific default column width and
+              significant digits.  A column spec such as  "area:10"  means  to
+              use  a  column  width  of 10.  A column spec such as "area:10.4"
+              means to use a column width of 10 and 4 significant digits.  The
+              significant  digits  information  only applies to floating point
+              values.  If any column spec is "all", all valid columns will  be
+              included for this report.
+
+              The  following  column  names  are  valid  for this report: area
+              dont_touch full_name design_type is_combinational is_isolation
+               is_level_shifter  is_memory_cell  is_sequential  is_three_state
+              name pad_cell
+               pin_count valid_purposes view_name
+
+DESCRIPTION
+       This  command  prints  a  tabular  report with information on a list of
+       lib_cell objects.
+
+EXAMPLES
+       The following example prints a report  for  all  lib_cells  in  library
+       "tech_lib", using the default report configuration.
+
+         prompt> report_lib_cells -objects [get_lib_cells -of_objects tech_lib]
+
+       This  example  reports  on  all  lib_cells  matching  "XOR*" in library
+       "tech_lib", with a specific column configuration.
+
+         prompt> report_lib_cells -objects [get_lib_cells tech_lib/XOR*] \
+          -columns {full_name:20 area:10.4 pin_count}
+
+SEE ALSO
+       set_report_configuration(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

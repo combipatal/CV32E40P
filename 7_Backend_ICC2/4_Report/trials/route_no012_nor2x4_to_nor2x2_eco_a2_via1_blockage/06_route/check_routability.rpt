@@ -1,0 +1,246 @@
+
+=========================================================
+==     Check for PG Net Open  ==
+=========================================================
+
+Warning: PG net VSS has opens. (ZRT-764)
+Warning: PG net VDD has opens. (ZRT-764)
+
+>>>>>> Found 2 PG net open
+Information: The command 'check_routability' cleared the undo history. (UNDO-016)
+
+=========================================================
+==     Check for global route app-option  ==
+=========================================================
+
+>>> The option values are suggested.
+
+Warning: Cell contains tie connections which are not connected to real PG. (ZRT-511)
+Cell Min-Routing-Layer = M1
+Cell Max-Routing-Layer = M8
+Turn off antenna since no rule is specified
+Information: Option route.detail.force_end_on_preferred_grid will be ignored since none of the layers have preferred grid. (ZRT-703)
+Warning: Cannot find a default contact code for layer CO. (ZRT-022)
+Warning: Port VDD of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VSS of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Ignore 2 top cell ports with no pins. (ZRT-027)
+Skipping 6 internal pins that are not physical. Set route.common.verbose_level to > 0 and run routing command to get skipped pin names.
+Info: number of net_type_blockage: 0 
+Information: Via ladder engine would be activated for pattern must join connection in certain commands. Please refer to man-page for the command list. (ZRT-619)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 3.55 outside the layer range. (ZRT-707)
+Information: When applicable Min-max layer allow_pin_connection mode will allow paths of length 3.55 outside the layer range on clock nets. (ZRT-718)
+Information: When applicable layer based tapering will taper up to 0.00 in distance from the pin. (ZRT-706)
+Warning: Standard cell pin MUX41X2_HVT/S0 has no valid via regions. (ZRT-044)
+Printing options for 'route.common.*'
+
+Printing options for 'route.detail.*'
+detail.drc_convergence_effort_level                     :	 high                
+detail.generate_extra_off_grid_pin_tracks               :	 true                
+detail.optimize_wire_via_effort_level                   :	 high                
+
+Printing options for 'route.auto_via_ladder.*'
+
+
+============================================
+==  Check for design                      ==
+============================================
+
+>>> No net contains a large number of ports 
+
+>>> No port contains a large number of pins 
+
+Warning: Port VDD of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+Warning: Port VSS of cell cv32e40p_synth_wrap is unplaced.  This may impact routing result. (ZRT-740)
+
+>>>>>> Found 2 unplaced ports
+
+================================
+==  Check for PG DPT on Track ==
+================================
+>>>>>> Number of PG rails cross even number of track: 0
+
+============================================
+==  Check for PG PreRoute setting         ==
+============================================
+ No number_of_secondary_pg_pin_connections setting and skip checking 
+ 
+============================================
+==             Check for pins             ==
+============================================
+Warning: pin is off track in the region (262.3850 74.4660) (263.6360 74.5160) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (262.6890 132.6990) (263.0130 132.7490) on layer M1. (ZRT-761)
+Warning: pin is off track in the region (262.6890 132.6990) (263.0130 132.7490) on layer M1. (ZRT-761)
+
+>>>>>> found 3 off track pins
+
+====================================================
+== Check for the Cut Metal not on Preferred Grid ==
+====================================================
+
+============================================
+==  Check for overlap of standard cells   ==
+============================================
+
+>>>>>> No overlap of standard cells found
+
+============================================
+==     Check for min-grid violations      ==
+============================================
+
+  >>>> No Library min-grid violations found
+
+  >>>> No Design min-grid violations found
+
+>>>>>> No min-grid violations found
+
+
+============================================
+==    Check for out-of-boundary ports     ==
+============================================
+
+>>>>>> No out-of-boundary error found
+
+============================================
+==        Check for blocked ports         ==
+============================================
+
+>>>>>> Port might be blocked by layer constraints - min/max and freeze layer settings
+
+>>>>>> Port might be blocked by check port access
+
+>>>>>> No blocked ports found
+
+>>>>>> Net blocked by layer constraints - min/max and freeze layer settings
+
+>>>>>> No blocked nets found
+
+============================================
+==     Check for shielding violations     ==
+============================================
+
+>>>>>> The following Non-PG net has a shape with shape_use shield_route
+
+>>> No non-PG net has a shape with shape_use shield_route.
+
+>>>>>> The following PG net has shape with shape_use detail_route and shape length is too long.
+
+>>> No PG net has shape with shape_use detail_route and shape length is too long.
+
+>>>>>> The following nets with shield non-default rule has no internal data representation in Zroute.
+
+>>> No nets with shield non-default rule has no internal data representation in Zroute.
+
+
+>>> No valid P/G net specified in route.common.shielding_nets.
+
+============================================
+==     Check for via cut blockage violation   ==
+============================================
+
+>>>>>> The following via cut blockages are wrongly treated as real vias.
+>>> Error: via cut routing blockage {71.929 20.974} {72.039 21.084} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {25.873 22.340} {25.983 22.450} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {69.497 45.633} {69.607 45.743} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {69.649 42.289} {69.759 42.399} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {33.017 47.726} {33.127 47.836} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {33.929 51.070} {34.039 51.180} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {212.681 60.985} {212.791 61.095} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {297.345 69.041} {297.455 69.151} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {26.025 75.729} {26.135 75.839} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {29.977 75.729} {30.087 75.839} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {27.089 72.385} {27.199 72.495} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {44.265 71.134} {44.375 71.244} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {48.369 79.073} {48.479 79.183} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {43.353 85.761} {43.463 85.871} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {258.433 122.545} {258.543 122.655} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {294.457 131.209} {294.567 131.319} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {182.433 166.017} {182.543 166.127} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {227.425 157.961} {227.535 158.071} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {227.425 157.961} {227.535 158.071} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {184.105 168.110} {184.215 168.220} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {212.529 174.798} {212.639 174.908} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {222.105 182.737} {222.215 182.847} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {235.633 186.081} {235.743 186.191} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {302.817 198.206} {302.927 198.316} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {190.945 212.948} {191.055 213.058} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {195.505 206.260} {195.615 206.370} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {170.273 224.841} {170.383 224.951} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {179.241 216.292} {179.351 216.402} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {175.745 222.980} {175.855 223.090} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {251.441 221.614} {251.551 221.724} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {164.497 241.678} {164.607 241.788} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {213.289 241.678} {213.399 241.788} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {48.065 259.649} {48.175 259.759} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {288.529 256.305} {288.639 256.415} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {199.305 265.086} {199.415 265.196} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {203.257 268.430} {203.367 268.540} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {207.513 265.086} {207.623 265.196} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {212.833 273.025} {212.943 273.135} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {214.809 273.025} {214.919 273.135} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {225.601 276.369} {225.711 276.479} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {220.433 275.118} {220.543 275.228} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {249.921 271.774} {250.031 271.884} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {252.657 275.118} {252.767 275.228} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {182.129 286.401} {182.239 286.511} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {212.377 288.494} {212.487 288.604} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {239.281 288.494} {239.391 288.604} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {238.065 286.401} {238.175 286.511} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {240.953 278.462} {241.063 278.572} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {203.713 296.433} {203.823 296.543} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Error: via cut routing blockage {212.377 296.433} {212.487 296.543} in layer VIA1 is treated as real via. (ZRT-576)
+>>> Reporting for the first 50 via cut blockage violations.
+
+>>> Detected 55 via cut blockages are wrongly treated as real vias.
+
+============================================
+==     Check for custom via definition    ==
+============================================
+
+>>> No custom via definition has too many cuts
+
+============================================
+==          Check for via master          ==
+============================================
+
+>>> The total number of via master definition is 302
+
+===============================================
+==     Check non-default rule setting        ==
+===============================================
+
+>>> No NDR width is larger than signalRouteMaxWidth
+
+>>> No NDR shield width is larger than signalRouteMaxWidth
+
+======================================================
+==     Check redundant duplicated PG shapes         ==
+======================================================
+
+>>> No redundant duplicated PG shapes overlap with each other.
+
+=========================================================
+==     Check for shapes with no net  ==
+=========================================================
+
+>>> No shape with no net.
+
+=========================================================
+==     Check for high fanout net  ==
+=========================================================
+
+>>> No high fanout net.
+
+===========================================================
+==     Check library cell has non-routing layer pins     ==
+===========================================================
+
+>>> No cell has non-routing layer pins to be connected.
+
+============================================
+==     Check over promoted nets           ==
+============================================
+
+>>> No over promoted nets.
+
+End of check_routability
+rtapiOptAttrInterf: set attribute check_routability_called=1778340492 

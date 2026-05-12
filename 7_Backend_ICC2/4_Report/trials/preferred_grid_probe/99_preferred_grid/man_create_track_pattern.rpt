@@ -1,0 +1,242 @@
+2.  Synopsys Commands                                        Command Reference
+                             create_track_pattern
+
+NAME
+       create_track_pattern
+              Creates  a  track  pattern  for specified routing layer and site
+              definition.
+
+SYNTAX
+       int create_track_pattern
+              -layer layer
+              [-site site_def]
+              [-tech tech]
+              [-library library]
+              [-type type]
+              [-direction direction]
+              [-offsets offset_list]
+              [-spacing spacing]
+              [-spacings spacing_list]
+              [-mask_pattern mask_list]
+              [-widths width_list]
+              [-reserved_for_widths reserved_flag_list]
+              [-relative_to core_area|block_boundary]
+              [-end_grid_relative_to core_area|block_boundary]
+              [-end_grid_low_offset low_offset_list]
+              [-end_grid_high_offset high_offset_list]
+              [-end_grid_low_steps low_steps_list]
+              [-end_grid_high_steps high_steps_list]
+
+   Data Types
+       layer                  collection
+       site_def               collection
+       tech                   collection
+       library                collection
+       type                   string
+       direction              string
+       offset_list            list
+       spacing                float
+       spacing_list           list
+       mask_list              list
+       width_list             list
+       reserved_flag_list     list
+       low_offset_list        list
+       high_offset_list       list
+       low_steps_list         list
+       high_steps_list        list
+
+ARGUMENTS
+       -layer layer
+              Specifies the routing layer based on  which  the  track  pattern
+              will  be  created.   You  can use layer name, layer number, or a
+              collection containing one layer object.
+
+       -site site_def
+              Specifies the site definition based on which the  track  pattern
+              will be created.  You can use site definition name, or a collec-
+              tion containing one site definition object.  If  not  specified,
+              the  default  site definition is used if available, otherwise an
+              error is issued.
+
+       -tech tech
+              Track pattern will be created in this  technology.   Default  is
+              the  current  library's tech.  This option is mutually exclusive
+              with the -library option.
+
+       -library library
+              Track pattern will be created in the technology of this library.
+              Default  is the current library.  This option is mutually exclu-
+              sive with the -tech option.
+
+       -type type
+              Specifies the type of the track pattern to  be  created.   Valid
+              values are uniform and non_uniform.  Default is uniform.
+
+       -direction direction
+              Specifies  the  direction  of  the  track pattern to be created.
+              Valid values are horizontal and vertical.  Default will use  the
+              preferred  routing  direction of the layer.  If there is no pre-
+              ferred routing direction, or the preferred routing direction  is
+              not horizontal or vertical, then an error is issued.
+
+       -offsets offset_list
+              Specifies  the location of each track in the track pattern.  The
+              units for the offsets are specified in the technology file; usu-
+              ally  it  is  microns.   For creating non_uniform track pattern,
+              this option is mandatory.  For creating uniform  track  pattern,
+              this option must contain one element if specified.  If not spec-
+              ified when creating uniform  track  pattern,  default  will  use
+              track_offset  attribute  specified for the layer. If there is no
+              track_offset attribute set, then half of  the  spacing  will  be
+              used.   In  any  cases, the offset value must be greater than or
+              equal to zero, otherwise an error is issued.
+
+       -spacing spacing
+              Specifies the pitch distance between each  track  of  the  track
+              pattern.   The unit for the spacing is specified in the technol-
+              ogy file; usually it is micron.  This option  can  be  specified
+              only  when creating uniform track pattern.  Default will use the
+              pitch of the layer.  The spacing  value  must  be  greater  than
+              zero, otherwise and error is issued.
+
+       -spacings spacing_list
+              Specifies  the  pitch  distances between each track of the track
+              pattern.  The unit for the spacing is specified in the  technol-
+              ogy  file;  usually  it is micron.  This option can be specified
+              only when creating uniform track pattern.  This options is mutu-
+              ally  exclusive  with  the  -spacing  option.  Each value in the
+              option must be greater than zero, otherwise and error is issued.
+              If  this  option is specified, then the list size of this option
+              must be same as list size of the -offsets option.
+
+       -mask_pattern mask_list
+              Specifies the mask pattern for the track pattern to be  created.
+              Valid values for the elements of the list are mask_one, mask_two
+              and mask_three.  If this option is specified  when  creating  an
+              non_uniform  track  pattern,  then  the list size of this option
+              must be same as list size of -offsets option.
+
+       -widths width_list
+              Specifies the associated wire width for each track of the  track
+              pattern.   Tracks  that have width attribute can only be used by
+              shapes whose width matches the track's width.  The units for the
+              widths  are  specified  in  the  technology  file; usually it is
+              microns.  By default, tracks created based on this track pattern
+              have  no  width attribute and have no usage constraint.  If this
+              option is specified when creating a non_uniform  track  pattern,
+              then  the list size of this option must be same as the list size
+              of the -offsets option.  If this option is specified when creat-
+              ing  an uniform track pattern, then the list size of this option
+              must be one.  The width value, when specified, must  be  greater
+              than  or  equal  to the minimum width of the layer, otherwise an
+              error is issued.
+
+       -reserved_for_widths reserved_flag_list
+              Indicates whether the tracks created by this track  pattern  are
+              reserved  tracks.  Reserved tracks can only be used by nets with
+              a non-default rule.  This option  can  be  specified  only  when
+              -widths  option  is specified.  If this option is specified when
+              creating a non_uniform track pattern, then the list size of this
+              option must be same as the list size of the -offsets option.  If
+              this option is specified when creating an uniform track pattern,
+              then the list size of this option must be one.
+
+       -relative_to core_area | block_boundary
+              Specifies  the  alignment  of  track  line of the track pattern.
+              Based on the option, one of the track line will  be  aligned  to
+              lower  boundary of core area bounding box or block bounding box.
+              Although tracks will be  created  in  complete  block  boundary.
+              Default is core_area;
+
+       -end_grid_low_offset low_offset_list
+              Specifies  a  list of offset from the left or bottom edge to the
+              starting point of the first grid rectangle.  This option  should
+              be  specified  together  with  options -end_grid_high_offset and
+              -end_grid_low_steps  and  -end_grid_high_steps.  and  they   are
+              should in same list size.
+
+       -end_grid_high_offset high_offset_list
+              Specifies  a  list of offset from the left or bottom edge to the
+              ending point of the first grid rectangle.  This option should be
+              specified   together   with   options  -end_grid_low_offset  and
+              -end_grid_low_steps  and  -end_grid_high_steps.  and  they   are
+              should in same list size.
+
+       -end_grid_low_steps low_steps_list
+              Specifies  a  list of steps to use when creating subsequent grid
+              points. Each offset in the list is the distance between the pre-
+              vious  starting  grid point and the current starting grid point.
+              This  option  should  be   specified   together   with   options
+              -end_grid_low_offset      and      -end_grid_high_offset     and
+              -end_grid_high_steps. and they are should in same list size.
+
+       -end_grid_high_steps high_steps_list
+              Specifies a list of steps to use when creating  subsequent  grid
+              points. Each offset in the list is the distance between the pre-
+              vious ending grid point and the current ending grid point.  This
+              option    should    be    specified    together   with   options
+              -end_grid_low_offset     and      -end_grid_high_offset      and
+              -end_grid_low_steps. and they are should in same list size.
+
+       -end_grid_relative_to core_area | block_boundary
+              Specifies  that  subsequent  grid points need to be created with
+              respect to core area bounding box or lower left of block  bound-
+              ing  box.  This option should be specified together with options
+              -end_grid_low_offset.  default is core_area.
+
+DESCRIPTION
+       The create_track_pattern command enables you to create a track  pattern
+       in the technology of the current or specified library. A technology can
+       have at-most one track pattern for a specific site definition and rout-
+       ing layer combination.
+
+       You  can  create either an uniform track pattern or a non_uniform track
+       pattern.  A uniform track pattern has same spacing between tracks.  The
+       -offsets,  -widths and -reserved_for_widths options, if specified, must
+       have one element.
+
+       A non_uniform track pattern can have different spacing between  tracks.
+       The  -offsets  option  is mandatory for creating non_uniform track pat-
+       tern.  The -mask_pattern, -widths and -reserved_for_widths options,  if
+       specified, must have same size as -offsets option.
+
+   Multicorner-Multimode Support
+       This command has no dependency on scenario-specific information.
+
+EXAMPLES
+       The following example creates a non_uniform horizontal track pattern on
+       layer M1 for default site  definition  in  the  technology  of  current
+       library.   The  track  pattern  has four tracks with specified offsets,
+       widths and mask pattern.
+
+         prompt> create_track_pattern -layer M1 -type non_uniform \
+            -direction horizontal -offsets { 0.3 0.5 0.7 1.05 } \
+            -mask_pattern { mask_one mask_two mask_one mask_two } \
+            -widths { 0.15 0.1 0.1 0.1 }
+         1
+
+       The following example creates a uniform vertical track pattern on layer
+       M2  for site definition unit in the technology of current library.  The
+       tracks for this track pattern start from offset 0.3, and has spacing as
+       0.2 and width as 0.1. The mask pattern is alternating.
+
+         prompt> create_track_pattern -layer M2 -site unit -type uniform \
+            -direction vertical -offsets { 0.3 } -spacing 0.2 \
+            -widths { 0.1 } -mask_pattern { mask_one mask_two }
+         1
+
+       The  following  example creates a uniform track pattern on layer M3 for
+       default site definition using default attributes.
+
+         prompt> create_track_pattern -layer M3
+         Warning: '-direction' option not specified. Using preferred routing direction of the layer vertical. (NDMUI-379)
+         Warning: '-spacing' option not specified. Using pitch of the layer 0.14. (NDMUI-379)
+         Warning: '-offsets' option not specified. Using half spacing 0.07. (NDMUI-379)
+         1
+
+SEE ALSO
+       remove_track_patterns(2)
+       report_track_patterns(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

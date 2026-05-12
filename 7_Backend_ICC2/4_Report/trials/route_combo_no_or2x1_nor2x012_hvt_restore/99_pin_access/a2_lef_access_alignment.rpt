@@ -1,0 +1,100 @@
+A2 LEF access alignment analysis
+
+lef: /DATA/home/edu135/lib/SAED32_EDK/lib/stdcell_hvt/lef/saed32nm_hvt_1p9m.lef
+match_tsv: 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_pin_access/drc_to_pin_access_coordinate_match.tsv
+marker_context: 7_Backend_ICC2/4_Report/trials/route_combo_no_or2x1_nor2x012_hvt_restore/99_marker_context_all/marker_context.rpt
+unique_access_points: 52
+track_start: 0.088
+track_pitch: 0.152
+via1_m1_requirement: cut_width=0.050, enc_x=0.030, enc_y=0.005
+
+Missing inputs:
+
+Unique matched A2 access points by ref:
+  NOR2X4_HVT: 43
+  OR2X4_HVT: 8
+  NOR2X0_HVT: 1
+
+M1 enclosure status by ref:
+  NOR2X4_HVT | inside_m1_but_enclosure_tight: 33
+  NOR2X4_HVT | full_m1_enclosure_ok: 10
+  OR2X4_HVT | full_m1_enclosure_ok: 8
+  NOR2X0_HVT | inside_m1_but_enclosure_tight: 1
+
+Inferred orientation by ref:
+  NOR2X4_HVT | MX: 21
+  NOR2X4_HVT | R0: 19
+  OR2X4_HVT | MX: 5
+  OR2X4_HVT | R0: 3
+  NOR2X4_HVT | R180: 2
+  NOR2X4_HVT | MY: 1
+  NOR2X0_HVT | R0: 1
+
+Ref NOR2X0_HVT local access X buckets:
+  0.608: 1
+Ref NOR2X0_HVT local access Y buckets:
+  0.608: 1
+Ref NOR2X0_HVT global access track delta X:
+  0.000: 1
+Ref NOR2X0_HVT global access track delta Y:
+  0.000: 1
+Ref NOR2X0_HVT LEF A2 shapes:
+  M1 RECT (0.489, 0.553, 0.663, 0.733)
+  CO RECT (0.511, 0.665, 0.553, 0.707)
+
+Ref NOR2X4_HVT local access X buckets:
+  0.608: 43
+Ref NOR2X4_HVT local access Y buckets:
+  0.643: 23
+  0.608: 20
+Ref NOR2X4_HVT global access track delta X:
+  0.000: 43
+Ref NOR2X4_HVT global access track delta Y:
+  -0.035: 23
+  0.000: 20
+Ref NOR2X4_HVT LEF A2 shapes:
+  M1 RECT (0.489, 0.553, 0.663, 0.733)
+  CO RECT (0.511, 0.665, 0.553, 0.707)
+
+Ref OR2X4_HVT local access X buckets:
+  0.608: 8
+Ref OR2X4_HVT local access Y buckets:
+  0.760: 5
+  0.723: 3
+Ref OR2X4_HVT global access track delta X:
+  0.000: 8
+Ref OR2X4_HVT global access track delta Y:
+  0.000: 4
+  -0.037: 3
+  -0.000: 1
+Ref OR2X4_HVT LEF A2 shapes:
+  M1 RECT (0.503, 0.631, 0.664, 0.815)
+  CO RECT (0.511, 0.662, 0.553, 0.704)
+
+Examples:
+  u_core/core_i/U5633 ref=OR2X4_HVT orient=MX global=(36.568,20.912) local=(0.608,0.760) status=full_m1_enclosure_ok
+  u_core/core_i/id_stage_i/U2688 ref=NOR2X4_HVT orient=R0 global=(20.76,22.28) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U1193 ref=NOR2X4_HVT orient=R0 global=(37.176,45.688) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U1195 ref=NOR2X4_HVT orient=MX global=(135.368,37.749) local=(0.608,0.643) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U3540 ref=NOR2X4_HVT orient=R0 global=(136.584,39.0) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U2475 ref=OR2X4_HVT orient=R0 global=(197.536,42.459) local=(0.608,0.723) status=full_m1_enclosure_ok
+  u_core/core_i/id_stage_i/U3375 ref=NOR2X4_HVT orient=MX global=(39.456,47.781) local=(0.608,0.643) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U1700 ref=NOR2X4_HVT orient=R0 global=(56.936,69.096) local=(0.608,0.608) status=full_m1_enclosure_ok
+  u_core/core_i/id_stage_i/U1198 ref=NOR2X4_HVT orient=R0 global=(47.968,62.408) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U1200 ref=NOR2X4_HVT orient=R0 global=(59.368,69.096) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U204 ref=NOR2X4_HVT orient=R180 global=(40.52,71.189) local=(0.608,0.643) status=full_m1_enclosure_ok
+  u_core/core_i/id_stage_i/U3250 ref=NOR2X4_HVT orient=R0 global=(42.8,72.44) local=(0.608,0.608) status=full_m1_enclosure_ok
+  u_core/core_i/id_stage_i/U1190 ref=NOR2X4_HVT orient=MX global=(43.56,74.533) local=(0.608,0.643) status=inside_m1_but_enclosure_tight
+  u_core/core_i/U5127 ref=NOR2X4_HVT orient=R0 global=(296.944,82.472) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/U5112 ref=NOR2X4_HVT orient=MX global=(214.256,111.317) local=(0.608,0.643) status=inside_m1_but_enclosure_tight
+  u_core/core_i/U5494 ref=OR2X4_HVT orient=R0 global=(293.296,116.027) local=(0.608,0.723) status=full_m1_enclosure_ok
+  u_core/core_i/cs_registers_i/U110 ref=OR2X4_HVT orient=R0 global=(222.008,146.123) local=(0.608,0.723) status=full_m1_enclosure_ok
+  u_core/core_i/id_stage_i/U392 ref=NOR2X4_HVT orient=MX global=(167.44,164.821) local=(0.608,0.643) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U582 ref=NOR2X4_HVT orient=R0 global=(191.304,156.04) local=(0.608,0.608) status=inside_m1_but_enclosure_tight
+  u_core/core_i/id_stage_i/U394 ref=NOR2X4_HVT orient=R0 global=(168.2,169.416) local=(0.608,0.608) status=full_m1_enclosure_ok
+
+Interpretation:
+  full_m1_enclosure_ok means the access point has enough A2 M1 metal for default VIA1 M1 enclosure.
+  inside_m1_but_enclosure_tight means the access point is on the pin but too close to an M1 pin edge.
+  If most points are full_m1_enclosure_ok, the remaining off-grid is less likely pure LEF pin-metal width.
+  Then focus should move to generated via/access snapping or route/check grid policy.

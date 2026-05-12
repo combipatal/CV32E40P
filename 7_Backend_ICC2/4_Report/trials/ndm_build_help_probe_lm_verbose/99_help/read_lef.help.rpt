@@ -1,0 +1,29 @@
+ read_lef             # Read LEF files
+   [-library lib]         (Library to populate)
+   [-merge_action merge_option]
+                          (merge option (default is add): 
+                           Values: add, attribute_only, ignore, 
+                           overwrite, update)
+   [-block_map block_map_file_name]
+                          (block map file name)
+   [-syntax_only]         (Only do syntax/semantic checks)
+   [-convert_sites site_name_pairs]
+                          (List of name pairs {from_site to_site})
+   [-include include_list]
+                          (Types of data to include: 
+                           Values: cell, tech)
+   [-properties property_list]
+                          (Properties to read)
+   [-cell_boundary {by_overlap_layer|by_cell_size}]
+                          (Derive cell boundary from specific shape (default is by_overlap_layer): 
+                           Values: by_cell_size, by_overlap_layer)
+   [-create_eeq_setting_for_block_and_pad]
+                          (If specified, eeq_class attributes will be calculated and set for PG terminals)
+   [-ignore_pin_direction_for_eeq]
+                          (If specified, strong/weak connection among terminals is determined only by PORT statement)
+   [-preserve_lef_cell_site]
+                          (Don't assign site to cell based on cell size, just keep the setting from LEF file)
+   [-configure_frame_options]
+                          (If specified, read_lef calls “configure_frame_options” at the end of read_lef)
+   file_names             (Files to read)
+

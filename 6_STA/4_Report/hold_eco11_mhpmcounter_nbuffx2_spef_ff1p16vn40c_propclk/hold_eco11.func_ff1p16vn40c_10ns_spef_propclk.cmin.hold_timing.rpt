@@ -1,0 +1,814 @@
+****************************************
+Report : timing
+	-path_type full
+	-delay_type min
+	-slack_lesser_than 100.00
+	-max_paths 20
+	-sort_by slack
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP5-3
+Date   : Sun May 10 12:05:09 2026
+****************************************
+
+
+  Startpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/ZCTSINV_6417_432/Y
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.16       0.16
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/CLK (SDFFARX1_RVT)
+                                                          0.00       0.16 r
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/QN (SDFFARX1_RVT)
+                                                          0.04 &     0.20 f
+  u_core/core_i/cs_registers_i/U1860/Y (AO22X1_HVT)       0.02 &     0.22 f
+  u_core/core_i/cs_registers_i/eco_cell_19_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.24 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.24 f
+  data arrival time                                                  0.24
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.17       0.17
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][0]/CLK (SDFFARX1_RVT)
+                                                                     0.17 r
+  clock reconvergence pessimism                          -0.01       0.16
+  clock uncertainty                                       0.10       0.26
+  library hold time                                      -0.01       0.25
+  data required time                                                 0.25
+  ------------------------------------------------------------------------------
+  data required time                                                 0.25
+  data arrival time                                                 -0.24
+  ------------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+  Startpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/ZCTSINV_6417_432/Y
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.16       0.16
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/CLK (SDFFARX1_RVT)
+                                                          0.00       0.16 r
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/QN (SDFFARX1_RVT)
+                                                          0.04 &     0.20 f
+  u_core/core_i/cs_registers_i/U1597/Y (AO22X1_HVT)       0.02 &     0.22 f
+  u_core/core_i/cs_registers_i/eco_cell_21_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.24 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.24 f
+  data arrival time                                                  0.24
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.17       0.17
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[3][0]/CLK (SDFFARX1_RVT)
+                                                                     0.17 r
+  clock reconvergence pessimism                          -0.01       0.16
+  clock uncertainty                                       0.10       0.26
+  library hold time                                      -0.01       0.25
+  data required time                                                 0.25
+  ------------------------------------------------------------------------------
+  data required time                                                 0.25
+  data arrival time                                                 -0.24
+  ------------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+  Startpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/ZCTSINV_6417_432/Y
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.16       0.16
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/CLK (SDFFARX1_RVT)
+                                                          0.00       0.16 r
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/QN (SDFFARX1_RVT)
+                                                          0.04 &     0.20 f
+  u_core/core_i/cs_registers_i/U2121/Y (AO22X1_HVT)       0.02 &     0.22 f
+  u_core/core_i/cs_registers_i/eco_cell_23_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.24 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.24 f
+  data arrival time                                                  0.24
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.17       0.17
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[0][0]/CLK (SDFFARX1_RVT)
+                                                                     0.17 r
+  clock reconvergence pessimism                          -0.01       0.16
+  clock uncertainty                                       0.10       0.26
+  library hold time                                      -0.01       0.25
+  data required time                                                 0.25
+  ------------------------------------------------------------------------------
+  data required time                                                 0.25
+  data arrival time                                                 -0.24
+  ------------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.01
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][33]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1734/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_25_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.26 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][33]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.26 f
+  data arrival time                                                  0.26
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][33]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.26
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][56]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1828/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_41_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.26 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][56]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.26 f
+  data arrival time                                                  0.26
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][56]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.26
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][54]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1820/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_47_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.26 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][54]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.26 f
+  data arrival time                                                  0.26
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][54]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.26
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][58]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1836/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_43_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][58]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][58]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][63]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1857/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_37_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][63]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][63]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][34]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1738/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_29_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.26 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][34]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.26 f
+  data arrival time                                                  0.26
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][34]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.26
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][32]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1730/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_35_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.26 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][32]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.26 f
+  data arrival time                                                  0.26
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][32]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.26
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][55]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1824/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_31_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][55]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][55]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][57]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1832/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_39_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][57]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][57]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][62]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1854/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_49_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][62]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][62]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][35]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1742/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_33_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][35]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][35]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][59]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1840/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_45_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][59]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][59]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][36]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1746/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_27_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][36]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][36]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][25]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1914/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][25]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.25 f
+  data arrival time                                                  0.25
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.17       0.17
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][25]/CLK (SDFFARX1_RVT)
+                                                                     0.17 r
+  clock reconvergence pessimism                          -0.00       0.17
+  clock uncertainty                                       0.10       0.27
+  library hold time                                      -0.01       0.25
+  data required time                                                 0.25
+  ------------------------------------------------------------------------------
+  data required time                                                 0.25
+  data arrival time                                                 -0.25
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/if_stage_i/pc_id_o_reg[9]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/depc_q_reg[9]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.15       0.15
+  u_core/core_i/if_stage_i/pc_id_o_reg[9]/CLK (SDFFARX1_RVT)
+                                                          0.00       0.15 r
+  u_core/core_i/if_stage_i/pc_id_o_reg[9]/Q (SDFFARX1_RVT)
+                                                          0.06 &     0.21 f
+  u_core/core_i/U2987/Y (NBUFFX4_HVT)                     0.03 &     0.24 f
+  u_core/core_i/cs_registers_i/U1308/Y (AO222X1_HVT)      0.03 &     0.27 f
+  u_core/core_i/cs_registers_i/depc_q_reg[9]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.19       0.19
+  u_core/core_i/cs_registers_i/depc_q_reg[9]/CLK (SDFFARX1_RVT)      0.19 r
+  clock reconvergence pessimism                          -0.00       0.19
+  clock uncertainty                                       0.10       0.29
+  library hold time                                      -0.02       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (VIOLATED: increase significant digits)                     -0.00
+
+
+  Startpoint: u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][60]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg/GCLK
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.09       0.09
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/CLK (SDFFARX1_RVT)
+                                                          0.00       0.09 r
+  u_core/core_i/id_stage_i/mhpmevent_minstret_o_reg/Q (SDFFARX1_RVT)
+                                                          0.07 &     0.16 f
+  u_core/core_i/cs_registers_i/U289/Y (NAND4X0_HVT)       0.02 &     0.18 r
+  u_core/core_i/cs_registers_i/U144/Y (NBUFFX2_HVT)       0.03 &     0.21 r
+  u_core/core_i/cs_registers_i/U145/Y (INVX8_HVT)         0.02 &     0.23 f
+  u_core/core_i/cs_registers_i/U1844/Y (AO22X1_HVT)       0.02 &     0.25 f
+  u_core/core_i/cs_registers_i/eco_cell_51_0/Y (NBUFFX2_HVT)
+                                                          0.02 &     0.27 f
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][60]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.27 f
+  data arrival time                                                  0.27
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.18       0.18
+  u_core/core_i/cs_registers_i/mhpmcounter_q_reg[2][60]/CLK (SDFFARX1_RVT)
+                                                                     0.18 r
+  clock reconvergence pessimism                          -0.00       0.18
+  clock uncertainty                                       0.10       0.28
+  library hold time                                      -0.01       0.27
+  data required time                                                 0.27
+  ------------------------------------------------------------------------------
+  data required time                                                 0.27
+  data arrival time                                                 -0.27
+  ------------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[22]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[21]
+               (rising edge-triggered flip-flop clocked by clk_i)
+  Last common pin: u_core/core_i/ZCTSINV_6417_432/Y
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                                   Incr       Path
+  ------------------------------------------------------------------------------
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.15       0.15
+  u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[22]/CLK (SDFFARX1_RVT)
+                                                          0.00       0.15 r
+  u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[22]/Q (SDFFARX1_RVT)
+                                                          0.06 &     0.21 r
+  u_core/core_i/U4354/Y (AND2X1_HVT)                      0.02 &     0.23 r
+  u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[21]/D (SDFFARX1_RVT)
+                                                          0.00 &     0.23 r
+  data arrival time                                                  0.23
+
+  clock clk_i (rise edge)                                 0.00       0.00
+  clock network delay (propagated)                        0.16       0.16
+  u_core/core_i/ex_stage_i/alu_i/alu_div_i/ResReg_DP_reg[21]/CLK (SDFFARX1_RVT)
+                                                                     0.16 r
+  clock reconvergence pessimism                          -0.01       0.15
+  clock uncertainty                                       0.10       0.25
+  library hold time                                      -0.02       0.23
+  data required time                                                 0.23
+  ------------------------------------------------------------------------------
+  data required time                                                 0.23
+  data arrival time                                                 -0.23
+  ------------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+Warning: report_timing has satisfied the max_paths criteria. There are 2295 further endpoints which have paths of interest with slack less than   100.00 that were not considered when generating this report. (UITE-502)
+
+1

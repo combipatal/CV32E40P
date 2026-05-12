@@ -1,0 +1,207 @@
+2.  Synopsys Commands                                        Command Reference
+                                set_pt_options
+
+NAME
+       set_pt_options
+              Sets  configuration  options to optimize the current design with
+              PrimeTime ECO.
+
+SYNTAX
+       status set_pt_options
+       [-pt_exec path_name]
+       [-host_option option_name]
+       [-scenario_scripts pair_list]
+       [-scenario_constraints pair_list]
+       [-pre_dmsa_script file_name]
+       [-pre_link_script file_name]
+       [-link_script file_name]
+       [-post_link_script file_name]
+       [-work_dir directory_name]
+       [-hold_fix_buffers buffer_list]
+       [-setup_path_groups pathgroup_list]
+       [-hold_path_groups pathgroup_list]
+       [-ir_result_name string]
+       [-verilog_options options]
+       [-reset]
+
+   Data Types
+       path_name        string
+       option_name      string
+       pair_list        list
+       file_name        string
+       directory_name   string
+       buffer_list      list
+       pathgroup_list   list
+
+ARGUMENTS
+       -pt_exec path_name
+              Specifies the path to the 'pt_shell' PrimeTime executable.
+
+       -host_option option_name
+              Specifies the option name defined by the  set_host_options  com-
+              mand.  After  you  specify host options like the number of cores
+              and submit command, PrimeTime slave  process  will  be  launched
+              based  on  the  specified  options. But set_host_options -target
+              PrimeTime has higher priority than  -host_option  for  launching
+              PrimeTime  slave  process. In hierarchical ECO fusion, this host
+              option is passed to the run_block_script command  in  the  back-
+              ground  to export data for blocks or implement ECO changes using
+              distributed processing. This option is mandatory for  hierarchi-
+              cal  ECO  fusion.  After  setting  the  host  options,  use  the
+              check_host_options command to validate the settings.
+
+       -scenario_scripts pair_list
+              Specifies a signoff script for each signoff scenario  using  the
+              following format:
+
+               {{scen1 script1} ... {scenN scriptN}}
+
+              By  default,  eco  fusion will write out verilog, upf, parastics
+              and  saif   if   applicable   and   define   eco_fusion_verilog,
+              eco_fusion_upf,  eco_fusion_parastic,  eco_fusion_parasitic_cor-
+              ner_name and eco_fusion_read_saif_callback TCL variables or call
+              back  functions to point to corresponding files in the top-level
+              wrapper script assembled for each scenario. These TCL  variables
+              could be referred to in end-user provided signoff scripts, which
+              are sourced at end of  the  top-level  wrapper  script.  But  if
+              either  number of scenarios or scenario names does not match ICC
+              scenarios exactly, it will only provide pointer to  verilog  and
+              upf while not parasitic and saif. Then end-users need to prepare
+              the saif/parasitics on their own.
+
+              To avoid checking out PrimePower  license  in  eco  fusion,  eco
+              fusion  defines eco_fusion_read_saif_callback and calls it auto-
+              matically from the master process. so end-users should not  read
+              saif  or call eco_fusion_read_saif_callback directly in provided
+              signoff     script.     But      end-user      could      refine
+              eco_fusion_read_saif_callback  in  provided  signoff  scripts to
+              read saif file prepared by themselves.
+
+              As for hierarchical  eco  fusion  flow,  end-users  should  call
+              eco_fusion_read_parasitic_callback  to  read parasitics for top-
+              block and sub blocks as eco_fusion_parasitic only points to top-
+              block parasitic.
+
+       -scenario_constraints pair_list
+              Specifies  a  signoff  constraint  file for each active scenario
+              using the following format:
+
+              {{scenario_1 /path_to_file_1} {scenario_2 /path_to_file_2} ...}
+
+              where the path is an absolute path to the file. This  option  is
+              mandatory  for  the hierarchical ECO fusion flow when a complete
+              full-chip constraint is not available in memory for the  eco_opt
+              command  to  export.  This can occur when one or more blocks are
+              linked to abstract view instead of the design view.
+
+       -pre_dmsa_script file_name
+              Specifies the file that  contains  a  custom  PrimeTime  script,
+              which is executed on master before dmsa is launched.
+
+       -pre_link_script file_name
+              Specifies  the  file  that  contains  a custom PrimeTime script,
+              which is executed on slave  before  linking  in  PrimeTime.  Use
+              PrimeTime commands that do not require the current design.
+
+       -link_script file_name
+              Specifies  the  file  that  contains  a custom PrimeTime script,
+              which is executed on slave immediately after linking  in  Prime-
+              Time. Use PrimeTime commands that require the current design.
+
+       -post_link_script file_name
+              Specifies  the  file  that  contains  a custom PrimeTime script,
+              which is executed on slave after linking but before update  tim-
+              ing in PrimeTime.
+
+       -work_dir directory_name
+              Specifies  the directory where PrimeTime files and logs are gen-
+              erated.  If you don't specify a working directory,  a  directory
+              is automatically created under your current working directory.
+
+       -hold_fix_buffers list
+              Specifies a list of library buffer names for hold time fixing.
+
+       -setup_path_groups list
+              Specifies  a  list or collection of path groups for setup timing
+              fixing.  Restricts setup fixing to  paths  that  belong  to  the
+              specified path groups.
+
+       -hold_path_groups list
+              Specifies  a  list  or collection of path groups for hold timing
+              fixing.  Restricts hold fixing to paths that belong to the spec-
+              ified path groups.
+
+       -ir_result_name string
+              Specifies  the  rail  result  name for IR drop fixing to work on
+              when -type power_integrity is enabled.   If  -ir_result_name  is
+              not specified,  tool will use currently opened rail result.   If
+              no rail result is currently opened, tool will  use  the  default
+              rail result named REDHAWK_RESULT.
+
+       -verilog_options options
+              Specifies custom options for write_verilog.
+
+       -reset Resets all command options.
+
+DESCRIPTION
+       This  command  specifies options to run PrimeTime from within an imple-
+       mentation tool. For example, you must specify a path to  the  PrimeTime
+       executable to run PrimeTime ECO.
+
+       You  can  reset  to  default  values  for all options by specifying the
+       -reset option.
+
+       The tools are configured as in the analyze_timing_correlation  command.
+       If  you  want  to  have  a  different  setting  for  PrimeTime, use the
+       -pre_link_script or -post_link_script to  specify  your  own  PrimeTime
+       setting. The setting will be applied across all scenarios.
+
+       For  example, if you have turned off crosstalk analysis but want Prime-
+       Time to run in crosstalk analysis mode, create a Tcl script  that  con-
+       tains the following PrimeTime command.
+
+         set_app si_enable_analysis true
+
+       Suppose  the  file  name is my_sta_setting.tcl. With the following com-
+       mand, PrimeTime will run in SI mode.
+
+         prompt> set_pt_options -pre_link_script my_sta_setting.tcl
+
+       To create a setting that requires the current design, you can  use  the
+       -post_link_script option as follows:
+
+         prompt> set_pt_options -post_link_script my_post_link_setting.tcl
+
+       If  you have multiple scenarios in your design, PrimeTime runs Distrib-
+       uted Multi Scenario Analysis (DMSA) with separate slave  processes.  If
+       you don't specify any submit commands, the tool launches PrimeTime mas-
+       ter and slave processes on the same host machine as  the  current  ses-
+       sion.  If  you  specify  a  submit  command,  PrimeTime  slaves will be
+       launched using the submit command. To specify a submit  command,  first
+       use the set_host_options command to define your host option name. Next,
+       use this  option  name  to  specify  the  -host_option  option  of  the
+       set_pt_options  command. The following example shows the commands using
+       the bsub command to use LSF farm.
+
+         prompt> set_host_option -name pteco_host_option -submit_command "/lsf/bin/bsub -R
+         prompt> set_pt_options -host_option "pteco_host_option"
+         prompt> report_pt_options
+
+EXAMPLES
+       The following example sets a specific PrimeTime executable.
+
+         prompt> set_pt_options -pt_exec /u/mgr/bin/pt_shell
+
+       The following example sets a specific PrimeTime executable  and  enable
+       In-Design StarRC for extraction.
+
+         prompt> set_pt_options -pt_exec /u/mgr/bin/pt_shell
+
+SEE ALSO
+       check_pt_qor (2)
+       eco_opt (2)
+       report_pt_options (2)
+       open_rail_result (2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

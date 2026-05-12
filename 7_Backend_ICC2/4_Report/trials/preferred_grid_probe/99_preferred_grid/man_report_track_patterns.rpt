@@ -1,0 +1,92 @@
+2.  Synopsys Commands                                        Command Reference
+                             report_track_patterns
+
+NAME
+       report_track_patterns
+              Reports  track  patterns  for  specified routing layers and site
+              definitions.
+
+SYNTAX
+       int report_track_patterns
+              -layers layer_list
+              [-sites site_def_list]
+              [-tech tech]
+              [-library library]
+              [-verbose]
+              [-nosplit]
+              [-significant_digits digits]
+
+   Data Types
+       layer_list     string
+       site_def_list  list
+       tech           collection
+       library        string or collection
+       digits         int
+
+ARGUMENTS
+       -layers layer_list
+              Specifies the routing layers from which to report the track pat-
+              tern.  Specify the layers by using a collection or by specifying
+              a list of layer names from the technology.
+
+       -sites site_def_list
+              Specifies the site definitions from which to  report  the  track
+              pattern.   Specify  the site definition by using a collection or
+              by specifying a list of site definition names from the  technol-
+              ogy.   If  not specified, the default site definition is used if
+              available, otherwise an error is issued.
+
+       -tech tech
+              Track pattern will be reported from this technology.  Default is
+              the  current  library's tech.  This option is mutually exclusive
+              with the -library option.
+
+       -library library
+              Track pattern will be  reported  from  the  technology  of  this
+              library.   Default is the current library.  This option is mutu-
+              ally exclusive with the -tech option.
+
+       -verbose
+              There is no effect using this option right now. In  the  future,
+              it  may  report  additional  columns of data when this option is
+              specified.
+
+       -nosplit
+              Does not split lines if column overflows.
+
+       -significant_digits digits
+              Specifies the number of digits to the right of the decimal point
+              that are to be reported. Allowed values are 0-13; the default is
+              determined by  the  report_default_significant_digits  variable,
+              whose  default  value is 2. Use this option if you want to over-
+              ride the default.
+
+DESCRIPTION
+       This command displays information about the track patterns in  a  tech-
+       nology.
+
+EXAMPLES
+       The  following  example reports all track patterns in the technology of
+       the current library.
+
+         prompt> report_track_patterns
+         Site_def  Layer  Type         Direction   Spacing Offset  Width   Reserved  Mask
+         --------------------------------------------------------------------------------
+         unit      M1     non_uniform  vertical    --      0.30    0.15    true      mask_one
+         unit      M1     non_uniform  vertical    --      0.50    0.10    false     mask_two
+         unit      M1     non_uniform  vertical    --      0.70    0.10    true      mask_one
+         unit      M1     non_uniform  vertical    --      1.05    0.10    false     mask_two
+         unit      M2     non_uniform  horizontal  --      0.10    0.10    false     mask_one
+         unit      M2     non_uniform  horizontal  --      0.25    0.15    true      mask_two
+         unit      M3     uniform      vertical    0.20    0.30    0.10    false     mask_one mask_two
+         unit      M4     uniform      horizontal  0.20    0.10    0.10    false     mask_two mask_one
+         unit      M5     uniform      horizontal  0.14    0.07    --      --        --
+         unit      M6     uniform      horizontal  0.14    0.07    --      --        --
+         1
+
+SEE ALSO
+       create_track_pattern(2)
+       remove_track_patterns(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

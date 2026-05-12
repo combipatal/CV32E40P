@@ -1,0 +1,33 @@
+****************************************
+Report : constraint
+	-all_violators
+	-path slack_only
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP5-3
+Date   : Sun May 10 11:51:58 2026
+****************************************
+
+
+
+   min_delay/hold ('clk_i' group)
+
+   Endpoint                                                  Slack
+   -----------------------------------------------------------------
+   u_core/core_i/cs_registers_i/depc_q_reg[9]/D               0.00  (VIOLATED: increase significant digits)
+
+
+
+
+   max_capacitance
+
+                             Required        Actual
+   Pin                      Capacitance    Capacitance       Slack
+   -----------------------------------------------------------------
+   u_core/core_i/cs_registers_i/U83/Y
+                               16.00          16.88          -0.88  (VIOLATED)
+   u_core/core_i/U2357/Y       16.00          16.63          -0.63  (VIOLATED)
+   u_core/core_i/cs_registers_i/gen_trigger_regs.tmatch_value_q_reg[22]/Q
+                                8.00           8.19          -0.19  (VIOLATED)
+
+
+1

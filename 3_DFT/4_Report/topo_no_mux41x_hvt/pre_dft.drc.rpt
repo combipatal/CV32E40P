@@ -1,0 +1,72 @@
+In mode: all_dft...
+  Pre-DFT DRC enabled
+
+Information: Starting test design rule checking. (TEST-222)
+  Loading test protocol
+Warning: insert_dft does not perform synthesis optimization in DC-Topographical mode. Run incremental compile to reoptimize the design after insert_dft. (TESTXG-58)
+  ...basic checks...
+  ...basic sequential cell checks...
+  	...checking for scan equivalents...
+  ...checking vector rules...
+  ...checking pre-dft rules...
+
+-----------------------------------------------------------------
+Begin Topology violations...
+
+Warning: Input pin pulp_clock_en_i of cell u_core/core_i (cv32e40p_core_COREV_PULP0_COREV_CLUSTER0_FPU0_FPU_ADDMUL_LAT0_FPU_OTHERS_LAT0_ZFINX0_NUM_MHPMCOUNTERS1) is unconnected. It is assumed 'X' for the purpose of test. (TEST-332)
+Information: There are 146 other pins with the same violation. (TEST-170)
+
+Topology violations completed...
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+Begin Pre-DFT violations...
+
+Warning: Clock gating cell u_core/core_i/if_stage_i/clk_gate_is_compressed_id_o_reg has unconnected test pin. (TEST-130)
+Information: There are 72 other cells with the same violation. (TEST-171)
+
+Pre-DFT violations completed...
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+Begin Other violations...
+
+Warning: Cell u_core/core_i/sleep_unit_i/core_clock_gate_i/u_icg has constant 1 value. (TEST-505)
+
+Other violations completed...
+-----------------------------------------------------------------
+
+-----------------------------------------------------------------
+  DRC Report
+
+  Total violations: 294
+
+-----------------------------------------------------------------
+
+147 TOPOLOGY VIOLATIONS
+   147 Unconnected input pin violations (TEST-332)
+
+73 PRE-DFT VIOLATIONS
+    73 Test pin of clock gating cell is unconnected violations (TEST-130)
+
+74 OTHER VIOLATIONS
+     1 Cell is constant 1 violation (TEST-505)
+
+
+Warning: Violations occurred during test design rule checking. (TEST-124)
+
+-----------------------------------------------------------------
+  Sequential Cell Report
+
+  74 out of 2204 sequential cells have violations
+
+-----------------------------------------------------------------
+
+SEQUENTIAL CELLS WITH VIOLATIONS
+      *   1 cell has constant 1 value
+      *  73 cells are clock gating cells
+SEQUENTIAL CELLS WITHOUT VIOLATIONS
+      *2130 cells are valid scan cells
+
+Information: Test design rule checking completed. (TEST-123)
+1

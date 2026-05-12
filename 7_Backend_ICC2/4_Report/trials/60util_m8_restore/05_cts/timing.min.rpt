@@ -1,0 +1,753 @@
+****************************************
+Report : timing
+        -path_type full
+        -delay_type min
+        -max_paths 20
+        -report_by design
+Design : cv32e40p_synth_wrap
+Version: W-2024.09-SP2
+Date   : Fri May  8 14:26:22 2026
+****************************************
+
+  Startpoint: u_core/core_i/id_stage_i/data_sign_ext_ex_o_reg[0] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/load_store_unit_i/data_sign_ext_q_reg[0] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.26      0.26
+
+  u_core/core_i/id_stage_i/data_sign_ext_ex_o_reg[0]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.26 r
+  u_core/core_i/id_stage_i/data_sign_ext_ex_o_reg[0]/Q (SDFFARX1_RVT)
+                                                   0.10      0.36 f
+  u_core/core_i/load_store_unit_i/data_sign_ext_q_reg[0]/D (SDFFARX1_RVT)
+                                                   0.00      0.36 f
+  data arrival time                                          0.36
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.27      0.27
+  u_core/core_i/load_store_unit_i/data_sign_ext_q_reg[0]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.27 r
+  clock uncertainty                                0.10      0.37
+  library hold time                               -0.03      0.34
+  data required time                                         0.34
+  ------------------------------------------------------------------------
+  data required time                                         0.34
+  data arrival time                                         -0.36
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.02
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/data_we_ex_o_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/load_store_unit_i/data_we_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.26      0.26
+
+  u_core/core_i/id_stage_i/data_we_ex_o_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.26 r
+  u_core/core_i/id_stage_i/data_we_ex_o_reg/QN (SDFFARX1_RVT)
+                                                   0.08      0.34 f
+  u_core/core_i/U5029/Y (INVX1_HVT)                0.02      0.36 r
+  u_core/core_i/load_store_unit_i/data_we_q_reg/D (SDFFARX1_RVT)
+                                                   0.00      0.36 r
+  data arrival time                                          0.36
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.27      0.27
+  u_core/core_i/load_store_unit_i/data_we_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.27 r
+  clock uncertainty                                0.10      0.37
+  library hold time                               -0.04      0.33
+  data required time                                         0.33
+  ------------------------------------------------------------------------
+  data required time                                         0.33
+  data arrival time                                         -0.36
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.03
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/controller_i/debug_force_wakeup_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/cs_registers_i/dcsr_q_reg[cause][7] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.19      0.19
+
+  u_core/core_i/id_stage_i/controller_i/debug_force_wakeup_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.19 r
+  u_core/core_i/id_stage_i/controller_i/debug_force_wakeup_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.31 f
+  u_core/core_i/id_stage_i/U3199/Y (AO22X1_HVT)    0.07      0.38 f
+  u_core/core_i/cs_registers_i/dcsr_q_reg[cause][7]/D (SDFFARX1_RVT)
+                                                   0.00      0.38 f
+  data arrival time                                          0.38
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.28      0.28
+  u_core/core_i/cs_registers_i/dcsr_q_reg[cause][7]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.28 r
+  clock uncertainty                                0.10      0.38
+  library hold time                               -0.03      0.34
+  data required time                                         0.34
+  ------------------------------------------------------------------------
+  data required time                                         0.34
+  data arrival time                                         -0.38
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.04
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/data_type_ex_o_reg[0] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/load_store_unit_i/data_type_q_reg[0] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.26      0.26
+
+  u_core/core_i/id_stage_i/data_type_ex_o_reg[0]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.26 r
+  u_core/core_i/id_stage_i/data_type_ex_o_reg[0]/Q (SDFFARX1_RVT)
+                                                   0.11      0.37 f
+  u_core/core_i/load_store_unit_i/data_type_q_reg[0]/D (SDFFARX1_RVT)
+                                                   0.00      0.37 f
+  data arrival time                                          0.37
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.27      0.27
+  u_core/core_i/load_store_unit_i/data_type_q_reg[0]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.27 r
+  clock uncertainty                                0.10      0.37
+  library hold time                               -0.04      0.33
+  data required time                                         0.33
+  ------------------------------------------------------------------------
+  data required time                                         0.33
+  data arrival time                                         -0.37
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.04
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/aligner_i/pc_q_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/pc_id_o_reg[2] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.28      0.28
+
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.28 r
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[2]/Q (SDFFARX1_RVT)
+                                                   0.12      0.40 f
+  u_core/core_i/if_stage_i/pc_id_o_reg[2]/D (SDFFARX1_RVT)
+                                                   0.00      0.40 f
+  data arrival time                                          0.40
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.29      0.29
+  u_core/core_i/if_stage_i/pc_id_o_reg[2]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.29 r
+  clock uncertainty                                0.10      0.39
+  library hold time                               -0.04      0.35
+  data required time                                         0.35
+  ------------------------------------------------------------------------
+  data required time                                         0.35
+  data arrival time                                         -0.40
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.05
+
+
+
+  Startpoint: u_core/core_i/id_stage_i/data_type_ex_o_reg[1] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/load_store_unit_i/data_type_q_reg[1] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.26      0.26
+
+  u_core/core_i/id_stage_i/data_type_ex_o_reg[1]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.26 r
+  u_core/core_i/id_stage_i/data_type_ex_o_reg[1]/Q (SDFFARX1_RVT)
+                                                   0.12      0.38 f
+  u_core/core_i/load_store_unit_i/data_type_q_reg[1]/D (SDFFARX1_RVT)
+                                                   0.00      0.38 f
+  data arrival time                                          0.38
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.27      0.27
+  u_core/core_i/load_store_unit_i/data_type_q_reg[1]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.27 r
+  clock uncertainty                                0.10      0.37
+  library hold time                               -0.04      0.33
+  data required time                                         0.33
+  ------------------------------------------------------------------------
+  data required time                                         0.33
+  data arrival time                                         -0.38
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.05
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/aligner_i/pc_q_reg[24] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/pc_id_o_reg[24] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.28      0.28
+
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[24]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.28 r
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[24]/Q (SDFFARX1_RVT)
+                                                   0.12      0.40 f
+  u_core/core_i/if_stage_i/pc_id_o_reg[24]/D (SDFFARX1_RVT)
+                                                   0.00      0.41 f
+  data arrival time                                          0.41
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/pc_id_o_reg[24]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.35
+  data required time                                         0.35
+  ------------------------------------------------------------------------
+  data required time                                         0.35
+  data arrival time                                         -0.41
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.05
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/aligner_i/pc_q_reg[27] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/pc_id_o_reg[27] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.28      0.28
+
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[27]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.28 r
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[27]/Q (SDFFARX1_RVT)
+                                                   0.13      0.41 f
+  u_core/core_i/if_stage_i/pc_id_o_reg[27]/D (SDFFARX1_RVT)
+                                                   0.00      0.41 f
+  data arrival time                                          0.41
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.29      0.29
+  u_core/core_i/if_stage_i/pc_id_o_reg[27]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.29 r
+  clock uncertainty                                0.10      0.39
+  library hold time                               -0.04      0.35
+  data required time                                         0.35
+  ------------------------------------------------------------------------
+  data required time                                         0.35
+  data arrival time                                         -0.41
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/aligner_i/pc_q_reg[6] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/pc_id_o_reg[6] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.28      0.28
+
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[6]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.28 r
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[6]/Q (SDFFARX1_RVT)
+                                                   0.13      0.40 f
+  u_core/core_i/if_stage_i/pc_id_o_reg[6]/D (SDFFARX1_RVT)
+                                                   0.00      0.40 f
+  data arrival time                                          0.40
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.29      0.29
+  u_core/core_i/if_stage_i/pc_id_o_reg[6]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.29 r
+  clock uncertainty                                0.10      0.39
+  library hold time                               -0.04      0.35
+  data required time                                         0.35
+  ------------------------------------------------------------------------
+  data required time                                         0.35
+  data arrival time                                         -0.40
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/aligner_i/pc_q_reg[12] (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/pc_id_o_reg[12] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.28      0.28
+
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[12]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.28 r
+  u_core/core_i/if_stage_i/aligner_i/pc_q_reg[12]/Q (SDFFARX1_RVT)
+                                                   0.13      0.41 f
+  u_core/core_i/if_stage_i/pc_id_o_reg[12]/D (SDFFARX1_RVT)
+                                                   0.00      0.41 f
+  data arrival time                                          0.41
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/pc_id_o_reg[12]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.35
+  data required time                                         0.35
+  ------------------------------------------------------------------------
+  data required time                                         0.35
+  data arrival time                                         -0.41
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[26] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U288/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5631/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[26]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[26]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[29] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U288/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5650/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[29]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[29]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[21] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U285/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5602/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[21]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[21]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[24] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U288/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5619/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[24]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[24]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[27] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U288/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5638/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[27]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[27]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[22] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U285/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5607/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[22]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[22]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[23] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U288/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5614/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[23]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[23]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[20] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U285/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5595/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[20]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[20]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[19] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U285/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5590/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[19]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[19]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+
+  Startpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg (rising edge-triggered flip-flop clocked by clk_i)
+  Endpoint: u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[17] (rising edge-triggered flip-flop clocked by clk_i)
+  Mode: default
+  Corner: default
+  Scenario: default
+  Path Group: clk_i
+  Path Type: min
+
+  Point                                            Incr      Path  
+  ------------------------------------------------------------------------
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.16      0.16
+
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/CLK (SDFFARX1_RVT)
+                                                   0.00      0.16 r
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/state_q_reg/Q (SDFFARX1_RVT)
+                                                   0.12      0.28 f
+  u_core/core_i/U285/Y (NBUFFX4_HVT)               0.06      0.34 f
+  u_core/core_i/U5578/Y (AO22X1_HVT)               0.08      0.42 f
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[17]/D (SDFFARX1_RVT)
+                                                   0.00      0.42 f
+  data arrival time                                          0.42
+
+  clock clk_i (rise edge)                          0.00      0.00
+  clock network delay (propagated)                 0.30      0.30
+  u_core/core_i/if_stage_i/prefetch_buffer_i/instruction_obi_i/gen_no_trans_stable.obi_addr_q_reg[17]/CLK (SDFFARX1_RVT)
+                                                   0.00      0.30 r
+  clock uncertainty                                0.10      0.40
+  library hold time                               -0.04      0.36
+  data required time                                         0.36
+  ------------------------------------------------------------------------
+  data required time                                         0.36
+  data arrival time                                         -0.42
+  ------------------------------------------------------------------------
+  slack (MET)                                                0.06
+
+
+1

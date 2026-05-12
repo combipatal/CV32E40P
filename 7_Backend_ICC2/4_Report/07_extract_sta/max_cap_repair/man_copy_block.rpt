@@ -1,0 +1,123 @@
+2.  Synopsys Commands                                        Command Reference
+                                  copy_block
+
+NAME
+       copy_block
+              Copies a block to a new block in the same or a different library
+              and view
+
+SYNTAX
+       collection copy_block
+              [-force]
+              [-from_block  source_block]
+              -to_block   destination_block
+
+   Data Types
+       source_block       string
+       destination_block  string
+
+ARGUMENTS
+       -force Forces overwrite of the block specified by -to_block block_name.
+              This  option  is  used when the destination is open and modified
+              but not yet saved.
+
+       -from_block source_block
+              Specifies the source block name with  optional  library,  label,
+              and  view  specifications.  The source_block specification is as
+              follows:
+
+              [libName:]blockName[/labelName][.viewName]
+
+              or a collection of one block. If the  library  specification  is
+              not present, the current library is used. If label specification
+              is not present, then the default label  is  used.  If  the  view
+              specification  is  not  present,  the  design  view  is used. By
+              default, the current_block is used as the source.
+
+       -to_block destination_block
+              Specifies the destination block name with optional  library  and
+              view  specifications.  The destination_block specification is as
+              follows:
+
+              [libName:]blockName[/labelName][.viewName]
+
+              If the library, block, or view specifications are  not  present,
+              the  values  from  the  source  block  are  used. This option is
+              required.
+
+DESCRIPTION
+       This command copies a source block to a destination with  the  same  or
+       different  library  and  block.  The destination block will have a mode
+       attribute with a value of "a" and the destination block can be  further
+       modified  without  any  change in open mode. If you try to copy a block
+       over itself, the command issues an  error  message.  The  command  also
+       fails  if  the  destination block is open and has been modified but not
+       saved and the -force option is omitted. The command also fails  if  you
+       specify  an  illegal name for the source or destination library, block,
+       or view. If successful, the destination block is returned.
+
+       If the provided destination library is not present, the tool will  cre-
+       ate  the  destination  on  disk by cloning the source library. Once the
+       copy is done, both the destination library and block will be present on
+       disk for this kind of scenario.
+
+       This  command returns the block if successful, or O if not. If an ille-
+       gal name is given for the source or  destination  block  names,  a  Tcl
+       error is raised.
+
+       When  no  view  is explicitly specified for both source and destination
+       then all available views of source block are  copied  into  destination
+       block and the design view of destination block is returned.
+
+       A  given source block view can't be copied into a different destination
+       block view, like a design view can't be copied to an abstract view.  An
+       error is issued while trying to do such operation.
+
+       The  copied  destination  block is by default available in memory only.
+       This behavior can be controlled using app option  design.on_disk_opera-
+       tion  where  setting  the  app  option to true means copied destination
+       block will be saved to disk.
+
+       The copied destination block doesn't become the current block. It needs
+       to be explicitly set.
+
+EXAMPLES
+       This  example  copies  block  Top  in library lib to block Top2 in same
+       library for subsequent block exploration. The destination  library  and
+       view are taken from the original block.
+
+         prompt> copy_block -from_block lib:Top -to_block Top2
+         {"lib:Top2.design"}
+         prompt> current_block lib:Top2
+
+       If  library  lib  is  already  open  and  is current library then using
+       -from_block Top and current_block Top2 in above example is sufficient.
+
+       This example copies a block Top in current  library  into  a  different
+       existing library MyOtherDesigns for subsequent block exploration.
+
+         prompt> copy_block -from_block Top -to_block MyOtherDesigns:Top
+         {"MyOtherDesigns:Top.design"}
+         prompt> current_block MyOtherDesigns:Top
+
+       This  example  copies  a  block Top in current library into a different
+       existing library MyOtherDesigns with a different name Top2 and saves it
+       to disk.
+
+         prompt> set_app_options -name design.on_disk_operation -value true
+         prompt> copy_block -from_block Top -to_block MyOtherDesigns:Top2
+         Information: Saving block 'MyOtherDesigns:Top2.design'
+         {"MyOtherDesigns:Top2.design"}
+
+SEE ALSO
+       get_blocks(2)
+       get_designs(2)
+       move_block(2)
+       open_block(2)
+       open_lib(2)
+       remove_blocks(2)
+       reopen_block(2)
+       save_block(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.

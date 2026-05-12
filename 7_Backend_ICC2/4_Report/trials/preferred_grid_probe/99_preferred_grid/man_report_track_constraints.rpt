@@ -1,0 +1,72 @@
+2.  Synopsys Commands                                        Command Reference
+                           report_track_constraints
+
+NAME
+       report_track_constraints
+              The  command  outputs  a report describing the track constraints
+              set for the current block.
+
+SYNTAX
+       int report_track_constraints
+              [-nosplit]
+              [-verbose]
+
+ARGUMENTS
+       -nosplit
+              Does not split lines if column overflows.
+
+       -verbose
+              Controls output of  additional  information.  Enabling  -verbose
+              reports end grid information in addition to standard contents.
+
+DESCRIPTION
+       The  report_track_constraints  command  takes no arguments. It displays
+       information on the track constraints  defined  in  the  current  block.
+       Labels that exceed the defined column width in the report are automati-
+       cally condensed as seen in the below example with the label "thisIsARe-
+       allyLongLabelString" being reported as "thisIsAReallyLon...".
+
+EXAMPLES
+       The  following  commands set and remove track constraints and then show
+       the resulting track constraint report.
+         prompt> set_track_constraint -block [current_block] -layer M1 \
+            -label A -grid 1 -offset 1 -mask mask_one -origin block
+         prompt> set_track_constraint -block [current_block] -layer M2 \
+            -label B -grid 1 -offset {0 0.5} -mask {mask_one mask_two} -origin block
+         prompt> set_track_constraint -block [current_block] -layer M2 \
+            -label C -grid 4.5 -offset 1 -mask mask_one -origin block \
+            -track_direction vertical
+         prompt> set_track_constraint -block [current_block] -layer M3 \
+            -label thisIsAReallyLongLabelString -grid 1 -offset {0 0.1 0.9} \
+            -mask mask_two -origin block -track_direction horizontal -widths {0.1 0.2}
+         prompt> remove_track_constraint -block [current_block] -layer M1 \
+            -mask {mask_one mask_two}
+         prompt> remove_track_constraint -block [current_block] -layer M2 \
+            -mask mask_one -track_direction vertical
+         prompt> report_track_constraints -nosplit
+             Label               Constraint               Orient    Origin    Grid      Offset         Widths    Mask Pattern
+         --------------------------------------------------------------------------------
+              Layer: M1
+
+              Layer: M2
+              B                   {Horizontal, mask_one}  R0 MX     block     1.0000    {0.0000 0.5000} default
+              B                   {Vertical, mask_one}    R0 MX     block     1.0000    {0.0000 0.5000} default
+              B                   {Vertical, mask_two}    R0 MX     block     1.0000    {0.0000 0.5000} default
+
+              Layer: M3
+              thisIsAReallyLon... {Vertical, mask_one}    R0 MX     block     1.0000    {0.0000 0.1000 0.9000} 0.1000 0.2000
+
+              Layer: M4
+
+              Layer: M5
+
+              Layer: M6
+
+              Layer: M7
+
+SEE ALSO
+       set_track_constraint(2)
+       remove_track_constraint(2)
+
+                    Version W-2024.09-SP2-T-20250915
+            Copyright (c) 2025 Synopsys, Inc. All rights reserved.
